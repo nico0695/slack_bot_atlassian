@@ -16,15 +16,3 @@
 
 /coverage
 /doc
-
-/.claude
-/.agents
-/.gemini
-/.github/skills
-
-/custom-skills
-
-AGENTS_AND_SKILLS.md
-AGENTS.md
-CLAUDE.md
-GEMINI.md

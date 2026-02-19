@@ -14,6 +14,8 @@ This repository is a modular Slack bot built with Node.js and TypeScript. It int
 - Redis for conversation caching.
 - Cron jobs for alerts.
 - Error handling via custom error classes and global middleware.
+- Long-running assistant operations use a progress callback pattern propagated controller → services → message processor.
+- Image and conversation modules abstract AI providers behind repositories selected via configuration.
 
 **Do:**
 
@@ -33,6 +35,14 @@ This repository is a modular Slack bot built with Node.js and TypeScript. It int
 - Commit code with lint or type errors.
 - Skip writing tests for new code.
 
+## Input Validation (Web Controllers)
+
+- Validate all Express REST inputs with Zod schemas before calling services.
+- Use helpers from `src/shared/utils/validation.ts` (`validateBody`, `validateQuery`, `validateParams`).
+- Define schemas under `src/modules/{feature}/shared/schemas` (e.g., `{feature}.schemas.ts`).
+- Use shared schemas where available (e.g., `paginationSchema`, `idParamSchema`).
+- Do not add ad-hoc `if (!field)` checks in controllers, services, or repositories for request shape.
+
 ## Coding Standards
 
 - TypeScript, 2-space indentation, single quotes, no trailing semicolons.
@@ -44,6 +54,13 @@ This repository is a modular Slack bot built with Node.js and TypeScript. It int
 - Run `npm run lint` and address all warnings before merging.
 - Format code with Prettier: `npx prettier --write "src/**/*.ts"`.
 
+## Logging
+
+- Use Pino via `createModuleLogger('module.name')` from `src/config/logger.ts`.
+- Never use `console.log` / `console.error`; logging is enforced via ESLint.
+- Log errors as `log.error({ err: error }, 'description')` using structured objects.
+- Prefer module-specific loggers over creating new logger instances ad hoc.
+
 ## Testing
 
 - Jest with `ts-jest`, tests in `*.test.ts` files alongside code.
@@ -52,6 +69,10 @@ This repository is a modular Slack bot built with Node.js and TypeScript. It int
 - Validate coverage with `npm run test:coverage`.
 - Strive for >80% coverage on new modules.
 - Prefer unit tests for business logic, integration tests for controllers.
+
+Run tests with the provided npm scripts:
+
+- `npm test`, `npm run test:watch`, `npm run test:coverage`.
 
 ## Commit & PR Guidelines
 
@@ -76,6 +97,25 @@ This repository is a modular Slack bot built with Node.js and TypeScript. It int
 
 - Ensure web interface is accessible (ARIA, keyboard navigation).
 - Support internationalization where possible.
+
+## Skills, Templates & Agents
+
+- When adding new functionality, prefer existing patterns and skills documented in:
+  - `.github/skills/*/SKILL.md` (e.g., `express-rest-api`, `slack-bot-builder`, `nodejs-backend-patterns`, `typescript-advanced-types`, `async-patterns`).
+  - `custom-skills/*/SKILL.md` for project-specific guidance (`new-module`, `rest-endpoint`, `slack-feature`).
+- For new modules, follow the structure and templates from the `new-module` skills:
+  - Controllers under `src/modules/{feature}/controller` (Slack + Web variants when applicable).
+  - Services under `src/modules/{feature}/services` containing business logic.
+  - Repositories under `src/modules/{feature}/repositories` for all external/data access.
+  - Shared constants, interfaces, and schemas under `src/modules/{feature}/shared`.
+- For new REST endpoints, use the `express-rest-api` and `rest-endpoint` skills as blueprints (routing, validation with Zod, error handling, pagination, and filtering).
+- For new Slack features, use the `slack-bot-builder` and `slack-feature` skills (Bolt patterns, message formats, actions, and commands).
+- When designing reusable utilities or abstractions, consult `typescript-advanced-types` and `nodejs-backend-patterns` skills before introducing new patterns.
+- If implementing AI agents or tool-like capabilities, follow the concepts from `AGENTS_AND_SKILLS.md`:
+  - Keep skills atomic and reusable, with clear inputs and outputs.
+  - Implement skills under `src/modules/ai/skills/{category}` and register them centrally when such infrastructure is present.
+  - Implement higher-level agents under `src/modules/ai/agents` that orchestrate multiple skills.
+  - Prefer orchestrating existing skills rather than duplicating logic.
 
 ## Review Instructions
 
