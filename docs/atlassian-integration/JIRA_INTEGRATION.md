@@ -735,31 +735,33 @@ enum JiraWebhookEvent {
 
 ### Webhook Handler
 ```typescript
-// jiraWebhook.controller.ts
-@Controller('/webhooks')
-export class JiraWebhookController {
-  @Post('/jira')
-  async handleJiraWebhook(@Req() req: Request, @Res() res: Response) {
-    const event = req.body
-    
-    // Verify webhook signature (si está configurado)
-    if (!this.verifySignature(req)) {
-      return res.status(401).send('Invalid signature')
-    }
-    
-    // Process async
-    this.webhookService.processEvent(event).catch(error => {
-      this.log.error({ err: error }, 'Webhook processing failed')
-    })
-    
-    // Respond immediately
-    return res.status(200).send('OK')
+// jiraWebhook.router.ts
+import { Router, Request, Response } from 'express'
+import { JiraWebhookService } from './jiraWebhook.service'
+
+const webhookService = new JiraWebhookService()
+export const jiraWebhookRouter = Router()
+
+jiraWebhookRouter.post('/jira', async (req: Request, res: Response) => {
+  const event = req.body
+
+  // Verify webhook signature (si está configurado)
+  if (!verifySignature(req)) {
+    return res.status(401).send('Invalid signature')
   }
-  
-  private verifySignature(req: Request): boolean {
-    // Implementar verificación si Jira lo soporta
-    return true
-  }
+
+  // Process async
+  webhookService.processEvent(event).catch(error => {
+    // TODO: log error using createModuleLogger('jira.webhook')
+  })
+
+  // Respond immediately
+  return res.status(200).send('OK')
+})
+
+function verifySignature(req: Request): boolean {
+  // Implementar verificación si Jira lo soporta
+  return true
 }
 ```
 

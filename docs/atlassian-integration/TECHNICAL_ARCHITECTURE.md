@@ -619,7 +619,7 @@ export const createIssueSchema = z.object({
   description: z.string()
     .max(32000)
     .optional()
-    .transform(val => sanitizeHtml(val)),
+    .transform(val => (typeof val === 'string' ? sanitizeHtml(val) : val)),
   
   priority: z.enum(['Lowest', 'Low', 'Medium', 'High', 'Highest'])
     .optional()

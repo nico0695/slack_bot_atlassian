@@ -215,11 +215,12 @@ import * as Diff from 'diff'
 const patch = Diff.parsePatch(diffString)
 const changes = Diff.diffLines(oldContent, newContent)
 
+// `log` represents your module logger (e.g. a Pino logger instance)
 for (const change of changes) {
   if (change.added) {
-    console.log(`+ ${change.value}`)
+    log.info({ value: change.value }, 'Line added')
   } else if (change.removed) {
-    console.log(`- ${change.value}`)
+    log.info({ value: change.value }, 'Line removed')
   }
 }
 ```
@@ -602,30 +603,20 @@ app.get('/metrics', async (req, res) => {
 })
 ```
 
-### winston (Advanced Logging)
+### Logging (Pino - logger del proyecto)
 
-```bash
-npm install --save winston
-```
+La integración con Atlassian **no debe introducir nuevas librerías de logging** como `winston`.
+En su lugar, reutiliza el logger estándar del proyecto basado en **Pino** a través de
+`createModuleLogger()` (ver `src/config/logger.ts`).
 
 ```typescript
-import winston from 'winston'
+import { createModuleLogger } from '../../src/config/logger'
 
-const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.combine(
-    winston.format.timestamp(),
-    winston.format.errors({ stack: true }),
-    winston.format.json()
-  ),
-  defaultMeta: { service: 'jira-integration' },
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' }),
-  ],
-})
+const log = createModuleLogger('atlassian.jira')
 
-// Use with Pino for consistency
+// Ejemplos de uso
+log.info({ issueKey }, 'Jira issue fetched')
+log.error({ err }, 'Failed to fetch Jira issue')
 ```
 
 ---
@@ -911,4 +902,4 @@ npm install --save-dev @types/jira-client @types/bottleneck @types/markdown-it @
 
 ## Resumen
 
-Conjunto completo de librerías para integración Atlassian. **Core**: jira-client (SDK oficial), axios (Bitbucket API), bottleneck (rate limiting 5 req/sec Jira, 1000/hora BB), p-retry (retry con exponential backoff). **Parsing**: markdown-it (render descriptions), sanitize-html (XSS protection), parse-diff (git diff parser). **Visualization**: chart.js + chartjs-node-canvas (velocity/burndown charts), d3 + jsdom (advanced charts server-side). **Export**: pdfkit (sprint reports PDF), json2csv (export issues). **Analysis**: esprima/typescript compiler API (parse code), eslint (linting). **Utilities**: date-fns (business days, sprint duration), node-cache (in-memory hot cache), bull (job queue para sync jobs). **Testing**: nock (mock HTTP), supertest (API testing). **Monitoring**: prom-client (Prometheus metrics). **NLP**: compromise (entity extraction), handlebars (templates). Total ~30 librerías cubriendo todas necesidades. Instalación completa ~50MB dependencies. Compatibilidad: TypeScript + ESM/CommonJS, Node.js >=16.
+Conjunto completo de librerías para integración Atlassian. **Core**: jira-client (SDK oficial), axios (Bitbucket API), bottleneck (rate limiting 5 req/sec Jira, 1000/hora BB), p-retry (retry con exponential backoff). **Parsing**: markdown-it (render descriptions), sanitize-html (XSS protection), parse-diff (git diff parser). **Visualization**: chart.js + chartjs-node-canvas (velocity/burndown charts), d3 + jsdom (advanced charts server-side). **Export**: pdfkit (sprint reports PDF), json2csv (export issues). **Analysis**: esprima/typescript compiler API (parse code), eslint (linting). **Utilities**: date-fns (business days, sprint duration), node-cache (in-memory hot cache), bull (job queue para sync jobs). **Testing**: nock (mock HTTP), supertest (API testing). **Monitoring**: prom-client (Prometheus metrics). **NLP**: compromise (entity extraction), handlebars (templates). Total ~30 librerías cubriendo todas necesidades. Instalación completa ~50MB dependencies. Compatibilidad: TypeScript + ESM/CommonJS, Node.js >=18.
