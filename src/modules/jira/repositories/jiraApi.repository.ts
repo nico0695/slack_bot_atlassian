@@ -75,8 +75,12 @@ export default class JiraApiRepository {
     try {
       this.ensureClient()
 
+      if (!this.client) {
+        throw new Error('Jira client not initialized')
+      }
+
       // Get server info to test connection
-      const serverInfo = await this.client!.getServerInfo()
+      const serverInfo = await this.client.getServerInfo()
 
       log.info({ version: serverInfo.version }, 'Jira connection successful')
 
@@ -105,13 +109,17 @@ export default class JiraApiRepository {
     try {
       this.ensureClient()
 
+      if (!this.client) {
+        throw new Error('Jira client not initialized')
+      }
+
       const key = projectKey || this.config?.projectKey
 
       if (!key) {
         throw new Error('Project key is required')
       }
 
-      const project = await this.client!.getProject(key)
+      const project = await this.client.getProject(key)
 
       log.debug({ projectKey: key }, 'Project retrieved')
 
