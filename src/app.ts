@@ -36,6 +36,7 @@ import TasksWebController from './modules/tasks/controller/tasksWeb.controller'
 import NotesWebController from './modules/notes/controller/notesWeb.controller'
 import LinksWebController from './modules/links/controller/linksWeb.controller'
 import SystemWebController from './modules/system/controller/systemWeb.controller'
+import JiraWebController from './modules/jira/controller/jiraWeb.controller'
 import { slackHelperMessage } from './shared/constants/slack.constants'
 
 dotenv.config()
@@ -64,6 +65,7 @@ export default class App {
   private textToSpeechWebController: TextToSpeechWebController
   private summaryWebController: SummaryWebController
   private systemWebController: SystemWebController
+  private jiraWebController: JiraWebController
 
   constructor() {
     // Controllers Instances
@@ -83,6 +85,7 @@ export default class App {
     this.textToSpeechWebController = TextToSpeechWebController.getInstance()
     this.summaryWebController = SummaryWebController.getInstance()
     this.systemWebController = SystemWebController.getInstance()
+    this.jiraWebController = JiraWebController.getInstance()
 
     // Express
     this.app = express()
@@ -121,6 +124,7 @@ export default class App {
     this.app.use('/images', [this.imagesWebController.router])
     this.app.use('/text-to-speech', [this.textToSpeechWebController.router])
     this.app.use('/summary', [this.summaryWebController.router])
+    this.app.use('/jira', [this.jiraWebController.router])
   }
 
   private slackListeners(): void {
