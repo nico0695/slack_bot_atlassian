@@ -6,7 +6,7 @@ Este PR añade documentación completa de planificación para integrar servicios
 
 ## 📚 Documentación Creada
 
-Se crearon **8 documentos** en `/docs/atlassian-integration/` con **6,383 líneas** de contenido detallado:
+Se crearon **10 documentos** en `/docs/atlassian-integration/` con **6,871 líneas** de contenido detallado:
 
 ### 1. README.md (151 líneas)
 - Visión general del proyecto

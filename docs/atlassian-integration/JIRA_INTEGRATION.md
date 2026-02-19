@@ -768,19 +768,28 @@ function verifySignature(req: Request): boolean {
 ### Event Processing
 ```typescript
 // jiraWebhook.service.ts
+
+interface JiraWebhookPayload {
+  webhookEvent: string
+  issue?: any
+  comment?: any
+  user?: any
+  timestamp?: number
+}
+
 class JiraWebhookService {
-  async processEvent(event: JiraWebhookEvent): Promise<void> {
+  async processEvent(event: JiraWebhookPayload): Promise<void> {
     const eventType = event.webhookEvent
     
     // Route to appropriate handler
     switch (eventType) {
-      case 'jira:issue_created':
+      case JiraWebhookEvent.ISSUE_CREATED:
         await this.handleIssueCreated(event)
         break
-      case 'jira:issue_updated':
+      case JiraWebhookEvent.ISSUE_UPDATED:
         await this.handleIssueUpdated(event)
         break
-      case 'comment_created':
+      case JiraWebhookEvent.COMMENT_CREATED:
         await this.handleCommentAdded(event)
         break
       // ... más handlers

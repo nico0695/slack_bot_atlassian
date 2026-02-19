@@ -124,7 +124,19 @@ interface IWebhookHandler {
 }
 
 class WebhookEventBus {
+  private static instance: WebhookEventBus
   private handlers: IWebhookHandler[] = []
+
+  private constructor() {}
+
+  static getInstance(): WebhookEventBus {
+    if (this.instance) {
+      return this.instance
+    }
+
+    this.instance = new WebhookEventBus()
+    return this.instance
+  }
 
   registerHandler(handler: IWebhookHandler): void {
     this.handlers.push(handler)
@@ -645,50 +657,87 @@ export const createIssueSchema = z.object({
 export type CreateIssueDTO = z.infer<typeof createIssueSchema>
 
 // Controller usage
-@Post('/issues')
-async createIssue(@Req() req: Request, @Res() res: Response) {
-  const data = validateBody(createIssueSchema, req.body)
-  const issue = await this.jiraService.createIssue(data)
-  return res.json(issue)
+import { Router } from 'express'
+import GenericController from '../../../shared/modules/genericController'
+import { HttpAuth, Permission } from '../../../shared/middleware/auth'
+import { Profiles } from '../../../shared/constants/auth.constants'
+import { validateBody } from '../../../shared/utils/validation'
+
+export default class JiraWebController extends GenericController {
+  private static instance: JiraWebController
+  public router: Router
+  private jiraServices: JiraServices
+
+  private constructor() {
+    super()
+    this.jiraServices = JiraServices.getInstance()
+    this.router = Router()
+    this.registerRoutes()
+  }
+
+  static getInstance(): JiraWebController {
+    if (this.instance) {
+      return this.instance
+    }
+    this.instance = new JiraWebController()
+    return this.instance
+  }
+
+  protected registerRoutes(): void {
+    this.router.post('/issues', this.createIssue)
+  }
+
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  async createIssue(req: any, res: any): Promise<void> {
+    const data = validateBody(createIssueSchema, req.body)
+    const issue = await this.jiraServices.createIssue(data)
+    res.json(issue)
+  }
 }
 ```
 
 ### Authentication & Authorization
 
 ```typescript
-// Existing @HttpAuth decorator
-// Extend for Atlassian-specific permissions
+// Use existing @HttpAuth and @Permission decorators
+// Permissions are controlled via Profiles enum
 
-enum AtlassianPermission {
-  JIRA_READ = 'jira:read',
-  JIRA_WRITE = 'jira:write',
-  JIRA_ADMIN = 'jira:admin',
-  BB_READ = 'bitbucket:read',
-  BB_WRITE = 'bitbucket:write',
-  BB_ADMIN = 'bitbucket:admin',
-}
+import { HttpAuth, Permission } from '../../../shared/middleware/auth'
+import { Profiles } from '../../../shared/constants/auth.constants'
 
-@Controller('/jira')
-export class JiraWebController {
-  @Get('/issues/:issueKey')
-  @HttpAuth()
-  @Permission(AtlassianPermission.JIRA_READ)
-  async getIssue(@Req() req: Request) {
-    // ...
+export default class JiraWebController extends GenericController {
+  protected registerRoutes(): void {
+    this.router.get('/issues/:issueKey', this.getIssue)
+    this.router.post('/issues', this.createIssue)
+    this.router.delete('/projects/:key', this.deleteProject)
   }
 
-  @Post('/issues')
-  @HttpAuth()
-  @Permission(AtlassianPermission.JIRA_WRITE)
-  async createIssue(@Req() req: Request) {
-    // ...
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  async getIssue(req: any, res: any): Promise<void> {
+    const user = this.userData
+    const { issueKey } = req.params
+    const issue = await this.jiraServices.getIssue(issueKey)
+    res.json(issue)
   }
 
-  @Delete('/projects/:key')
-  @HttpAuth()
-  @Permission(AtlassianPermission.JIRA_ADMIN)
-  async deleteProject(@Req() req: Request) {
-    // ...
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  async createIssue(req: any, res: any): Promise<void> {
+    const user = this.userData
+    const data = validateBody(createIssueSchema, req.body)
+    const issue = await this.jiraServices.createIssue(data)
+    res.json(issue)
+  }
+
+  @HttpAuth
+  @Permission([Profiles.ADMIN])
+  async deleteProject(req: any, res: any): Promise<void> {
+    const user = this.userData
+    const { key } = req.params
+    await this.jiraServices.deleteProject(key)
+    res.status(204).send()
   }
 }
 ```
@@ -701,7 +750,7 @@ import rateLimit from 'express-rate-limit'
 // Per-user rate limiting
 const apiLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 100, // limit each user to 100 requests per windowMs
   standardHeaders: true,
   legacyHeaders: false,
   handler: (req, res) => {
@@ -710,9 +759,11 @@ const apiLimiter = rateLimit({
       retryAfter: res.getHeader('Retry-After')
     })
   },
-  keyGenerator: (req) => {
-    // Use user ID instead of IP
-    return req.user?.id.toString() || req.ip
+  keyGenerator: (req: any) => {
+    // Note: req.user is not directly available in the current architecture
+    // User data is accessed via this.userData in controllers after @HttpAuth
+    // For rate limiting, use IP or implement custom middleware to attach user
+    return req.ip
   }
 })
 

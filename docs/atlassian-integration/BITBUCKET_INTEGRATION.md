@@ -727,7 +727,7 @@ Analyze for:
 Provide specific line numbers and suggestions.
     `
     
-    const response = await this.openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         { role: 'system', content: 'You are an expert code reviewer.' },
@@ -737,7 +737,7 @@ Provide specific line numbers and suggestions.
     })
     
     // Parse response
-    return this.parseAIResponse(response.choices[0].message.content)
+    return this.parseAIResponse(response.data.choices[0].message?.content || '')
   }
 }
 
@@ -947,13 +947,13 @@ Format:
 ${analysis.jiraIssues.join(', ')}
     `
     
-    const response = await this.openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }],
       temperature: 0.5,
     })
     
-    return response.choices[0].message.content
+    return response.data.choices[0].message?.content || ''
   }
 }
 ```
@@ -1081,7 +1081,7 @@ class BitbucketApiRepository {
 
   constructor() {
     this.limiter = new Bottleneck({
-      minTime: 3600,  // 1 hour in ms
+      minTime: 1000 * 60 * 60,  // 1 hour in ms (3,600,000 ms)
       maxConcurrent: 5,
       reservoir: 1000,  // 1000 requests
       reservoirRefreshAmount: 1000,

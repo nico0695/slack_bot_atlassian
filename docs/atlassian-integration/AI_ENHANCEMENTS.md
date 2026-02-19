@@ -84,7 +84,8 @@ class PMIntentClassifier {
   async classify(message: string): Promise<PMIntent | null> {
     const prompt = this.buildClassificationPrompt(message)
     
-    const response = await openai.chat.completions.create({
+    // Using OpenAI SDK v3 (existing in the project)
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4o-mini', // Cheaper for classification
       messages: [
         { role: 'system', content: this.getSystemPrompt() },
@@ -94,7 +95,7 @@ class PMIntentClassifier {
       max_tokens: 50,
     })
 
-    return this.parseIntent(response.choices[0].message.content)
+    return this.parseIntent(response.data.choices[0].message?.content || '')
   }
 
   private buildClassificationPrompt(message: string): string {
@@ -191,14 +192,13 @@ Example:
 }
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
       temperature: 0.1,
     })
 
-    return JSON.parse(response.choices[0].message.content)
+    return JSON.parse(response.data.choices[0].message?.content || '')
   }
 }
 ```
@@ -266,7 +266,7 @@ Generate a report with:
 Use clear, professional language. Be data-driven but also provide insights.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -279,7 +279,7 @@ Use clear, professional language. Be data-driven but also provide insights.
       max_tokens: 2000,
     })
 
-    return response.choices[0].message.content
+    return response.data.choices[0].message?.content || ''
   }
 }
 ```
@@ -339,7 +339,7 @@ Use emojis, keep it concise but informative.
 Format in markdown for GitHub releases.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -352,7 +352,7 @@ Format in markdown for GitHub releases.
       max_tokens: 1500,
     })
 
-    return response.choices[0].message.content
+    return response.data.choices[0].message?.content || ''
   }
 
   private identifyBreakingChanges(
@@ -442,7 +442,7 @@ Generate comprehensive API docs with:
 Format in markdown, suitable for a README or wiki.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -455,7 +455,7 @@ Format in markdown, suitable for a README or wiki.
       max_tokens: 3000,
     })
 
-    return response.choices[0].message.content
+    return response.data.choices[0].message?.content || ''
   }
 }
 ```
@@ -537,7 +537,7 @@ For each issue found, provide:
 Return as JSON array.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -546,11 +546,10 @@ Return as JSON array.
         },
         { role: 'user', content: prompt }
       ],
-      response_format: { type: 'json_object' },
       temperature: 0.2,
     })
 
-    const result = JSON.parse(response.choices[0].message.content)
+    const result = JSON.parse(response.data.choices[0].message?.content || '')
     return result.issues || []
   }
 }
@@ -640,7 +639,7 @@ For each issue:
 Return as JSON.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -649,11 +648,10 @@ Return as JSON.
         },
         { role: 'user', content: prompt }
       ],
-      response_format: { type: 'json_object' },
       temperature: 0.1,
     })
 
-    const result = JSON.parse(response.choices[0].message.content)
+    const result = JSON.parse(response.data.choices[0].message?.content || '')
     return result.issues || []
   }
 }
@@ -749,7 +747,7 @@ Return JSON with:
 }
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -758,11 +756,10 @@ Return JSON with:
         },
         { role: 'user', content: prompt }
       ],
-      response_format: { type: 'json_object' },
       temperature: 0.3,
     })
 
-    return JSON.parse(response.choices[0].message.content)
+    return JSON.parse(response.data.choices[0].message?.content || '')
   }
 }
 ```
@@ -806,14 +803,13 @@ Identify:
 Return as JSON.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4o-mini',
       messages: [{ role: 'user', content: prompt }],
-      response_format: { type: 'json_object' },
       temperature: 0.2,
     })
 
-    return JSON.parse(response.choices[0].message.content)
+    return JSON.parse(response.data.choices[0].message?.content || '')
   }
 
   private async getTeamExpertise(): Promise<Map<string, UserExpertise>> {
@@ -941,7 +937,7 @@ Mention any blockers or urgent items.
 Be concise but thorough.
     `
 
-    const response = await openai.chat.completions.create({
+    const response = await this.openai.createChatCompletion({
       model: 'gpt-4',
       messages: [
         {
@@ -954,7 +950,7 @@ Be concise but thorough.
       max_tokens: 500,
     })
 
-    return response.choices[0].message.content
+    return response.data.choices[0].message?.content || ''
   }
 }
 ```
