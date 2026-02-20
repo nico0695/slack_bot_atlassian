@@ -316,7 +316,7 @@ export const createIssueSchema = z.object({
 })
 ```
 
-#### 8. Actualizar Issue
+#### 8. Update Issue
 ```typescript
 // Comando
 .jira update PROJ-123 -s "New summary" -p Critical -a maria@company.com

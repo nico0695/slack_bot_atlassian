@@ -44,9 +44,9 @@ enum PMIntent {
 class PMIntentClassifier {
   private examples: Array<{ text: string; intent: PMIntent }> = [
     // Jira create
-    { text: 'crea un bug para el login que falla', intent: PMIntent.JIRA_CREATE_ISSUE },
+    { text: 'crea un bug for the login que falla', intent: PMIntent.JIRA_CREATE_ISSUE },
     { text: 'necesito crear una tarea de alta prioridad', intent: PMIntent.JIRA_CREATE_ISSUE },
-    { text: 'reporta un issue en el módulo de pagos', intent: PMIntent.JIRA_CREATE_ISSUE },
+    { text: 'reporta un issue in the módulo de pagos', intent: PMIntent.JIRA_CREATE_ISSUE },
     
     // Jira update
     { text: 'cambia la prioridad de PROJ-123 a crítica', intent: PMIntent.JIRA_UPDATE_ISSUE },
@@ -73,7 +73,7 @@ class PMIntentClassifier {
     { text: 'hay bugs en este pull request?', intent: PMIntent.BB_REVIEW_CODE },
     
     // Documentation
-    { text: 'genera release notes de la versión 1.2.0', intent: PMIntent.DOCS_RELEASE_NOTES },
+    { text: 'genera release notes of the versión 1.2.0', intent: PMIntent.DOCS_RELEASE_NOTES },
     { text: 'crea documentación del último sprint', intent: PMIntent.DOCS_SPRINT_REPORT },
     
     // Predictions

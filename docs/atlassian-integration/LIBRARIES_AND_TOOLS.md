@@ -603,10 +603,10 @@ app.get('/metrics', async (req, res) => {
 })
 ```
 
-### Logging (Pino - logger del proyecto)
+### Logging (Pino - logger of the project)
 
 La integración con Atlassian **no debe introducir nuevas librerías de logging** como `winston`.
-En su lugar, reutiliza el logger estándar del proyecto basado en **Pino** a través de
+En su lugar, reutiliza el logger estándar of the project basado en **Pino** a través de
 `createModuleLogger()` (ver `src/config/logger.ts`).
 
 ```typescript
@@ -623,7 +623,7 @@ log.error({ err }, 'Failed to fetch Jira issue')
 
 ## Cache & Storage
 
-### ioredis (Redis Client - ya existe en el proyecto)
+### ioredis (Redis Client - ya existe in the proyecto)
 
 ```bash
 npm install --save ioredis
@@ -717,7 +717,7 @@ syncQueue.on('failed', (job, err) => {
 })
 ```
 
-### node-cron (ya existe en el proyecto para alerts)
+### node-cron (ya existe in the proyecto para alerts)
 
 ```typescript
 import cron from 'node-cron'

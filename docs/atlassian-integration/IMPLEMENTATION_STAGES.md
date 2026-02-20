@@ -233,7 +233,7 @@ class JQLBuilder {
 .jira create-from-template bug
 
 // Con AI Assistant
-"Crea un bug para el login que falla con Google OAuth"
+"Crea un bug for the login que falla con Google OAuth"
 → AI classify → jira.create intent
 ```
 
@@ -288,7 +288,7 @@ export const createIssueSchema = z.object({
 
 ### Prerequisitos de Infraestructura
 
-> **⚠️ Importante:** Los webhooks requieren una URL pública accesible desde los servidores de Atlassian.
+> **⚠️ Importante:** Los webhooks requieren una URL pública accesible desof the servidores de Atlassian.
 
 - **Desarrollo local**: Usar [ngrok](https://ngrok.com/) o similar para exponer el puerto local
   ```bash
@@ -412,7 +412,7 @@ enum ProjectManagementIntent {
 #### 5.2 Generación de Documentación
 ```typescript
 // Comandos
-.docs sprint               // Generar sprint report
+.docs sprint               // Generate sprint report
 .docs release v1.2.0       // Release notes automáticas
 .docs api PROJ-123         // API docs de un feature
 
@@ -573,8 +573,8 @@ interface ChartData {
 class AutoAssigner {
   async suggestAssignee(issue: JiraIssue): Promise<string[]>
   // Analiza:
-  // - Componentes del issue
-  // - Expertise del equipo (histórico)
+  // - Componentes of the issue
+  // - Expertise of the team (histórico)
   // - Carga actual de trabajo
   // - Availability
 }
@@ -642,7 +642,7 @@ src/modules/wiki/
 
 ```typescript
 // Auto-generated wiki pages
-.wiki generate project          // Overview del proyecto
+.wiki generate project          // Overview of the project
 .wiki generate architecture     // Diagrama de arquitectura
 .wiki generate api             // API documentation
 .wiki generate glossary        // Términos técnicos

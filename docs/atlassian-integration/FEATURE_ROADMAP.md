@@ -313,7 +313,7 @@ Features for future roadmap.
       - Velocity forecasting
       - Risk assessment
       - Bottleneck detection
-    - ROI: Better planning, menos delays
+    - ROI: Better planning, less thanlays
 
 #### Alto Impacto
 36. **Smart PR Creator** [P3]
@@ -336,7 +336,7 @@ Features for future roadmap.
 38. **Smart Assignee Suggestion** [P4]
     - Utility: Media | Complexity: Muy Compleja | Impact: Medio
     - Analyzes:
-      - Componentes del issue
+      - Componentes of the issue
       - Expertise histórico
       - Carga de trabajo
       - Availability
