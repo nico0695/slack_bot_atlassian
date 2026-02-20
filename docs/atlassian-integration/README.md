@@ -1,144 +1,144 @@
 # Atlassian Integration Plan - Project Manager Assistant
 
-## Visión General
+## Overview
 
-Transformar el Slack bot actual en un asistente integral de gestión de proyectos con integración profunda de Jira y Bitbucket. El sistema proveerá capacidades de project manager automatizado, análisis de código, gestión de issues, seguimiento de releases, generación de documentación y estadísticas de proyecto.
+Transform the current Slack bot into a comprehensive project management assistant with deep Jira and Bitbucket integration. The system will provide automated project manager capabilities, code analysis, issue management, release tracking, documentation generation, and project statistics.
 
-## Objetivos Principales
+## Main Objectives
 
-1. **Automatización de Workflows**: Reducir tareas manuales en la gestión de proyectos
-2. **Visibilidad en Tiempo Real**: Dashboards y notificaciones inteligentes
-3. **Documentación Automatizada**: Generación de documentación técnica y de proyecto
-4. **Análisis y Métricas**: Estadísticas de código, velocity, burndown, quality metrics
-5. **Asistente Inteligente**: AI contextual con conocimiento del estado del proyecto
-6. **Wiki Centralizada**: Base de conocimiento con información de Jira y Bitbucket
+1. **Workflow Automation**: Reduce manual tasks in project management
+2. **Real-Time Visibility**: Intelligent dashboards and notifications
+3. **Automated Documentation**: Technical and project documentation generation
+4. **Analysis and Metrics**: Code statistics, velocity, burndown, quality metrics
+5. **Intelligent Assistant**: Contextual AI with project status awareness
+6. **Centralized Wiki**: Knowledge base with Jira and Bitbucket information
 
-## Estructura de Documentación
+## Documentation Structure
 
-Este directorio contiene la planificación completa dividida en documentos especializados:
+This directory contains the complete planning divided into specialized documents:
 
 ### 1. [IMPLEMENTATION_STAGES.md](./IMPLEMENTATION_STAGES.md)
-Etapas macro de implementación con orden recomendado, dependencias y estimaciones de tiempo.
+Macro implementation stages with recommended order, dependencies, and time estimates.
 
-**Contenido:**
-- Configuración de APIs y servicios
-- Creación de módulos base
-- Implementación de funcionalidades core
-- Integraciones avanzadas
-- Optimización y deployment
+**Content:**
+- API and service configuration
+- Base module creation
+- Core functionality implementation
+- Advanced integrations
+- Optimization and deployment
 
 ### 2. [JIRA_INTEGRATION.md](./JIRA_INTEGRATION.md)
-Plan detallado de integración con Jira API.
+Detailed Jira API integration plan.
 
-**Contenido:**
-- Setup de autenticación (API tokens, OAuth 2.0)
-- Estructura de módulo jira
-- Funcionalidades por complejidad
-- Webhooks y eventos
-- Automatizaciones JQL
+**Content:**
+- Authentication setup (API tokens, OAuth 2.0)
+- Jira module structure
+- Features by complexity
+- Webhooks and events
+- JQL automations
 
 ### 3. [BITBUCKET_INTEGRATION.md](./BITBUCKET_INTEGRATION.md)
-Plan detallado de integración con Bitbucket API.
+Detailed Bitbucket API integration plan.
 
-**Contenido:**
-- Setup de autenticación (App passwords, OAuth)
-- Estructura de módulo bitbucket
-- Funcionalidades de repositorios
+**Content:**
+- Authentication setup (App passwords, OAuth)
+- Bitbucket module structure
+- Repository features
 - Code review automation
 - Pipeline monitoring
 
 ### 4. [FEATURE_ROADMAP.md](./FEATURE_ROADMAP.md)
-Roadmap completo de funcionalidades organizadas por:
-- Utilidad (baja, media, alta, crítica)
-- Complejidad (simple, media, compleja, muy compleja)
-- Impacto (bajo, medio, alto, crítico)
-- Prioridad sugerida
+Complete feature roadmap organized by:
+- Utility (low, medium, high, critical)
+- Complexity (simple, medium, complex, very complex)
+- Impact (low, medium, high, critical)
+- Suggested priority
 
 ### 5. [TECHNICAL_ARCHITECTURE.md](./TECHNICAL_ARCHITECTURE.md)
-Arquitectura técnica y decisiones de diseño.
+Technical architecture and design decisions.
 
-**Contenido:**
-- Patrones de diseño
-- Estructura de módulos
-- Cacheo y optimización
-- Seguridad y validaciones
+**Content:**
+- Design patterns
+- Module structure
+- Caching and optimization
+- Security and validations
 - Testing strategy
 
 ### 6. [AI_ENHANCEMENTS.md](./AI_ENHANCEMENTS.md)
-Mejoras de AI específicas para project management.
+AI enhancements specific to project management.
 
-**Contenido:**
-- Clasificadores específicos de dominio
-- Generación de documentación con AI
-- Análisis de código con embeddings
-- Sugerencias contextuales
-- Automatización inteligente
+**Content:**
+- Domain-specific classifiers
+- AI-powered documentation generation
+- Code analysis with embeddings
+- Contextual suggestions
+- Intelligent automation
 
 ### 7. [LIBRARIES_AND_TOOLS.md](./LIBRARIES_AND_TOOLS.md)
-Librerías recomendadas y herramientas necesarias.
+Recommended libraries and necessary tools.
 
-**Contenido:**
-- SDKs oficiales
-- Utilidades de parsing
-- Visualización de datos
+**Content:**
+- Official SDKs
+- Parsing utilities
+- Data visualization
 - Testing tools
 - DevOps integration
 
-## Filosofía de Implementación
+## Implementation Philosophy
 
-### Iterativo e Incremental
-- Cada funcionalidad es independiente y deployable
-- MVP primero, features avanzadas después
-- Feedback continuo del equipo
+### Iterative and Incremental
+- Each feature is independent and deployable
+- MVP first, advanced features later
+- Continuous team feedback
 
-### Modular y Extensible
-- Cada integración en su propio módulo
-- Interfaces claras entre componentes
-- Fácil de testear en aislamiento
+### Modular and Extensible
+- Each integration in its own module
+- Clear interfaces between components
+- Easy to test in isolation
 
-### AI-First pero Pragmático
-- AI como complemento, no reemplazo de funcionalidad
-- Fallbacks robustos
-- Validaciones y controles de calidad
+### AI-First but Pragmatic
+- AI as complement, not replacement of functionality
+- Robust fallbacks
+- Quality validations and controls
 
-### Documentado y Observable
-- Logging estructurado
-- Métricas de uso
-- Documentación auto-generada
-- Alertas proactivas
+### Documented and Observable
+- Structured logging
+- Usage metrics
+- Auto-generated documentation
+- Proactive alerts
 
 ## Quickstart
 
-### Fase 1 - Setup Básico (Semana 1-2)
-1. Leer [IMPLEMENTATION_STAGES.md](./IMPLEMENTATION_STAGES.md) - Stage 1
-2. Configurar credenciales de Jira y Bitbucket
-3. Implementar módulo base de Jira
-4. Crear primeros comandos básicos
+### Phase 1 - Basic Setup (Week 1-2)
+1. Read [IMPLEMENTATION_STAGES.md](./IMPLEMENTATION_STAGES.md) - Stage 1
+2. Configure Jira and Bitbucket credentials
+3. Implement base Jira module
+4. Create first basic commands
 
-### Fase 2 - Features Core (Semana 3-6)
-1. Implementar funcionalidades de alta prioridad de [FEATURE_ROADMAP.md](./FEATURE_ROADMAP.md)
-2. Setup de webhooks
-3. Dashboards básicos
+### Phase 2 - Core Features (Week 3-6)
+1. Implement high-priority features from [FEATURE_ROADMAP.md](./FEATURE_ROADMAP.md)
+2. Webhook setup
+3. Basic dashboards
 
-### Fase 3 - AI y Automatización (Semana 7-10)
-1. Implementar clasificadores de [AI_ENHANCEMENTS.md](./AI_ENHANCEMENTS.md)
-2. Automatizaciones inteligentes
-3. Generación de documentación
+### Phase 3 - AI and Automation (Week 7-10)
+1. Implement classifiers from [AI_ENHANCEMENTS.md](./AI_ENHANCEMENTS.md)
+2. Intelligent automations
+3. Documentation generation
 
-### Fase 4 - Advanced Features (Semana 11+)
-1. Analytics avanzados
+### Phase 4 - Advanced Features (Week 11+)
+1. Advanced analytics
 2. Custom workflows
-3. Integraciones adicionales
+3. Additional integrations
 
-## Métricas de Éxito
+## Success Metrics
 
-- **Reducción de tiempo** en tareas manuales: >40%
-- **Visibilidad**: Dashboards actualizados en <5min
-- **Documentación**: 80% auto-generada
-- **Adoption**: >70% del equipo usa al menos 3 features
-- **Satisfacción**: NPS >8/10
+- **Time reduction** in manual tasks: >40%
+- **Visibility**: Dashboards updated in <5min
+- **Documentation**: 80% auto-generated
+- **Adoption**: >70% of team uses at least 3 features
+- **Satisfaction**: NPS >8/10
 
-## Soporte y Referencias
+## Support and References
 
 - [Jira REST API Documentation](https://developer.atlassian.com/cloud/jira/platform/rest/v3/)
 - [Bitbucket Cloud REST API](https://developer.atlassian.com/cloud/bitbucket/rest/)
@@ -146,6 +146,6 @@ Librerías recomendadas y herramientas necesarias.
 
 ---
 
-## Resumen Ejecutivo
+## Executive Summary
 
-Este plan transforma el Slack bot existente en un Project Manager Assistant completo integrando Jira y Bitbucket. La implementación se divide en 7 etapas macro: configuración de APIs, módulos base, funcionalidades core, webhooks, AI enhancements, analytics, y optimización. Se proponen 54 funcionalidades (detalladas en FEATURE_ROADMAP.md) clasificadas por utilidad/complejidad/impacto, desde básicas (listado de issues) hasta avanzadas (análisis de código con AI, predicción de deadlines). La arquitectura mantiene el patrón modular existente (controller/service/repository) añadiendo capas de cacheo Redis, validaciones Zod, y webhooks listeners. Se recomienda implementación iterativa con MVP en 2 semanas (Stage 1-2), features core en 4 semanas adicionales, y capabilities avanzadas en 4+ semanas. Librerías clave: jira-client, bitbucket API, chart.js para visualización, y enhancements de OpenAI para análisis contextual. El resultado: reducción >40% en tiempo de gestión, documentación 80% automatizada, y visibility en tiempo real del estado del proyecto.
+This plan transforms the existing Slack bot into a complete Project Manager Assistant integrating Jira and Bitbucket. Implementation is divided into 7 macro stages: API configuration, base modules, core features, webhooks, AI enhancements, analytics, and optimization. 54 features are proposed (detailed in FEATURE_ROADMAP.md) classified by utility/complexity/impact, from basic (issue listing) to advanced (AI code analysis, deadline prediction). The architecture maintains the existing modular pattern (controller/service/repository) adding Redis caching layers, Zod validations, and webhook listeners. Iterative implementation is recommended with MVP in 2 weeks (Stage 1-2), core features in 4 additional weeks, and advanced capabilities in 4+ weeks. Key libraries: jira-client, bitbucket API, chart.js for visualization, and OpenAI enhancements for contextual analysis. The result: >40% reduction in management time, 80% automated documentation, and real-time project status visibility.
