@@ -22,7 +22,7 @@ const client = new JiraClient({
   strictSSL: true,
 })
 
-// Métodos disponibles
+// Methods disponibles
 await client.findIssue(issueKey)
 await client.addNewIssue(issue)
 await client.updateIssue(issueKey, update)

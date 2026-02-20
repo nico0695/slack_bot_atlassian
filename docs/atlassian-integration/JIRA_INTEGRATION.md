@@ -1,8 +1,8 @@
 # Jira Integration - Detailed Plan
 
-## Autenticación y Setup
+## Authentication y Setup
 
-### Métodos de Autenticación
+### Methods de Authentication
 
 #### 1. API Token (Recomendado para desarrollo)
 ```typescript
@@ -26,7 +26,7 @@ export class JiraApiRepository {
 ```
 
 **Setup:**
-1. Ir a https://id.atlassian.com/manage-profile/security/api-tokens
+1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
 2. Crear nuevo API token
 3. Guardar en .env
 
@@ -43,7 +43,7 @@ interface JiraOAuthConfig {
 // https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/
 ```
 
-### Variables de Entorno
+### Environment Variables
 ```bash
 # API Token method
 JIRA_HOST=your-domain.atlassian.net
@@ -65,7 +65,7 @@ JIRA_RATE_LIMIT_PER_MINUTE=100
 
 ---
 
-## Estructura del Módulo Jira
+## Structure ofl Módulo Jira
 
 ### Arquitectura de Archivos
 ```
@@ -121,9 +121,9 @@ src/modules/jira/
 
 ---
 
-## Funcionalidades por Complejidad
+## Features by Complejidad
 
-### Complejidad: SIMPLE (1-2 días cada una)
+### Complejidad: SIMPLE (1-2 days cada una)
 
 #### 1. Ver Issue Individual
 ```typescript
@@ -215,7 +215,7 @@ GET /jira/backlog
 const jql = `project = "${projectKey}" AND sprint is EMPTY AND status != Done ORDER BY rank ASC`
 ```
 
-### Complejidad: MEDIA (2-4 días cada una)
+### Complejidad: MEDIA (2-4 days cada una)
 
 #### 6. Búsqueda con JQL
 ```typescript
@@ -366,7 +366,7 @@ async transitionIssue(issueKey: string, transitionName: string): Promise<void> {
 }
 ```
 
-#### 10. Agregar Comentario
+#### 10. Add Comentario
 ```typescript
 // Comando
 .jira comment PROJ-123 "This is my comment with *markdown*"
@@ -382,7 +382,7 @@ Body: {
 }
 ```
 
-### Complejidad: COMPLEJA (4-7 días cada una)
+### Complejidad: COMPLEJA (4-7 days cada una)
 
 #### 11. Sprint Management
 ```typescript
@@ -573,7 +573,7 @@ DELETE /jira/issues/:issueKey/watchers/:username
 GET /jira/issues/:issueKey/watchers
 ```
 
-### Complejidad: MUY COMPLEJA (7-14 días cada una)
+### Complejidad: MUY COMPLEJA (7-14 days cada una)
 
 #### 16. Custom Fields Management
 ```typescript
@@ -626,7 +626,7 @@ Body: {
 
 // Visualización de dependencies
 .jira dependencies PROJ-123
-→ Muestra árbol de dependencias
+→ Muestra árbol de dependencies
 ```
 
 #### 18. Epic Management
@@ -697,12 +697,12 @@ GET /jira/components/:componentId/issues
 
 ## Webhooks Jira
 
-### Configuración en Jira
-1. Ir a Jira Settings → System → Webhooks
+### Configuration en Jira
+1. Go to Jira Settings → System → Webhooks
 2. Crear nuevo webhook
 3. URL: `https://your-app.com/webhooks/jira`
 4. Events: Seleccionar eventos relevantes
-5. JQL Filter (opcional): `project = PROJ`
+5. JQL Filter (optional): `project = PROJ`
 
 ### Eventos Soportados
 
@@ -954,4 +954,4 @@ describe('Jira Integration', () => {
 
 ## Resumen
 
-Plan detallado de integración Jira cubriendo autenticación (API token y OAuth 2.0), estructura modular completa (controllers, services, repositories, webhooks), y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 días): ver issue, listar asignadas, ver proyecto, sprint actual, backlog. **Medias** (2-4 días): búsqueda JQL con builder, CRUD de issues, transiciones, comentarios. **Complejas** (4-7 días): sprint management, bulk operations, templates, saved filters, watchers. **Muy complejas** (7-14 días): custom fields, issue linking, epic management, version/release, components. Incluye webhooks para 10+ eventos con notificaciones multi-canal, rate limiting con Bottleneck (5 req/sec), caching strategy en Redis con TTL específicos, y testing comprehensivo. Total estimado: 15-20 funcionalidades implementables en 6-8 semanas con equipo de 2-3 desarrolladores.
+Plan detallado de integración Jira cubriendo autenticación (API token y OAuth 2.0), estructura modular completa (controllers, services, repositories, webhooks), y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 days): ver issue, listar asignadas, ver proyecto, sprint actual, backlog. **Medias** (2-4 days): búsqueda JQL con builder, CRUD de issues, transiciones, comentarios. **Complejas** (4-7 days): sprint management, bulk operations, templates, saved filters, watchers. **Muy complejas** (7-14 days): custom fields, issue linking, epic management, version/release, components. Incluye webhooks para 10+ eventos con notificaciones multi-canal, rate limiting con Bottleneck (5 req/sec), caching strategy en Redis con TTL específicos, y testing comprehensivo. Total estimado: 15-20 funcionalidades implementables en 6-8 weeks con equipo de 2-3 desarrolladores.

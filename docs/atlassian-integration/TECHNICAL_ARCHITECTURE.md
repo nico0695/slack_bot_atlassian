@@ -253,7 +253,7 @@ class MergeContext {
 
 ---
 
-## Estructura de Módulos
+## Structure of Módulos
 
 ### Módulo Completo (Jira Example)
 
@@ -425,7 +425,7 @@ export class App {
 ### Estrategia de Cache Multi-Layer
 
 ```typescript
-// 1. In-memory cache (opcional, para datos muy hot)
+// 1. In-memory cache (optional, para datos muy hot)
 class MemoryCache {
   private cache = new Map<string, { value: any; expiry: number }>()
 

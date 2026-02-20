@@ -1,8 +1,8 @@
 # Bitbucket Integration - Detailed Plan
 
-## Autenticación y Setup
+## Authentication y Setup
 
-### Métodos de Autenticación
+### Methods de Authentication
 
 #### 1. App Password (Recomendado para desarrollo)
 ```typescript
@@ -26,7 +26,7 @@ export class BitbucketApiRepository {
 ```
 
 **Setup:**
-1. Ir a Bitbucket Settings → Personal settings → App passwords
+1. Go to Bitbucket Settings → Personal settings → App passwords
 2. Crear nuevo app password con permisos necesarios
 3. Guardar en .env
 
@@ -42,7 +42,7 @@ interface BitbucketOAuthConfig {
 // https://developer.atlassian.com/cloud/bitbucket/oauth-2/
 ```
 
-### Variables de Entorno
+### Environment Variables
 ```bash
 # App Password method
 BITBUCKET_WORKSPACE=your-workspace
@@ -62,7 +62,7 @@ BITBUCKET_RATE_LIMIT_PER_HOUR=1000
 
 ---
 
-## Estructura del Módulo Bitbucket
+## Structure ofl Módulo Bitbucket
 
 ### Arquitectura de Archivos
 ```
@@ -119,9 +119,9 @@ src/modules/bitbucket/
 
 ---
 
-## Funcionalidades por Complejidad
+## Features by Complejidad
 
-### Complejidad: SIMPLE (1-2 días cada una)
+### Complejidad: SIMPLE (1-2 days cada una)
 
 #### 1. Listar Repositorios
 ```typescript
@@ -271,7 +271,7 @@ interface PullRequest {
 }
 ```
 
-### Complejidad: MEDIA (2-4 días cada una)
+### Complejidad: MEDIA (2-4 days cada una)
 
 #### 6. Ver Detalle de Pull Request
 ```typescript
@@ -396,7 +396,7 @@ async mergePR(
 }
 ```
 
-#### 10. Agregar Comentario a PR
+#### 10. Add Comentario a PR
 ```typescript
 // Comando
 .bb pr comment 123 "This looks good!"
@@ -414,7 +414,7 @@ Body: {
 }
 ```
 
-### Complejidad: COMPLEJA (4-7 días cada una)
+### Complejidad: COMPLEJA (4-7 days cada una)
 
 #### 11. Code Diff Viewer
 ```typescript
@@ -652,7 +652,7 @@ interface SearchMatch {
 }
 ```
 
-### Complejidad: MUY COMPLEJA (7-14 días cada una)
+### Complejidad: MUY COMPLEJA (7-14 days cada una)
 
 #### 16. AI Code Review
 ```typescript
@@ -1008,7 +1008,7 @@ class DeploymentTracker {
 
 ## Webhooks Bitbucket
 
-### Configuración en Bitbucket
+### Configuration en Bitbucket
 1. Repository Settings → Webhooks → Add webhook
 2. URL: `https://your-app.com/webhooks/bitbucket`
 3. Triggers: Seleccionar eventos
@@ -1119,4 +1119,4 @@ describe('BitbucketService', () => {
 
 ## Resumen
 
-Plan detallado de integración Bitbucket cubriendo autenticación (App Password y OAuth 2.0), estructura modular completa, y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 días): listar repos, ver repo, branches, commits, PRs. **Medias** (2-4 días): detalle de PR, crear PR, aprobar/rechazar, merge, comentarios. **Complejas** (4-7 días): code diff viewer, pipeline monitoring, branch management, file browser, code search. **Muy complejas** (7-14 días): AI code review con GPT-4, merge conflict resolver, repository analytics con hotspots, automated PR templates, deployment tracking. Incluye webhooks para 15+ eventos, rate limiting (1000 req/hora), validación de signatures con HMAC-SHA256, y testing comprehensivo. Total estimado: 15-20 funcionalidades en 6-8 semanas.
+Plan detallado de integración Bitbucket cubriendo autenticación (App Password y OAuth 2.0), estructura modular completa, y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 days): listar repos, ver repo, branches, commits, PRs. **Medias** (2-4 days): detalle de PR, crear PR, aprobar/rechazar, merge, comentarios. **Complejas** (4-7 days): code diff viewer, pipeline monitoring, branch management, file browser, code search. **Muy complejas** (7-14 days): AI code review con GPT-4, merge conflict resolver, repository analytics con hotspots, automated PR templates, deployment tracking. Incluye webhooks para 15+ eventos, rate limiting (1000 req/hora), validación de signatures con HMAC-SHA256, y testing comprehensivo. Total estimado: 15-20 funcionalidades en 6-8 weeks.

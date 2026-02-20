@@ -1,16 +1,16 @@
 # Implementation Stages - Atlassian Integration
 
-## Stage 1: Configuración de APIs y Servicios (Week 1)
+## Stage 1: API and Service Configuration (Week 1)
 
-### Objetivos
-- Configurar autenticación con Jira Cloud API
-- Configurar autenticación con Bitbucket Cloud API
-- Crear módulos base siguiendo arquitectura existente
-- Validar conectividad
+### Objectives
+- Configure authentication with Jira Cloud API
+- Configure authentication with Bitbucket Cloud API
+- Create base modules following existing architecture
+- Validate connectivity
 
-### Tareas
+### Tasks
 
-#### 1.1 Setup de Credenciales
+#### 1.1 Credentials Setup
 ```bash
 # .env additions
 JIRA_HOST=your-domain.atlassian.net
@@ -21,19 +21,19 @@ JIRA_PROJECT_KEY=PROJ
 BITBUCKET_WORKSPACE=your-workspace
 BITBUCKET_USERNAME=your-username
 BITBUCKET_APP_PASSWORD=your-app-password
-# o OAuth 2.0
+# or OAuth 2.0
 BITBUCKET_CLIENT_ID=
 BITBUCKET_CLIENT_SECRET=
 ```
 
-#### 1.2 Instalación de Dependencias
+#### 1.2 Dependency Installation
 ```bash
 npm install --save jira-client
-npm install --save axios  # para Bitbucket API
+npm install --save axios  # for Bitbucket API
 npm install --save @types/jira-client --save-dev
 ```
 
-#### 1.3 Crear Módulo Jira Base
+#### 1.3 Create Base Jira Module
 ```
 src/modules/jira/
 ├── controller/
@@ -44,7 +44,7 @@ src/modules/jira/
 ├── repositories/
 │   ├── jiraApi.repository.ts       # Jira API wrapper
 │   └── database/
-│       └── jiraCache.dataSource.ts # Cache de datos
+│       └── jiraCache.dataSource.ts # Data cache
 ├── shared/
 │   ├── constants/
 │   │   └── jira.constants.ts
@@ -53,11 +53,11 @@ src/modules/jira/
 │   └── schemas/
 │       └── jira.schemas.ts         # Zod validations
 └── utils/
-    ├── jiraFormatters.ts           # Formatear output
+    ├── jiraFormatters.ts           # Format output
     └── jql.builder.ts              # JQL query builder
 ```
 
-#### 1.4 Crear Módulo Bitbucket Base
+#### 1.4 Create Base Bitbucket Module
 ```
 src/modules/bitbucket/
 ├── controller/
@@ -80,7 +80,7 @@ src/modules/bitbucket/
     └── bitbucketFormatters.ts
 ```
 
-#### 1.5 Entidades TypeORM
+#### 1.5 TypeORM Entities
 ```typescript
 // src/entities/JiraIssueCache.ts
 @Entity()
@@ -126,26 +126,26 @@ export class BitbucketPRCache {
 // GET /bitbucket/repositories - List repos
 ```
 
-### Validación
-- [ ] Autenticación funcional con Jira
-- [ ] Autenticación funcional con Bitbucket
+### Validation
+- [ ] Authentication funcional con Jira
+- [ ] Authentication funcional con Bitbucket
 - [ ] Módulos registrados en app.ts
 - [ ] Tests de conectividad pasando
 - [ ] Logging configurado
 
-### Tiempo Estimado: 3-5 días
+### Tiempo Estimado: 3-5 days
 
 ---
 
 ## Stage 2: Módulos Base y Funcionalidades Core (Week 2-3)
 
-### Objetivos
+### Objectives
 - Implementar funcionalidades básicas de lectura
 - Comandos Slack fundamentales
 - REST API endpoints core
 - Cache básico en Redis
 
-### Tareas
+### Tasks
 
 #### 2.1 Funcionalidades Jira Core
 ```typescript
@@ -205,26 +205,26 @@ class JQLBuilder {
 }
 ```
 
-### Validación
-- [ ] Comandos básicos funcionando en Slack
+### Validation
+- [ ] Comandos básicos working en Slack
 - [ ] REST endpoints respondiendo correctamente
 - [ ] Cache reduciendo llamadas a APIs
 - [ ] Formateo consistente de respuestas
 - [ ] Tests unitarios >70%
 
-### Tiempo Estimado: 7-10 días
+### Tiempo Estimado: 7-10 days
 
 ---
 
 ## Stage 3: Creación y Modificación de Recursos (Week 4)
 
-### Objetivos
+### Objectives
 - Habilitar creación de issues/PRs desde Slack
 - Transiciones de estado
 - Comentarios y updates
 - Validaciones robustas
 
-### Tareas
+### Tasks
 
 #### 3.1 Creación de Issues Jira
 ```typescript
@@ -253,7 +253,7 @@ class JQLBuilder {
 .bb pr merge PR-123
 ```
 
-#### 3.4 Schemas de Validación
+#### 3.4 Schemas de Validation
 ```typescript
 // jira.schemas.ts
 export const createIssueSchema = z.object({
@@ -267,20 +267,20 @@ export const createIssueSchema = z.object({
 })
 ```
 
-### Validación
+### Validation
 - [ ] Creación de recursos validada
-- [ ] Transiciones de estado funcionando
+- [ ] Transiciones de estado working
 - [ ] Error handling robusto
 - [ ] Rollback en caso de falla
-- [ ] Audit log de cambios
+- [ ] Audit log de changes
 
-### Tiempo Estimado: 5-7 días
+### Tiempo Estimado: 5-7 days
 
 ---
 
 ## Stage 4: Webhooks y Notificaciones en Tiempo Real (Week 5)
 
-### Objetivos
+### Objectives
 - Configurar webhooks de Jira y Bitbucket
 - Sistema de notificaciones inteligentes
 - Filtros personalizables
@@ -299,7 +299,7 @@ export const createIssueSchema = z.object({
 - **Idempotencia**: Implementar deduplicación de eventos (los webhooks pueden reenviarse)
 - **Timeout**: Responder con 200 OK en <10 segundos; procesar eventos de forma asíncrona
 
-### Tareas
+### Tasks
 
 #### 4.1 Webhook Listeners
 ```
@@ -373,26 +373,26 @@ class NotificationManager {
 }
 ```
 
-### Validación
+### Validation
 - [ ] Webhooks recibidos correctamente
 - [ ] Notificaciones llegando a Slack
 - [ ] Notificaciones en web interface
-- [ ] Filtros funcionando
-- [ ] Rate limiting implementado
+- [ ] Filtros working
+- [ ] Rate limiting implemented
 
-### Tiempo Estimado: 5-7 días
+### Tiempo Estimado: 5-7 days
 
 ---
 
 ## Stage 5: AI Enhancements y Clasificadores (Week 6-7)
 
-### Objetivos
+### Objectives
 - Clasificador de intents específico de PM
 - Generación automática de documentación
 - Análisis de código con AI
 - Sugerencias contextuales
 
-### Tareas
+### Tasks
 
 #### 5.1 Intent Classifier Extension
 ```typescript
@@ -450,26 +450,26 @@ enum ProjectManagementIntent {
   - Team capacity
 ```
 
-### Validación
+### Validation
 - [ ] Clasificador con >85% accuracy
 - [ ] Documentación generada legible
 - [ ] Code review insights útiles
 - [ ] Predicciones dentro de ±15%
-- [ ] Feedback loop implementado
+- [ ] Feedback loop implemented
 
-### Tiempo Estimado: 7-10 días
+### Tiempo Estimado: 7-10 days
 
 ---
 
 ## Stage 6: Analytics, Dashboards y Reportes (Week 8-9)
 
-### Objetivos
+### Objectives
 - Dashboards visuales
 - Métricas de equipo
 - Custom reports
 - Exportación de datos
 
-### Tareas
+### Tasks
 
 #### 6.1 Dashboard Module
 ```
@@ -546,26 +546,26 @@ interface ChartData {
 }
 ```
 
-### Validación
+### Validation
 - [ ] Dashboards cargando <2s
 - [ ] Charts renderizando correctamente
 - [ ] Exportación PDF/CSV funcional
 - [ ] Datos históricos consistentes
 - [ ] Mobile-responsive
 
-### Tiempo Estimado: 7-10 días
+### Tiempo Estimado: 7-10 days
 
 ---
 
 ## Stage 7: Advanced Features y Optimización (Week 10+)
 
-### Objetivos
+### Objectives
 - Features avanzadas
 - Optimizaciones de performance
 - Auto-healing
 - Custom workflows
 
-### Tareas
+### Tasks
 
 #### 7.1 Auto-Healing y Bots
 ```typescript
@@ -594,7 +594,7 @@ class StalePRDetector {
   async findStalePRs(): Promise<BitbucketPR[]>
   async notifyOwners(prs: BitbucketPR[]): Promise<void>
   // Criterios:
-  // - Sin actividad >X días
+  // - Sin actividad >X days
   // - Conflictos no resueltos
   // - Sin reviewers asignados
 }
@@ -610,7 +610,7 @@ interface Workflow {
   actions: WorkflowAction[]
 }
 
-// Ejemplo: Auto-link Jira to PR
+// Example: Auto-link Jira to PR
 const autoLinkWorkflow: Workflow = {
   name: 'Auto-link Jira Issue to PR',
   trigger: { event: 'bitbucket:pr:created' },
@@ -661,7 +661,7 @@ class BatchProcessor {
 class IncrementalSync {
   async syncJiraIssues(since: Date): Promise<void>
   async syncBitbucketPRs(since: Date): Promise<void>
-  // Solo sincroniza cambios desde última ejecución
+  // Solo sincroniza changes desde última ejecución
 }
 
 // Connection pooling
@@ -692,14 +692,14 @@ describe('PM Workflows', () => {
 // - Cache hit ratio >80%
 ```
 
-### Validación
+### Validation
 - [ ] Auto-healing reduciendo manual work >30%
 - [ ] Custom workflows ejecutando
 - [ ] Wiki auto-generada actualizada
 - [ ] Performance benchmarks cumplidos
 - [ ] Test coverage >85%
 
-### Tiempo Estimado: 10-15 días
+### Tiempo Estimado: 10-15 days
 
 ---
 
@@ -721,14 +721,14 @@ Stage 7 (Advanced)
 
 **Orden recomendado:** 1 → 2 → 3 → 4 → 5 → 6 → 7
 
-**Mínimo viable:** Stage 1, 2, 3 (4 semanas)
+**Mínimo viable:** Stage 1, 2, 3 (4 weeks)
 
-**Producción-ready:** Stage 1-6 (9 semanas)
+**Producción-ready:** Stage 1-6 (9 weeks)
 
-**Full-featured:** Stage 1-7 (12+ semanas)
+**Full-featured:** Stage 1-7 (12+ weeks)
 
 ---
 
 ## Resumen
 
-Plan de implementación en 7 etapas cubriendo desde configuración inicial hasta features avanzadas. **Stage 1** setup de APIs y módulos base (3-5 días). **Stage 2** funcionalidades core de lectura (7-10 días). **Stage 3** CRUD operations (5-7 días). **Stage 4** webhooks y notificaciones (5-7 días). **Stage 5** AI enhancements y clasificadores (7-10 días). **Stage 6** analytics y dashboards (7-10 días). **Stage 7** features avanzadas y optimización (10-15 días). Total estimado: 10-12 semanas para implementación completa. MVP viable en 4 semanas (Stages 1-3). Cada stage es independiente y deployable, con validaciones específicas y métricas de éxito. Arquitectura modular permite desarrollo paralelo por múltiples desarrolladores.
+Plan de implementación en 7 etapas cubriendo desde configuración inicial hasta features avanzadas. **Stage 1** setup de APIs y módulos base (3-5 days). **Stage 2** funcionalidades core de lectura (7-10 days). **Stage 3** CRUD operations (5-7 days). **Stage 4** webhooks y notificaciones (5-7 days). **Stage 5** AI enhancements y clasificadores (7-10 days). **Stage 6** analytics y dashboards (7-10 days). **Stage 7** features avanzadas y optimización (10-15 days). Total estimado: 10-12 weeks para implementación completa. MVP viable en 4 weeks (Stages 1-3). Cada stage es independiente y deployable, con validaciones específicas y métricas de éxito. Arquitectura modular permite desarrollo paralelo por múltiples desarrolladores.
