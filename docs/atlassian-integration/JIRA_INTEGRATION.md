@@ -1,10 +1,10 @@
 # Jira Integration - Detailed Plan
 
-## Autenticación y Setup
+## Authentication and Setup
 
-### Métodos de Autenticación
+### Authentication Methods
 
-#### 1. API Token (Recomendado para desarrollo)
+#### 1. API Token (Recommended for development)
 ```typescript
 // jiraApi.repository.ts
 import JiraClient from 'jira-client'
@@ -26,11 +26,11 @@ export class JiraApiRepository {
 ```
 
 **Setup:**
-1. Ir a https://id.atlassian.com/manage-profile/security/api-tokens
-2. Crear nuevo API token
-3. Guardar en .env
+1. Go to https://id.atlassian.com/manage-profile/security/api-tokens
+2. Create new API token
+3. Save in .env
 
-#### 2. OAuth 2.0 (Recomendado para producción)
+#### 2. OAuth 2.0 (Recommended for production)
 ```typescript
 interface JiraOAuthConfig {
   clientId: string
@@ -39,11 +39,11 @@ interface JiraOAuthConfig {
   scopes: string[]
 }
 
-// Implementar flujo OAuth 3LO
+// Implement OAuth 3LO flow
 // https://developer.atlassian.com/cloud/jira/platform/oauth-2-3lo-apps/
 ```
 
-### Variables de Entorno
+### Environment Variables
 ```bash
 # API Token method
 JIRA_HOST=your-domain.atlassian.net
@@ -65,9 +65,9 @@ JIRA_RATE_LIMIT_PER_MINUTE=100
 
 ---
 
-## Estructura del Módulo Jira
+## Jira Module Structure
 
-### Arquitectura de Archivos
+### File Architecture
 ```
 src/modules/jira/
 ├── controller/
@@ -121,13 +121,13 @@ src/modules/jira/
 
 ---
 
-## Funcionalidades por Complejidad
+## Features by Complexity
 
-### Complejidad: SIMPLE (1-2 días cada una)
+### Complexity: SIMPLE (1-2 days each)
 
-#### 1. Ver Issue Individual
+#### 1. View Individual Issue
 ```typescript
-// Comando Slack
+// Slack Command
 .jira PROJ-123
 .jira issue PROJ-123
 .jira show PROJ-123
@@ -135,7 +135,7 @@ src/modules/jira/
 // REST
 GET /jira/issues/:issueKey
 
-// Retorna
+// Returns
 interface IssueDetails {
   key: string
   summary: string
@@ -151,9 +151,9 @@ interface IssueDetails {
 }
 ```
 
-#### 2. Listar Mis Issues
+#### 2. List My Issues
 ```typescript
-// Comando Slack
+// Slack Command
 .jira myissues
 .jira mine
 .jira me
@@ -161,7 +161,7 @@ interface IssueDetails {
 // REST
 GET /jira/issues/assigned-to-me
 
-// Implementación
+// Implementation
 async getMyIssues(userId: number): Promise<JiraIssue[]> {
   const jiraUser = await this.getUserMapping(userId)
   const jql = `assignee = "${jiraUser}" AND resolution = Unresolved ORDER BY priority DESC`
@@ -169,15 +169,15 @@ async getMyIssues(userId: number): Promise<JiraIssue[]> {
 }
 ```
 
-#### 3. Ver Proyecto
+#### 3. View Project
 ```typescript
-// Comando
+// Command
 .jira project PROJ
 
 // REST
 GET /jira/projects/:projectKey
 
-// Retorna
+// Returns
 interface ProjectInfo {
   key: string
   name: string
@@ -190,9 +190,9 @@ interface ProjectInfo {
 }
 ```
 
-#### 4. Issues del Sprint Actual
+#### 4. Current Sprint Issues
 ```typescript
-// Comando
+// Command
 .jira sprint
 .jira sprint current
 
@@ -203,9 +203,9 @@ GET /jira/sprints/active
 const jql = `project = "${projectKey}" AND sprint in openSprints() ORDER BY rank ASC`
 ```
 
-#### 5. Ver Backlog
+#### 5. View Backlog
 ```typescript
-// Comando
+// Command
 .jira backlog
 
 // REST
@@ -215,11 +215,11 @@ GET /jira/backlog
 const jql = `project = "${projectKey}" AND sprint is EMPTY AND status != Done ORDER BY rank ASC`
 ```
 
-### Complejidad: MEDIA (2-4 días cada una)
+### Complexity: MEDIUM (2-4 days each)
 
-#### 6. Búsqueda con JQL
+#### 6. Search with JQL
 ```typescript
-// Comando
+// Command
 .jira search "status = Open AND priority = High"
 .jira find assignee = john@company.com
 
@@ -274,7 +274,7 @@ class JQLBuilder {
   }
 }
 
-// Uso
+// Usage
 const jql = new JQLBuilder()
   .project('PROJ')
   .inStatus('Open', 'In Progress')
@@ -283,9 +283,9 @@ const jql = new JQLBuilder()
   .build()
 ```
 
-#### 7. Crear Issue
+#### 7. Create Issue
 ```typescript
-// Comando
+// Command
 .jira create -t Bug -s "Login fails with OAuth" -d "Description here" -p High -a john@company.com
 
 // REST
@@ -316,9 +316,9 @@ export const createIssueSchema = z.object({
 })
 ```
 
-#### 8. Actualizar Issue
+#### 8. Update Issue
 ```typescript
-// Comando
+// Command
 .jira update PROJ-123 -s "New summary" -p Critical -a maria@company.com
 
 // REST
@@ -333,9 +333,9 @@ Body: {
 }
 ```
 
-#### 9. Transición de Estado
+#### 9. Status Transition
 ```typescript
-// Comando
+// Command
 .jira move PROJ-123 "In Progress"
 .jira transition PROJ-123 "Done"
 
@@ -345,12 +345,12 @@ Body: {
   transitionName: string
 }
 
-// Implementación
+// Implementation
 async transitionIssue(issueKey: string, transitionName: string): Promise<void> {
-  // 1. Obtener transiciones disponibles
+  // 1. Get available transitions
   const transitions = await this.client.listTransitions(issueKey)
   
-  // 2. Encontrar transición por nombre
+  // 2. Find transition by name
   const transition = transitions.transitions.find(t => 
     t.name.toLowerCase() === transitionName.toLowerCase()
   )
@@ -359,16 +359,16 @@ async transitionIssue(issueKey: string, transitionName: string): Promise<void> {
     throw new BadRequestError(`Transition "${transitionName}" not available`)
   }
   
-  // 3. Ejecutar transición
+  // 3. Execute transition
   await this.client.transitionIssue(issueKey, {
     transition: { id: transition.id }
   })
 }
 ```
 
-#### 10. Agregar Comentario
+#### 10. Add Comment
 ```typescript
-// Comando
+// Command
 .jira comment PROJ-123 "This is my comment with *markdown*"
 
 // REST
@@ -382,11 +382,11 @@ Body: {
 }
 ```
 
-### Complejidad: COMPLEJA (4-7 días cada una)
+### Complexity: COMPLEX (4-7 days each)
 
 #### 11. Sprint Management
 ```typescript
-// Comandos
+// Commands
 .jira sprint create "Sprint 42" --start "2024-06-01" --end "2024-06-14"
 .jira sprint start "Sprint 42"
 .jira sprint complete "Sprint 42"
@@ -422,7 +422,7 @@ interface SprintReport {
 
 #### 12. Bulk Operations
 ```typescript
-// Comando
+// Command
 .jira bulk assign PROJ-123,PROJ-124,PROJ-125 maria@company.com
 .jira bulk label PROJ-123,PROJ-124 backend,urgent
 .jira bulk transition PROJ-123,PROJ-124,PROJ-125 "In Progress"
@@ -435,7 +435,7 @@ Body: {
   data: object
 }
 
-// Implementación con batch processing
+// Implementation with batch processing
 async bulkOperation(issueKeys: string[], operation: BulkOperation): Promise<BulkResult> {
   const results = {
     successful: [] as string[],
@@ -467,7 +467,7 @@ async bulkOperation(issueKeys: string[], operation: BulkOperation): Promise<Bulk
 
 #### 13. Issue Templates
 ```typescript
-// Templates predefinidos
+// Predefined templates
 interface IssueTemplate {
   name: string
   issueType: string
@@ -484,24 +484,24 @@ const templates: IssueTemplate[] = [
     issueType: 'Bug',
     summary: 'Bug: {{title}}',
     description: `
-## Descripción
+## Description
 {{description}}
 
-## Pasos para Reproducir
+## Steps to Reproduce
 1. 
 2. 
 3. 
 
-## Comportamiento Esperado
+## Expected Behavior
 
 
-## Comportamiento Actual
+## Actual Behavior
 
 
 ## Screenshots/Logs
 
 
-## Entorno
+## Environment
 - Browser/OS: 
 - Version: 
     `,
@@ -533,11 +533,11 @@ So that {{benefit}}
   }
 ]
 
-// Comando
+// Command
 .jira create-from-template bug "Login OAuth fails"
 ```
 
-#### 14. Advanced Search con Filters
+#### 14. Advanced Search with Filters
 ```typescript
 // Saved filters
 interface SavedFilter {
@@ -548,7 +548,7 @@ interface SavedFilter {
   isPublic: boolean
 }
 
-// Comando
+// Command
 .jira filter save "My High Priority" "assignee = currentUser() AND priority = High"
 .jira filter list
 .jira filter apply "My High Priority"
@@ -561,7 +561,7 @@ GET /jira/filters/:id/execute
 
 #### 15. Watchers Management
 ```typescript
-// Comandos
+// Commands
 .jira watch PROJ-123              // Add me as watcher
 .jira unwatch PROJ-123            // Remove me
 .jira watchers PROJ-123           // List watchers
@@ -573,11 +573,11 @@ DELETE /jira/issues/:issueKey/watchers/:username
 GET /jira/issues/:issueKey/watchers
 ```
 
-### Complejidad: MUY COMPLEJA (7-14 días cada una)
+### Complexity: VERY COMPLEX (7-14 days each)
 
 #### 16. Custom Fields Management
 ```typescript
-// Manejo de custom fields
+// Custom fields handling
 interface CustomFieldMapping {
   jiraFieldId: string    // customfield_10001
   fieldName: string      // "Story Points"
@@ -585,21 +585,21 @@ interface CustomFieldMapping {
   projectKey: string
 }
 
-// Service para mapear custom fields
+// Service to map custom fields
 class CustomFieldMapper {
   async discoverCustomFields(projectKey: string): Promise<CustomFieldMapping[]>
   async getFieldValue(issueKey: string, fieldName: string): Promise<any>
   async setFieldValue(issueKey: string, fieldName: string, value: any): Promise<void>
 }
 
-// Comando
+// Command
 .jira field get PROJ-123 "Story Points"
 .jira field set PROJ-123 "Story Points" 8
 ```
 
 #### 17. Issue Linking
 ```typescript
-// Tipos de links
+// Link types
 enum IssueLinkType {
   BLOCKS = 'Blocks',
   IS_BLOCKED_BY = 'is blocked by',
@@ -610,7 +610,7 @@ enum IssueLinkType {
   IS_CLONED_BY = 'is cloned by',
 }
 
-// Comandos
+// Commands
 .jira link PROJ-123 blocks PROJ-124
 .jira link PROJ-123 relates PROJ-125
 .jira unlink PROJ-123 PROJ-124
@@ -624,14 +624,14 @@ Body: {
   comment?: string
 }
 
-// Visualización de dependencies
+// Dependencies visualization
 .jira dependencies PROJ-123
-→ Muestra árbol de dependencias
+→ Shows dependency tree
 ```
 
 #### 18. Epic Management
 ```typescript
-// Comandos
+// Commands
 .jira epic create "User Authentication Epic" -d "All auth-related stories"
 .jira epic add PROJ-123 EPIC-1
 .jira epic remove PROJ-123 EPIC-1
@@ -659,7 +659,7 @@ interface EpicProgress {
 
 #### 19. Version/Release Management
 ```typescript
-// Comandos
+// Commands
 .jira version create "v1.2.0" --release "2024-06-30"
 .jira version list
 .jira version release "v1.2.0"
@@ -673,7 +673,7 @@ GET /jira/versions/:versionId/issues
 
 // Release notes generation
 .jira release-notes "v1.2.0"
-→ Genera markdown con:
+→ Generates markdown with:
   - Features (Stories)
   - Bug Fixes
   - Breaking Changes
@@ -682,7 +682,7 @@ GET /jira/versions/:versionId/issues
 
 #### 20. Components Management
 ```typescript
-// Comandos
+// Commands
 .jira component create "Authentication" --lead maria@company.com
 .jira component list
 .jira component issues "Authentication"
@@ -695,16 +695,16 @@ GET /jira/components/:componentId/issues
 
 ---
 
-## Webhooks Jira
+## Jira Webhooks
 
-### Configuración en Jira
-1. Ir a Jira Settings → System → Webhooks
-2. Crear nuevo webhook
+### Jira Configuration
+1. Go to Jira Settings → System → Webhooks
+2. Create new webhook
 3. URL: `https://your-app.com/webhooks/jira`
-4. Events: Seleccionar eventos relevantes
-5. JQL Filter (opcional): `project = PROJ`
+4. Events: Select relevant events
+5. JQL Filter (optional): `project = PROJ`
 
-### Eventos Soportados
+### Supported Events
 
 ```typescript
 enum JiraWebhookEvent {
@@ -745,7 +745,7 @@ export const jiraWebhookRouter = Router()
 jiraWebhookRouter.post('/jira', async (req: Request, res: Response) => {
   const event = req.body
 
-  // Verify webhook signature (si está configurado)
+  // Verify webhook signature (if configured)
   if (!verifySignature(req)) {
     return res.status(401).send('Invalid signature')
   }
@@ -760,7 +760,7 @@ jiraWebhookRouter.post('/jira', async (req: Request, res: Response) => {
 })
 
 function verifySignature(req: Request): boolean {
-  // Implementar verificación si Jira lo soporta
+  // Implement verification if Jira supports it
   return true
 }
 ```
@@ -792,23 +792,23 @@ class JiraWebhookService {
       case JiraWebhookEvent.COMMENT_CREATED:
         await this.handleCommentAdded(event)
         break
-      // ... más handlers
+      // ... more handlers
     }
   }
   
   private async handleIssueCreated(event: any): Promise<void> {
     const issue = event.issue
     
-    // 1. Invalidar cache
+    // 1. Invalidate cache
     await this.cacheService.invalidate(`jira:issue:${issue.key}`)
     
-    // 2. Encontrar suscriptores
+    // 2. Find subscribers
     const subscribers = await this.notificationService.findSubscribers({
       eventType: 'jira:issue:created',
       projectKey: issue.fields.project.key,
     })
     
-    // 3. Notificar
+    // 3. Notify
     for (const sub of subscribers) {
       if (sub.notifySlack) {
         await this.slackService.sendMessage(sub.channel, 
@@ -825,14 +825,14 @@ class JiraWebhookService {
 
 ---
 
-## Rate Limiting y Optimización
+## Rate Limiting and Optimization
 
-### Rate Limits de Jira Cloud
-- 5 requests por segundo por IP
-- Burst de hasta 10 requests
+### Jira Cloud Rate Limits
+- 5 requests per second per IP
+- Burst up to 10 requests
 - Headers: `X-RateLimit-*`
 
-### Estrategia de Rate Limiting
+### Rate Limiting Strategy
 ```typescript
 import Bottleneck from 'bottleneck'
 
@@ -841,7 +841,7 @@ class JiraApiRepository {
 
   constructor() {
     this.limiter = new Bottleneck({
-      minTime: 200,  // 200ms entre requests (5/sec)
+      minTime: 200,  // 200ms between requests (5/sec)
       maxConcurrent: 3,
       reservoir: 10,  // Burst capacity
       reservoirRefreshAmount: 10,
@@ -928,7 +928,7 @@ describe('JiraService', () => {
 ```typescript
 describe('Jira Integration', () => {
   it('should create issue via Slack command', async () => {
-    // Simular comando Slack
+    // Simulate Slack command
     const event = {
       text: '.jira create -t Bug -s "Test bug" -p High',
       user: 'U123',
@@ -952,6 +952,6 @@ describe('Jira Integration', () => {
 
 ---
 
-## Resumen
+## Summary
 
-Plan detallado de integración Jira cubriendo autenticación (API token y OAuth 2.0), estructura modular completa (controllers, services, repositories, webhooks), y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 días): ver issue, listar asignadas, ver proyecto, sprint actual, backlog. **Medias** (2-4 días): búsqueda JQL con builder, CRUD de issues, transiciones, comentarios. **Complejas** (4-7 días): sprint management, bulk operations, templates, saved filters, watchers. **Muy complejas** (7-14 días): custom fields, issue linking, epic management, version/release, components. Incluye webhooks para 10+ eventos con notificaciones multi-canal, rate limiting con Bottleneck (5 req/sec), caching strategy en Redis con TTL específicos, y testing comprehensivo. Total estimado: 15-20 funcionalidades implementables en 6-8 semanas con equipo de 2-3 desarrolladores.
+Detailed Jira integration plan covering authentication (API token and OAuth 2.0), complete modular structure (controllers, services, repositories, webhooks), and 20 features classified by complexity. **Simple** (1-2 days): view issue, list assigned, view project, current sprint, backlog. **Medium** (2-4 days): JQL search with builder, issue CRUD, transitions, comments. **Complex** (4-7 days): sprint management, bulk operations, templates, saved filters, watchers. **Very complex** (7-14 days): custom fields, issue linking, epic management, version/release, components. Includes webhooks for 10+ events with multi-channel notifications, rate limiting with Bottleneck (5 req/sec), caching strategy in Redis with specific TTLs, and comprehensive testing. Total estimate: 15-20 implementable features in 6-8 weeks with a team of 2-3 developers.

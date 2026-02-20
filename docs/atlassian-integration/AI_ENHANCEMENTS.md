@@ -44,41 +44,41 @@ enum PMIntent {
 class PMIntentClassifier {
   private examples: Array<{ text: string; intent: PMIntent }> = [
     // Jira create
-    { text: 'crea un bug para el login que falla', intent: PMIntent.JIRA_CREATE_ISSUE },
-    { text: 'necesito crear una tarea de alta prioridad', intent: PMIntent.JIRA_CREATE_ISSUE },
-    { text: 'reporta un issue en el módulo de pagos', intent: PMIntent.JIRA_CREATE_ISSUE },
+    { text: 'create a bug for the login that fails', intent: PMIntent.JIRA_CREATE_ISSUE },
+    { text: 'I need to create a high priority task', intent: PMIntent.JIRA_CREATE_ISSUE },
+    { text: 'report an issue in the payments module', intent: PMIntent.JIRA_CREATE_ISSUE },
     
     // Jira update
-    { text: 'cambia la prioridad de PROJ-123 a crítica', intent: PMIntent.JIRA_UPDATE_ISSUE },
-    { text: 'asigna PROJ-456 a maria', intent: PMIntent.JIRA_ASSIGN },
-    { text: 'mueve PROJ-789 a in progress', intent: PMIntent.JIRA_TRANSITION },
+    { text: 'change the priority of PROJ-123 to critical', intent: PMIntent.JIRA_UPDATE_ISSUE },
+    { text: 'assign PROJ-456 to maria', intent: PMIntent.JIRA_ASSIGN },
+    { text: 'move PROJ-789 to in progress', intent: PMIntent.JIRA_TRANSITION },
     
     // Jira search
-    { text: 'muéstrame todos los bugs abiertos', intent: PMIntent.JIRA_SEARCH_ISSUES },
-    { text: 'qué issues tengo asignados', intent: PMIntent.JIRA_SEARCH_ISSUES },
-    { text: 'busca tareas de alta prioridad del sprint actual', intent: PMIntent.JIRA_SEARCH_ISSUES },
+    { text: 'show me all open bugs', intent: PMIntent.JIRA_SEARCH_ISSUES },
+    { text: 'what issues are assigned to me', intent: PMIntent.JIRA_SEARCH_ISSUES },
+    { text: 'search for high priority tasks from the current sprint', intent: PMIntent.JIRA_SEARCH_ISSUES },
     
     // Sprint analysis
-    { text: 'cómo va el sprint actual', intent: PMIntent.JIRA_SPRINT_INFO },
-    { text: 'analiza el progreso del sprint', intent: PMIntent.JIRA_SPRINT_ANALYZE },
-    { text: 'vamos a completar todo lo planeado?', intent: PMIntent.JIRA_SPRINT_ANALYZE },
+    { text: 'how is the current sprint going', intent: PMIntent.JIRA_SPRINT_INFO },
+    { text: 'analyze the sprint progress', intent: PMIntent.JIRA_SPRINT_ANALYZE },
+    { text: 'are we going to complete everything planned?', intent: PMIntent.JIRA_SPRINT_ANALYZE },
     
     // PR management
-    { text: 'crea un PR de feature/login a develop', intent: PMIntent.BB_CREATE_PR },
-    { text: 'revisa el PR 123', intent: PMIntent.BB_REVIEW_PR },
-    { text: 'mergea el pull request 456', intent: PMIntent.BB_MERGE_PR },
+    { text: 'create a PR from feature/login to develop', intent: PMIntent.BB_CREATE_PR },
+    { text: 'review PR 123', intent: PMIntent.BB_REVIEW_PR },
+    { text: 'merge pull request 456', intent: PMIntent.BB_MERGE_PR },
     
     // Code review
-    { text: 'analiza el código del PR 789', intent: PMIntent.BB_REVIEW_CODE },
-    { text: 'hay bugs en este pull request?', intent: PMIntent.BB_REVIEW_CODE },
+    { text: 'analyze the code from PR 789', intent: PMIntent.BB_REVIEW_CODE },
+    { text: 'are there bugs in this pull request?', intent: PMIntent.BB_REVIEW_CODE },
     
     // Documentation
-    { text: 'genera release notes de la versión 1.2.0', intent: PMIntent.DOCS_RELEASE_NOTES },
-    { text: 'crea documentación del último sprint', intent: PMIntent.DOCS_SPRINT_REPORT },
+    { text: 'generate release notes for version 1.2.0', intent: PMIntent.DOCS_RELEASE_NOTES },
+    { text: 'create documentation for the last sprint', intent: PMIntent.DOCS_SPRINT_REPORT },
     
     // Predictions
-    { text: 'cuándo vamos a terminar PROJ-123?', intent: PMIntent.PREDICT_DEADLINE },
-    { text: 'a quién le asigno este bug?', intent: PMIntent.SUGGEST_ASSIGNEE },
+    { text: 'when are we going to finish PROJ-123?', intent: PMIntent.PREDICT_DEADLINE },
+    { text: 'who should I assign this bug to?', intent: PMIntent.SUGGEST_ASSIGNEE },
   ]
 
   async classify(message: string): Promise<PMIntent | null> {
@@ -123,7 +123,7 @@ Be accurate and conservative - if unsure, return "unknown".
 }
 ```
 
-### Entity Extraction con AI
+### Entity Extraction with AI
 
 ```typescript
 interface ExtractedEntities {
@@ -205,7 +205,7 @@ Example:
 
 ---
 
-## Generación de Documentación con AI
+## Documentation Generation with AI
 
 ### Sprint Report Generator
 
@@ -462,7 +462,7 @@ Format in markdown, suitable for a README or wiki.
 
 ---
 
-## Análisis de Código con AI
+## Code Analysis with AI
 
 ### Code Quality Analyzer
 
@@ -659,7 +659,7 @@ Return as JSON.
 
 ---
 
-## Análisis Predictivo
+## Predictive Analysis
 
 ### Deadline Predictor
 
@@ -872,7 +872,7 @@ Return as JSON.
 
 ---
 
-## Sugerencias Contextuales
+## Contextual Suggestions
 
 ### Context-Aware Assistant
 
@@ -957,6 +957,6 @@ Be concise but thorough.
 
 ---
 
-## Resumen
+## Summary
 
-Plan completo de AI enhancements para project management. **Intent Classification**: 20+ intents específicos (jira.create, bb.pr.review, docs.generate, predict.deadline) con classifier entrenado con ejemplos, entity extraction con regex + AI para casos complejos. **Documentación Automática**: sprint reports con GPT-4 (executive summary, achievements, challenges, metrics, action items), release notes desde PRs/issues (features, bugs, breaking changes, contributors), API docs generadas desde código fuente. **Code Analysis**: quality analyzer detecta complejidad ciclomática, code smells, anti-patterns con static + AI analysis; security scanner busca SQL injection, XSS, hardcoded secrets, OWASP Top 10 con patterns + GPT-4 audit. **Predictive Analytics**: deadline predictor usa historical data + team velocity + dependencies para estimar fecha completion con confidence level y risk factors; smart assignee suggester analiza issue content, team expertise histórico, current workload para recomendar top 3 assignees con scoring. **Context-Aware Assistant**: enriquece contexto con sprint actual, open issues/PRs del user, recent notifications, project state para dar respuestas contextuales y actionable. Implementación usa GPT-4 para análisis profundo, GPT-4o-mini para classification (más barato), temperature 0.1-0.3 para tasks determinísticos, 0.5-0.7 para creative tasks.
+Complete AI enhancements plan for project management. **Intent Classification**: 20+ specific intents (jira.create, bb.pr.review, docs.generate, predict.deadline) with classifier trained with examples, entity extraction with regex + AI for complex cases. **Automatic Documentation**: sprint reports with GPT-4 (executive summary, achievements, challenges, metrics, action items), release notes from PRs/issues (features, bugs, breaking changes, contributors), API docs generated from source code. **Code Analysis**: quality analyzer detects cyclomatic complexity, code smells, anti-patterns with static + AI analysis; security scanner searches for SQL injection, XSS, hardcoded secrets, OWASP Top 10 with patterns + GPT-4 audit. **Predictive Analytics**: deadline predictor uses historical data + team velocity + dependencies to estimate completion date with confidence level and risk factors; smart assignee suggester analyzes issue content, historical team expertise, current workload to recommend top 3 assignees with scoring. **Context-Aware Assistant**: enriches context with current sprint, user's open issues/PRs, recent notifications, project state to provide contextual and actionable responses. Implementation uses GPT-4 for deep analysis, GPT-4o-mini for classification (cheaper), temperature 0.1-0.3 for deterministic tasks, 0.5-0.7 for creative tasks.

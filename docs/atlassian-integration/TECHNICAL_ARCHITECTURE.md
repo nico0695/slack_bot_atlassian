@@ -1,29 +1,29 @@
 # Technical Architecture - Atlassian Integration
 
-## Patrones de Diseño
+## Design Patterns
 
-### 1. Repository Pattern (Existente - Mantener)
+### 1. Repository Pattern (Existing - Maintain)
 
-Separación clara entre lógica de negocio y acceso a datos.
+Clear separation between business logic and data access.
 
 ```typescript
-// Estructura por módulo
+// Module structure
 src/modules/jira/repositories/
-├── jiraApi.repository.ts           // API calls a Jira
+├── jiraApi.repository.ts           // API calls to Jira
 ├── database/
 │   └── jiraIssue.dataSource.ts     // TypeORM entity access
 └── redis/
     └── jiraRedis.repository.ts     // Cache layer
 ```
 
-**Beneficios**:
-- Testeable (mock fácil)
-- Swap de implementación (Jira Cloud → Jira Server)
-- Cache transparente
+**Benefits**:
+- Testable (easy mocking)
+- Implementation swap (Jira Cloud → Jira Server)
+- Transparent caching
 
-### 2. Service Layer Pattern (Existente - Mantener)
+### 2. Service Layer Pattern (Existing - Maintain)
 
-Business logic centralizada en services.
+Centralized business logic in services.
 
 ```typescript
 class JiraService {
@@ -52,9 +52,9 @@ class JiraService {
 }
 ```
 
-### 3. Singleton Pattern (Existente - Mantener)
+### 3. Singleton Pattern (Existing - Maintain)
 
-Controllers y services como singletons.
+Controllers and services as singletons.
 
 ```typescript
 export class JiraService {
@@ -73,12 +73,12 @@ export class JiraService {
 }
 ```
 
-### 4. Factory Pattern (Para Múltiples Providers)
+### 4. Factory Pattern (For Multiple Providers)
 
-Similar a imagen generation (OpenAI/Gemini/Leap).
+Similar to image generation (OpenAI/Gemini/Leap).
 
 ```typescript
-// Para futuro: múltiples issue trackers
+// For future: multiple issue trackers
 enum IssueTrackerType {
   JIRA = 'jira',
   LINEAR = 'linear',
@@ -106,9 +106,9 @@ class IssueTrackerFactory {
 }
 ```
 
-### 5. Observer Pattern (Para Webhooks)
+### 5. Observer Pattern (For Webhooks)
 
-Event-driven architecture para webhooks.
+Event-driven architecture for webhooks.
 
 ```typescript
 interface WebhookEvent {
@@ -151,7 +151,7 @@ class WebhookEventBus {
   }
 }
 
-// Uso
+// Usage
 const eventBus = WebhookEventBus.getInstance()
 
 eventBus.registerHandler(new IssueCreatedHandler())
@@ -160,9 +160,9 @@ eventBus.registerHandler(new CacheInvalidationHandler())
 eventBus.registerHandler(new NotificationHandler())
 ```
 
-### 6. Chain of Responsibility (Para AI Classification)
+### 6. Chain of Responsibility (For AI Classification)
 
-Clasificación de intents en cadena.
+Intent classification in chain.
 
 ```typescript
 interface IntentClassifier {
@@ -213,7 +213,7 @@ aiClassifier.setNext(fallbackClassifier)
 const intent = await explicitClassifier.classify(userMessage)
 ```
 
-### 7. Strategy Pattern (Para Merge Strategies)
+### 7. Strategy Pattern (For Merge Strategies)
 
 ```typescript
 interface MergeStrategy {
@@ -253,9 +253,9 @@ class MergeContext {
 
 ---
 
-## Estructura de Módulos
+## Module Structure
 
-### Módulo Completo (Jira Example)
+### Complete Module (Jira Example)
 
 ```
 src/modules/jira/
@@ -352,7 +352,7 @@ src/modules/jira/
     └── __tests__/
 ```
 
-### Registro en App
+### Registration in App
 
 ```typescript
 // src/app.ts
@@ -392,12 +392,12 @@ export class App {
       this.jiraWebController.getIssue.bind(this.jiraWebController))
     this.app.post('/jira/issues', 
       this.jiraWebController.createIssue.bind(this.jiraWebController))
-    // ... más routes
+    // ... more routes
 
     // Bitbucket routes
     this.app.get('/bitbucket/pullrequests', 
       this.bitbucketWebController.listPRs.bind(this.bitbucketWebController))
-    // ... más routes
+    // ... more routes
 
     // Webhook endpoints
     this.app.post('/webhooks/jira',
@@ -420,12 +420,12 @@ export class App {
 
 ---
 
-## Cacheo y Optimización
+## Caching and Optimization
 
-### Estrategia de Cache Multi-Layer
+### Multi-Layer Cache Strategy
 
 ```typescript
-// 1. In-memory cache (opcional, para datos muy hot)
+// 1. In-memory cache (optional, for very hot data)
 class MemoryCache {
   private cache = new Map<string, { value: any; expiry: number }>()
 
@@ -447,7 +447,7 @@ class MemoryCache {
   }
 }
 
-// 2. Redis cache (principal)
+// 2. Redis cache (primary)
 class JiraRedisRepository {
   async getIssue(issueKey: string): Promise<JiraIssue | null> {
     const key = `jira:issue:${issueKey}`
@@ -461,7 +461,7 @@ class JiraRedisRepository {
   }
 }
 
-// 3. Database (para analytics e histórico)
+// 3. Database (for analytics and history)
 class JiraIssueDataSource {
   async upsert(issue: JiraIssue): Promise<void> {
     await this.repo.upsert(issue, ['issueKey'])
@@ -607,9 +607,9 @@ class SmartPrefetcher {
 
 ---
 
-## Seguridad y Validaciones
+## Security and Validations
 
-### Input Validation con Zod
+### Input Validation with Zod
 
 ```typescript
 // createIssue.schema.ts
@@ -816,7 +816,7 @@ class SecurityUtils {
 
 ## Testing Strategy
 
-### Pirámide de Testing
+### Testing Pyramid
 
 ```
         /\
@@ -1000,6 +1000,6 @@ describe('Jira Workflow E2E', () => {
 
 ---
 
-## Resumen
+## Summary
 
-Arquitectura técnica detallada manteniendo patrones existentes del proyecto: Repository, Service Layer, Singleton. Se añaden Factory (multi-provider support), Observer (webhooks), Chain of Responsibility (AI intent classification), y Strategy (merge strategies). Estructura modular completa por feature con controllers (Slack + Web), services, repositories (API + DB + Redis), webhooks con handlers, shared (constants/interfaces/schemas Zod), y utils. Cache multi-layer: memory (1 min) → Redis (5 min) → DB (histórico) → API, con invalidación event-driven vía webhooks. Seguridad: validación Zod en todos los endpoints, sanitización HTML, rate limiting (100 req/15min users, 1000/min webhooks), permisos granulares con decorators @Permission. Testing: pirámide 70% unit / 20% integration / 10% E2E, mocking completo de APIs externas, coverage >85% target. Optimización: batch processing, prefetching inteligente, connection pooling, retry con exponential backoff.
+Detailed technical architecture maintaining existing project patterns: Repository, Service Layer, Singleton. Adding Factory (multi-provider support), Observer (webhooks), Chain of Responsibility (AI intent classification), and Strategy (merge strategies). Complete modular structure per feature with controllers (Slack + Web), services, repositories (API + DB + Redis), webhooks with handlers, shared (constants/interfaces/Zod schemas), and utils. Multi-layer cache: memory (1 min) → Redis (5 min) → DB (historical) → API, with event-driven invalidation via webhooks. Security: Zod validation on all endpoints, HTML sanitization, rate limiting (100 req/15min users, 1000/min webhooks), granular permissions with @Permission decorators. Testing: pyramid 70% unit / 20% integration / 10% E2E, complete mocking of external APIs, >85% coverage target. Optimization: batch processing, smart prefetching, connection pooling, retry with exponential backoff.

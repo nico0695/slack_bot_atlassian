@@ -1,10 +1,10 @@
 # Bitbucket Integration - Detailed Plan
 
-## Autenticación y Setup
+## Authentication and Setup
 
-### Métodos de Autenticación
+### Authentication Methods
 
-#### 1. App Password (Recomendado para desarrollo)
+#### 1. App Password (Recommended for development)
 ```typescript
 // bitbucketApi.repository.ts
 import axios, { AxiosInstance } from 'axios'
@@ -26,11 +26,11 @@ export class BitbucketApiRepository {
 ```
 
 **Setup:**
-1. Ir a Bitbucket Settings → Personal settings → App passwords
-2. Crear nuevo app password con permisos necesarios
-3. Guardar en .env
+1. Go to Bitbucket Settings → Personal settings → App passwords
+2. Create new app password with necessary permissions
+3. Save in .env
 
-#### 2. OAuth 2.0 (Recomendado para producción)
+#### 2. OAuth 2.0 (Recommended for production)
 ```typescript
 interface BitbucketOAuthConfig {
   clientId: string
@@ -42,7 +42,7 @@ interface BitbucketOAuthConfig {
 // https://developer.atlassian.com/cloud/bitbucket/oauth-2/
 ```
 
-### Variables de Entorno
+### Environment Variables
 ```bash
 # App Password method
 BITBUCKET_WORKSPACE=your-workspace
@@ -62,9 +62,9 @@ BITBUCKET_RATE_LIMIT_PER_HOUR=1000
 
 ---
 
-## Estructura del Módulo Bitbucket
+## Bitbucket Module Structure
 
-### Arquitectura de Archivos
+### File Architecture
 ```
 src/modules/bitbucket/
 ├── controller/
@@ -119,20 +119,20 @@ src/modules/bitbucket/
 
 ---
 
-## Funcionalidades por Complejidad
+## Features by Complexity
 
-### Complejidad: SIMPLE (1-2 días cada una)
+### Complexity: SIMPLE (1-2 days each)
 
-#### 1. Listar Repositorios
+#### 1. List Repositories
 ```typescript
-// Comando Slack
+// Slack Command
 .bb repos
 .bb repositories
 
 // REST
 GET /bitbucket/repositories
 
-// Implementación
+// Implementation
 async listRepositories(): Promise<BitbucketRepository[]> {
   const response = await this.client.get(
     `/repositories/${this.workspace}`
@@ -152,9 +152,9 @@ interface BitbucketRepository {
 }
 ```
 
-#### 2. Ver Detalle de Repositorio
+#### 2. View Repository Detail
 ```typescript
-// Comando
+// Command
 .bb repo main-repo
 
 // REST
@@ -177,9 +177,9 @@ interface RepositoryDetails {
 }
 ```
 
-#### 3. Listar Branches
+#### 3. List Branches
 ```typescript
-// Comando
+// Command
 .bb branches
 .bb branches REPO
 
@@ -197,9 +197,9 @@ interface Branch {
 }
 ```
 
-#### 4. Ver Últimos Commits
+#### 4. View Latest Commits
 ```typescript
-// Comando
+// Command
 .bb commits
 .bb commits REPO
 .bb commits REPO --branch develop
@@ -207,7 +207,7 @@ interface Branch {
 // REST
 GET /bitbucket/repositories/:slug/commits?branch=...
 
-// Implementación
+// Implementation
 async listCommits(
   repoSlug: string,
   branch?: string,
@@ -238,9 +238,9 @@ interface Commit {
 }
 ```
 
-#### 5. Listar Pull Requests
+#### 5. List Pull Requests
 ```typescript
-// Comando
+// Command
 .bb pr list
 .bb prs
 .bb pr list --state OPEN
@@ -271,11 +271,11 @@ interface PullRequest {
 }
 ```
 
-### Complejidad: MEDIA (2-4 días cada una)
+### Complexity: MEDIUM (2-4 days each)
 
-#### 6. Ver Detalle de Pull Request
+#### 6. View Pull Request Detail
 ```typescript
-// Comando
+// Command
 .bb pr 123
 .bb pr REPO/123
 
@@ -302,9 +302,9 @@ interface Participant {
 }
 ```
 
-#### 7. Crear Pull Request
+#### 7. Create Pull Request
 ```typescript
-// Comando
+// Command
 .bb pr create -s feature/login -t develop -title "Add OAuth login" -desc "..."
 
 // REST
@@ -331,9 +331,9 @@ export const createPRSchema = z.object({
 })
 ```
 
-#### 8. Aprobar/Rechazar PR
+#### 8. Approve/Decline PR
 ```typescript
-// Comandos
+// Commands
 .bb pr approve 123
 .bb pr unapprove 123
 .bb pr decline 123
@@ -344,9 +344,9 @@ DELETE /bitbucket/pullrequests/:id/approve
 POST /bitbucket/pullrequests/:id/decline
 ```
 
-#### 9. Mergear Pull Request
+#### 9. Merge Pull Request
 ```typescript
-// Comando
+// Command
 .bb pr merge 123
 .bb pr merge 123 --strategy squash
 .bb pr merge 123 --message "Custom merge message"
@@ -359,25 +359,25 @@ Body: {
   closeSourceBranch?: boolean
 }
 
-// Implementación con validaciones
+// Implementation with validations
 async mergePR(
   prId: number,
   options: MergePROptions
 ): Promise<MergeResult> {
-  // 1. Verificar estado del PR
+  // 1. Verify PR status
   const pr = await this.getPR(prId)
   if (pr.state !== 'OPEN') {
     throw new BadRequestError('PR is not open')
   }
   
-  // 2. Verificar builds
+  // 2. Verify builds
   const builds = await this.getBuildStatuses(prId)
   const failedBuilds = builds.filter(b => b.state === 'FAILED')
   if (failedBuilds.length > 0) {
     throw new BadRequestError('PR has failed builds')
   }
   
-  // 3. Verificar approvals
+  // 3. Verify approvals
   if (!this.hasRequiredApprovals(pr)) {
     throw new BadRequestError('PR needs more approvals')
   }
@@ -396,9 +396,9 @@ async mergePR(
 }
 ```
 
-#### 10. Agregar Comentario a PR
+#### 10. Add Comment to PR
 ```typescript
-// Comando
+// Command
 .bb pr comment 123 "This looks good!"
 .bb pr comment 123 --inline --file src/app.ts --line 42 "Consider using const here"
 
@@ -414,11 +414,11 @@ Body: {
 }
 ```
 
-### Complejidad: COMPLEJA (4-7 días cada una)
+### Complexity: COMPLEX (4-7 days each)
 
 #### 11. Code Diff Viewer
 ```typescript
-// Comando
+// Command
 .bb pr diff 123
 .bb pr diff 123 --file src/app.ts
 
@@ -426,7 +426,7 @@ Body: {
 GET /bitbucket/pullrequests/:id/diff
 GET /bitbucket/pullrequests/:id/diff?path=src/app.ts
 
-// Implementación
+// Implementation
 async getPRDiff(prId: number, filepath?: string): Promise<DiffResult> {
   const response = await this.client.get(
     `/repositories/${this.workspace}/${repo}/pullrequests/${prId}/diff`,
@@ -486,7 +486,7 @@ interface DiffLine {
 
 #### 12. Pipeline/Build Monitoring
 ```typescript
-// Comandos
+// Commands
 .bb pipelines
 .bb pipelines REPO
 .bb pipeline 123
@@ -526,7 +526,7 @@ GET /bitbucket/pipelines/:uuid/steps/:stepUuid/logs
 
 #### 13. Branch Management
 ```typescript
-// Comandos
+// Commands
 .bb branch create feature/new-feature --from develop
 .bb branch delete feature/old-feature
 .bb branch compare feature/login develop
@@ -553,7 +553,7 @@ interface BranchComparison {
 
 #### 14. File Browser
 ```typescript
-// Comandos
+// Commands
 .bb files
 .bb files REPO
 .bb files REPO --path src/
@@ -562,7 +562,7 @@ interface BranchComparison {
 // REST
 GET /bitbucket/repositories/:slug/src/:commit/:path
 
-// Implementación
+// Implementation
 async browseFiles(
   repoSlug: string,
   path: string = '/',
@@ -602,11 +602,11 @@ async getFileContent(
 
 #### 15. Code Search
 ```typescript
-// Comando
+// Command
 .bb search "TODO" --repo main-repo
 .bb search "function login" --language typescript
 
-// REST (usando Bitbucket Cloud API)
+// REST (using Bitbucket Cloud API)
 GET /bitbucket/repositories/:slug/search/code?search_query=...
 
 // Custom implementation
@@ -652,15 +652,15 @@ interface SearchMatch {
 }
 ```
 
-### Complejidad: MUY COMPLEJA (7-14 días cada una)
+### Complexity: VERY COMPLEX (7-14 days each)
 
 #### 16. AI Code Review
 ```typescript
-// Comando
+// Command
 .bb review 123
 .bb review 123 --deep
 
-// Implementación
+// Implementation
 class AICodeReviewService {
   async reviewPR(prId: number, deep: boolean = false): Promise<ReviewResult> {
     // 1. Get PR diff
@@ -765,11 +765,11 @@ interface ReviewResult {
 
 #### 17. Merge Conflict Resolver
 ```typescript
-// Comando
+// Command
 .bb conflicts 123
 .bb resolve-conflict 123 --file src/app.ts --strategy ours
 
-// Implementación
+// Implementation
 class MergeConflictResolver {
   async detectConflicts(prId: number): Promise<ConflictReport> {
     const pr = await this.bitbucketService.getPR(prId)
@@ -811,12 +811,12 @@ class MergeConflictResolver {
 
 #### 18. Repository Analytics
 ```typescript
-// Comandos
+// Commands
 .bb analytics REPO
 .bb analytics REPO --since "2024-01-01"
 .bb hotspots REPO
 
-// Implementación
+// Implementation
 class RepositoryAnalytics {
   async generateAnalytics(
     repoSlug: string,
@@ -999,22 +999,22 @@ class DeploymentTracker {
   }
 }
 
-// Comando
+// Command
 .bb deployments
 .bb deployments --env production
 ```
 
 ---
 
-## Webhooks Bitbucket
+## Bitbucket Webhooks
 
-### Configuración en Bitbucket
+### Configuration in Bitbucket
 1. Repository Settings → Webhooks → Add webhook
 2. URL: `https://your-app.com/webhooks/bitbucket`
-3. Triggers: Seleccionar eventos
+3. Triggers: Select events
 4. Status: Active
 
-### Eventos Soportados
+### Supported Events
 
 ```typescript
 enum BitbucketWebhookEvent {
@@ -1068,11 +1068,11 @@ class BitbucketWebhookValidator {
 
 ## Rate Limiting
 
-### Rate Limits Bitbucket Cloud
+### Bitbucket Cloud Rate Limits
 - 1000 requests per hour per user
 - Headers: `X-RateLimit-*`
 
-### Implementación
+### Implementation
 ```typescript
 import Bottleneck from 'bottleneck'
 
@@ -1118,6 +1118,6 @@ describe('BitbucketService', () => {
 
 ---
 
-## Resumen
+## Summary
 
-Plan detallado de integración Bitbucket cubriendo autenticación (App Password y OAuth 2.0), estructura modular completa, y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 días): listar repos, ver repo, branches, commits, PRs. **Medias** (2-4 días): detalle de PR, crear PR, aprobar/rechazar, merge, comentarios. **Complejas** (4-7 días): code diff viewer, pipeline monitoring, branch management, file browser, code search. **Muy complejas** (7-14 días): AI code review con GPT-4, merge conflict resolver, repository analytics con hotspots, automated PR templates, deployment tracking. Incluye webhooks para 15+ eventos, rate limiting (1000 req/hora), validación de signatures con HMAC-SHA256, y testing comprehensivo. Total estimado: 15-20 funcionalidades en 6-8 semanas.
+Detailed Bitbucket integration plan covering authentication (App Password and OAuth 2.0), complete modular structure, and 20 features classified by complexity. **Simple** (1-2 days): list repos, view repo, branches, commits, PRs. **Medium** (2-4 days): PR detail, create PR, approve/decline, merge, comments. **Complex** (4-7 days): code diff viewer, pipeline monitoring, branch management, file browser, code search. **Very complex** (7-14 days): AI code review with GPT-4, merge conflict resolver, repository analytics with hotspots, automated PR templates, deployment tracking. Includes webhooks for 15+ events, rate limiting (1000 req/hour), signature validation with HMAC-SHA256, and comprehensive testing. Total estimate: 15-20 features in 6-8 weeks.

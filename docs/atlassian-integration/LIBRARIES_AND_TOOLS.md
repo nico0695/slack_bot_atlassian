@@ -9,7 +9,7 @@ npm install --save jira-client
 npm install --save @types/jira-client --save-dev
 ```
 
-**Uso:**
+**Usage:**
 ```typescript
 import JiraClient from 'jira-client'
 
@@ -22,7 +22,7 @@ const client = new JiraClient({
   strictSSL: true,
 })
 
-// Métodos disponibles
+// Available methods
 await client.findIssue(issueKey)
 await client.addNewIssue(issue)
 await client.updateIssue(issueKey, update)
@@ -33,7 +33,7 @@ await client.addComment(issueKey, comment)
 await client.getProject(projectKey)
 ```
 
-**Alternativa: Jira.js (más moderno)**
+**Alternative: Jira.js (more modern)**
 ```bash
 npm install --save jira.js
 ```
@@ -70,13 +70,13 @@ const bitbucket: AxiosInstance = axios.create({
   timeout: 10000,
 })
 
-// Uso
+// Usage
 const repos = await bitbucket.get('/repositories/workspace')
 const prs = await bitbucket.get('/repositories/workspace/repo/pullrequests')
 const commits = await bitbucket.get('/repositories/workspace/repo/commits')
 ```
 
-**Alternativa: bitbucket-rest-api**
+**Alternative: bitbucket-rest-api**
 ```bash
 npm install --save bitbucket-rest-api
 ```
@@ -118,7 +118,7 @@ const bbLimiter = new Bottleneck({
 })
 ```
 
-### p-retry (Retry con Backoff)
+### p-retry (Retry with Backoff)
 
 ```bash
 npm install --save p-retry
@@ -252,7 +252,7 @@ files.forEach(file => {
 
 ---
 
-## Visualización de Datos
+## Data Visualization
 
 ### chart.js (Charts para Analytics)
 
@@ -322,7 +322,7 @@ const svgString = body.html()
 
 ---
 
-## Exportación de Reportes
+## Report Export
 
 ### pdfkit (PDF Generation)
 
@@ -450,7 +450,7 @@ results.forEach(result => {
 
 ---
 
-## Utilidades de Fecha/Tiempo
+## Date/Time Utilities
 
 ### date-fns (Date Utilities)
 
@@ -603,18 +603,18 @@ app.get('/metrics', async (req, res) => {
 })
 ```
 
-### Logging (Pino - logger del proyecto)
+### Logging (Pino - project logger)
 
-La integración con Atlassian **no debe introducir nuevas librerías de logging** como `winston`.
-En su lugar, reutiliza el logger estándar del proyecto basado en **Pino** a través de
-`createModuleLogger()` (ver `src/config/logger.ts`).
+The Atlassian integration **should not introduce new logging libraries** like `winston`.
+Instead, reuse the project's standard logger based on **Pino** via
+`createModuleLogger()` (see `src/config/logger.ts`).
 
 ```typescript
 import { createModuleLogger } from '../../src/config/logger'
 
 const log = createModuleLogger('atlassian.jira')
 
-// Ejemplos de uso
+// Usage examples
 log.info({ issueKey }, 'Jira issue fetched')
 log.error({ err }, 'Failed to fetch Jira issue')
 ```
@@ -623,7 +623,7 @@ log.error({ err }, 'Failed to fetch Jira issue')
 
 ## Cache & Storage
 
-### ioredis (Redis Client - ya existe en el proyecto)
+### ioredis (Redis Client - already exists in the project)
 
 ```bash
 npm install --save ioredis
@@ -717,7 +717,7 @@ syncQueue.on('failed', (job, err) => {
 })
 ```
 
-### node-cron (ya existe en el proyecto para alerts)
+### node-cron (already exists in the project for alerts)
 
 ```typescript
 import cron from 'node-cron'
@@ -743,11 +743,11 @@ cron.schedule('0 17 * * 5', async () => {
 
 ---
 
-## Recomendaciones Adicionales
+## Additional Recommendations
 
 ### Natural Language Processing
 
-**compromise** (NLP para JS)
+**compromise** (NLP for JS)
 ```bash
 npm install --save compromise
 ```
@@ -768,7 +768,7 @@ if (doc.match('create').found) {
 
 ### Template Engines
 
-**handlebars** (para templates de mensajes/reportes)
+**handlebars** (for message/report templates)
 ```bash
 npm install --save handlebars
 ```
@@ -796,7 +796,7 @@ const report = template({
 
 ### Validation
 
-**class-validator** (alternativa a Zod)
+**class-validator** (alternative to Zod)
 ```bash
 npm install --save class-validator
 npm install --save class-transformer
@@ -861,7 +861,7 @@ class CreateIssueDTO {
 
 ---
 
-## Instalación Completa
+## Complete Installation
 
 ```bash
 # Core SDKs
@@ -900,6 +900,6 @@ npm install --save-dev @types/jira-client @types/bottleneck @types/markdown-it @
 
 ---
 
-## Resumen
+## Summary
 
-Conjunto completo de librerías para integración Atlassian. **Core**: jira-client (SDK oficial), axios (Bitbucket API), bottleneck (rate limiting 5 req/sec Jira, 1000/hora BB), p-retry (retry con exponential backoff). **Parsing**: markdown-it (render descriptions), sanitize-html (XSS protection), parse-diff (git diff parser). **Visualization**: chart.js + chartjs-node-canvas (velocity/burndown charts), d3 + jsdom (advanced charts server-side). **Export**: pdfkit (sprint reports PDF), json2csv (export issues). **Analysis**: esprima/typescript compiler API (parse code), eslint (linting). **Utilities**: date-fns (business days, sprint duration), node-cache (in-memory hot cache), bull (job queue para sync jobs). **Testing**: nock (mock HTTP), supertest (API testing). **Monitoring**: prom-client (Prometheus metrics). **NLP**: compromise (entity extraction), handlebars (templates). Total ~30 librerías cubriendo todas necesidades. Instalación completa ~50MB dependencies. Compatibilidad: TypeScript + ESM/CommonJS, Node.js >=18.
+Complete set of libraries for Atlassian integration. **Core**: jira-client (official SDK), axios (Bitbucket API), bottleneck (rate limiting 5 req/sec Jira, 1000/hour BB), p-retry (retry with exponential backoff). **Parsing**: markdown-it (render descriptions), sanitize-html (XSS protection), parse-diff (git diff parser). **Visualization**: chart.js + chartjs-node-canvas (velocity/burndown charts), d3 + jsdom (advanced charts server-side). **Export**: pdfkit (sprint reports PDF), json2csv (export issues). **Analysis**: esprima/typescript compiler API (parse code), eslint (linting). **Utilities**: date-fns (business days, sprint duration), node-cache (in-memory hot cache), bull (job queue for sync jobs). **Testing**: nock (mock HTTP), supertest (API testing). **Monitoring**: prom-client (Prometheus metrics). **NLP**: compromise (entity extraction), handlebars (templates). Total ~30 libraries covering all needs. Complete installation ~50MB dependencies. Compatibility: TypeScript + ESM/CommonJS, Node.js >=18.
