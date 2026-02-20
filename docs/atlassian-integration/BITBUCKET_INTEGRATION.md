@@ -132,7 +132,7 @@ src/modules/bitbucket/
 // REST
 GET /bitbucket/repositories
 
-// Implementación
+// Implementation
 async listRepositories(): Promise<BitbucketRepository[]> {
   const response = await this.client.get(
     `/repositories/${this.workspace}`
@@ -207,7 +207,7 @@ interface Branch {
 // REST
 GET /bitbucket/repositories/:slug/commits?branch=...
 
-// Implementación
+// Implementation
 async listCommits(
   repoSlug: string,
   branch?: string,
@@ -359,7 +359,7 @@ Body: {
   closeSourceBranch?: boolean
 }
 
-// Implementación con validaciones
+// Implementation con validaciones
 async mergePR(
   prId: number,
   options: MergePROptions
@@ -426,7 +426,7 @@ Body: {
 GET /bitbucket/pullrequests/:id/diff
 GET /bitbucket/pullrequests/:id/diff?path=src/app.ts
 
-// Implementación
+// Implementation
 async getPRDiff(prId: number, filepath?: string): Promise<DiffResult> {
   const response = await this.client.get(
     `/repositories/${this.workspace}/${repo}/pullrequests/${prId}/diff`,
@@ -562,7 +562,7 @@ interface BranchComparison {
 // REST
 GET /bitbucket/repositories/:slug/src/:commit/:path
 
-// Implementación
+// Implementation
 async browseFiles(
   repoSlug: string,
   path: string = '/',
@@ -660,7 +660,7 @@ interface SearchMatch {
 .bb review 123
 .bb review 123 --deep
 
-// Implementación
+// Implementation
 class AICodeReviewService {
   async reviewPR(prId: number, deep: boolean = false): Promise<ReviewResult> {
     // 1. Get PR diff
@@ -769,7 +769,7 @@ interface ReviewResult {
 .bb conflicts 123
 .bb resolve-conflict 123 --file src/app.ts --strategy ours
 
-// Implementación
+// Implementation
 class MergeConflictResolver {
   async detectConflicts(prId: number): Promise<ConflictReport> {
     const pr = await this.bitbucketService.getPR(prId)
@@ -816,7 +816,7 @@ class MergeConflictResolver {
 .bb analytics REPO --since "2024-01-01"
 .bb hotspots REPO
 
-// Implementación
+// Implementation
 class RepositoryAnalytics {
   async generateAnalytics(
     repoSlug: string,
@@ -1072,7 +1072,7 @@ class BitbucketWebhookValidator {
 - 1000 requests per hour per user
 - Headers: `X-RateLimit-*`
 
-### Implementación
+### Implementation
 ```typescript
 import Bottleneck from 'bottleneck'
 
@@ -1117,6 +1117,6 @@ describe('BitbucketService', () => {
 
 ---
 
-## Resumen
+## Summary
 
-Plan detallado de integración Bitbucket cubriendo autenticación (App Password y OAuth 2.0), estructura modular completa, y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 days): listar repos, ver repo, branches, commits, PRs. **Medias** (2-4 days): detalle de PR, crear PR, aprobar/rechazar, merge, comentarios. **Complejas** (4-7 days): code diff viewer, pipeline monitoring, branch management, file browser, code search. **Muy complejas** (7-14 days): AI code review con GPT-4, merge conflict resolver, repository analytics con hotspots, automated PR templates, deployment tracking. Incluye webhooks para 15+ eventos, rate limiting (1000 req/hora), validación de signatures con HMAC-SHA256, y testing comprehensivo. Total estimado: 15-20 funcionalidades en 6-8 weeks.
+Detailed integration plan for Bitbucket covering autenticación (App Password y OAuth 2.0), complete modular structure, y 20 features classified by complexity. **Simples** (1-2 days): listar repos, ver repo, branches, commits, PRs. **Medias** (2-4 days): detalle de PR, crear PR, aprobar/rechazar, merge, comentarios. **Complejas** (4-7 days): code diff viewer, pipeline monitoring, branch management, file browser, code search. **Muy complejas** (7-14 days): AI code review con GPT-4, merge conflict resolver, repository analytics con hotspots, automated PR templates, deployment tracking. Includes webhooks para 15+ eventos, rate limiting (1000 req/hora), validación de signatures con HMAC-SHA256, y comprehensive testing. Estimated total: 15-20 funcionalidades en 6-8 weeks.

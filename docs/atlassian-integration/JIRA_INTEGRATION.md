@@ -161,7 +161,7 @@ interface IssueDetails {
 // REST
 GET /jira/issues/assigned-to-me
 
-// Implementación
+// Implementation
 async getMyIssues(userId: number): Promise<JiraIssue[]> {
   const jiraUser = await this.getUserMapping(userId)
   const jql = `assignee = "${jiraUser}" AND resolution = Unresolved ORDER BY priority DESC`
@@ -345,7 +345,7 @@ Body: {
   transitionName: string
 }
 
-// Implementación
+// Implementation
 async transitionIssue(issueKey: string, transitionName: string): Promise<void> {
   // 1. Obtener transiciones disponibles
   const transitions = await this.client.listTransitions(issueKey)
@@ -435,7 +435,7 @@ Body: {
   data: object
 }
 
-// Implementación con batch processing
+// Implementation con batch processing
 async bulkOperation(issueKeys: string[], operation: BulkOperation): Promise<BulkResult> {
   const results = {
     successful: [] as string[],
@@ -952,6 +952,6 @@ describe('Jira Integration', () => {
 
 ---
 
-## Resumen
+## Summary
 
-Plan detallado de integración Jira cubriendo autenticación (API token y OAuth 2.0), estructura modular completa (controllers, services, repositories, webhooks), y 20 funcionalidades clasificadas por complejidad. **Simples** (1-2 days): ver issue, listar asignadas, ver proyecto, sprint actual, backlog. **Medias** (2-4 days): búsqueda JQL con builder, CRUD de issues, transiciones, comentarios. **Complejas** (4-7 days): sprint management, bulk operations, templates, saved filters, watchers. **Muy complejas** (7-14 days): custom fields, issue linking, epic management, version/release, components. Incluye webhooks para 10+ eventos con notificaciones multi-canal, rate limiting con Bottleneck (5 req/sec), caching strategy en Redis con TTL específicos, y testing comprehensivo. Total estimado: 15-20 funcionalidades implementables en 6-8 weeks con equipo de 2-3 desarrolladores.
+Detailed integration plan for Jira covering autenticación (API token y OAuth 2.0), complete modular structure (controllers, services, repositories, webhooks), y 20 features classified by complexity. **Simples** (1-2 days): ver issue, listar asignadas, ver proyecto, sprint actual, backlog. **Medias** (2-4 days): búsqueda JQL con builder, CRUD de issues, transiciones, comentarios. **Complejas** (4-7 days): sprint management, bulk operations, templates, saved filters, watchers. **Muy complejas** (7-14 days): custom fields, issue linking, epic management, version/release, components. Includes webhooks para 10+ events with multi-channel notifications, rate limiting con Bottleneck (5 req/sec), caching strategy en Redis con TTL specific, y comprehensive testing. Estimated total: 15-20 funcionalidades implementable in 6-8 weeks with team of 2-3 developers.
