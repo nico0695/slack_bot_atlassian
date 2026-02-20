@@ -3,61 +3,61 @@
 ## Stage 1: Configuración de APIs y Servicios (Week 1)
 
 ### Objetivos
-- Configurar autenticación con Jira Cloud API
+- ~~Configurar autenticación con Jira Cloud API~~ ✅
 - Configurar autenticación con Bitbucket Cloud API
-- Crear módulos base siguiendo arquitectura existente
-- Validar conectividad
+- ~~Crear módulos base siguiendo arquitectura existente~~ ✅ (parcial — solo Jira)
+- ~~Validar conectividad~~ ✅ (parcial — solo Jira)
 
 ### Tareas
 
 #### 1.1 Setup de Credenciales
 ```bash
 # .env additions
-JIRA_HOST=your-domain.atlassian.net
-JIRA_EMAIL=your-email@company.com
-JIRA_API_TOKEN=your-jira-api-token
-JIRA_PROJECT_KEY=PROJ
+JIRA_HOST=your-domain.atlassian.net          # ✅ Agregado
+JIRA_EMAIL=your-email@company.com            # ✅ Agregado
+JIRA_API_TOKEN=your-jira-api-token           # ✅ Agregado
+JIRA_PROJECT_KEY=PROJ                        # ✅ Agregado
 
-BITBUCKET_WORKSPACE=your-workspace
-BITBUCKET_USERNAME=your-username
-BITBUCKET_APP_PASSWORD=your-app-password
+BITBUCKET_WORKSPACE=your-workspace           # ❌ Pendiente
+BITBUCKET_USERNAME=your-username             # ❌ Pendiente
+BITBUCKET_APP_PASSWORD=your-app-password     # ❌ Pendiente
 # o OAuth 2.0
-BITBUCKET_CLIENT_ID=
-BITBUCKET_CLIENT_SECRET=
+BITBUCKET_CLIENT_ID=                         # ❌ Pendiente
+BITBUCKET_CLIENT_SECRET=                     # ❌ Pendiente
 ```
 
 #### 1.2 Instalación de Dependencias
 ```bash
-npm install --save jira-client
-npm install --save axios  # para Bitbucket API
-npm install --save @types/jira-client --save-dev
+npm install --save jira-client               # ✅ Instalado
+npm install --save axios  # para Bitbucket API  # ❌ Pendiente
+npm install --save @types/jira-client --save-dev # ✅ Instalado
 ```
 
 #### 1.3 Crear Módulo Jira Base
 ```
 src/modules/jira/
 ├── controller/
-│   ├── jira.controller.ts          # Slack commands
-│   └── jiraWeb.controller.ts       # REST endpoints
+│   ├── jira.controller.ts          # Slack commands        ❌ Pendiente
+│   └── jiraWeb.controller.ts       # REST endpoints        ✅ Creado
 ├── services/
-│   └── jira.services.ts
+│   └── jira.services.ts                                    ✅ Creado
 ├── repositories/
-│   ├── jiraApi.repository.ts       # Jira API wrapper
+│   ├── jiraApi.repository.ts       # Jira API wrapper      ✅ Creado
 │   └── database/
-│       └── jiraCache.dataSource.ts # Cache de datos
+│       └── jiraCache.dataSource.ts # Cache de datos        ❌ Pendiente
 ├── shared/
 │   ├── constants/
-│   │   └── jira.constants.ts
+│   │   └── jira.constants.ts                               ✅ Creado
 │   ├── interfaces/
-│   │   └── jira.interfaces.ts
+│   │   └── jira.interfaces.ts                              ✅ Creado
 │   └── schemas/
-│       └── jira.schemas.ts         # Zod validations
+│       └── jira.schemas.ts         # Zod validations       ✅ Creado
 └── utils/
-    ├── jiraFormatters.ts           # Formatear output
-    └── jql.builder.ts              # JQL query builder
+    ├── jiraFormatters.ts           # Formatear output      ❌ Pendiente
+    └── jql.builder.ts              # JQL query builder     ❌ Pendiente
 ```
 
-#### 1.4 Crear Módulo Bitbucket Base
+#### 1.4 Crear Módulo Bitbucket Base — ❌ No implementado
 ```
 src/modules/bitbucket/
 ├── controller/
@@ -80,7 +80,7 @@ src/modules/bitbucket/
     └── bitbucketFormatters.ts
 ```
 
-#### 1.5 Entidades TypeORM
+#### 1.5 Entidades TypeORM — ❌ No implementadas
 ```typescript
 // src/entities/JiraIssueCache.ts
 @Entity()
@@ -120,18 +120,18 @@ export class BitbucketPRCache {
 
 #### 1.6 Primeros Endpoints de Prueba
 ```typescript
-// GET /jira/test - Test connection
-// GET /bitbucket/test - Test connection
-// GET /jira/projects - List projects
-// GET /bitbucket/repositories - List repos
+// GET /jira/test - Test connection           ✅ Implementado
+// GET /bitbucket/test - Test connection       ❌ Pendiente
+// GET /jira/projects - List projects          ✅ Implementado (como /jira/project)
+// GET /bitbucket/repositories - List repos    ❌ Pendiente
 ```
 
 ### Validación
-- [ ] Autenticación funcional con Jira
+- [x] Autenticación funcional con Jira
 - [ ] Autenticación funcional con Bitbucket
-- [ ] Módulos registrados en app.ts
-- [ ] Tests de conectividad pasando
-- [ ] Logging configurado
+- [x] Módulos registrados en app.ts (solo Jira)
+- [x] Tests de conectividad pasando (solo Jira — 7 tests)
+- [x] Logging configurado (Pino con createModuleLogger)
 
 ### Tiempo Estimado: 3-5 días
 

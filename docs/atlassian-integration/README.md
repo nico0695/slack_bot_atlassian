@@ -13,6 +13,12 @@ Transformar el Slack bot actual en un asistente integral de gestión de proyecto
 5. **Asistente Inteligente**: AI contextual con conocimiento del estado del proyecto
 6. **Wiki Centralizada**: Base de conocimiento con información de Jira y Bitbucket
 
+## Estado Actual
+
+> 📊 Ver **[STATUS.md](./STATUS.md)** para el estado general de implementación y tracking de progreso.
+
+---
+
 ## Estructura de Documentación
 
 Este directorio contiene la planificación completa dividida en documentos especializados:
@@ -84,6 +90,15 @@ Librerías recomendadas y herramientas necesarias.
 - Testing tools
 - DevOps integration
 
+### 8. [STATUS.md](./STATUS.md)
+Tracking de estado general de implementación — paso anterior, paso actual y siguiente.
+
+### 9. [STAGE_1_COMPLETE.md](./STAGE_1_COMPLETE.md)
+Resumen de implementación de Stage 1 (Jira base). Nota: cubre solo la parte de Jira API, Bitbucket y otros items de Stage 1 están pendientes.
+
+### 10. [PR_SUMMARY.md](./PR_SUMMARY.md)
+Resumen del PR de documentación de planificación.
+
 ## Filosofía de Implementación
 
 ### Iterativo e Incremental
@@ -109,11 +124,11 @@ Librerías recomendadas y herramientas necesarias.
 
 ## Quickstart
 
-### Fase 1 - Setup Básico (Semana 1-2)
-1. Leer [IMPLEMENTATION_STAGES.md](./IMPLEMENTATION_STAGES.md) - Stage 1
-2. Configurar credenciales de Jira y Bitbucket
-3. Implementar módulo base de Jira
-4. Crear primeros comandos básicos
+### Fase 1 - Setup Básico (Semana 1-2) — ⏳ En progreso
+1. ~~Leer [IMPLEMENTATION_STAGES.md](./IMPLEMENTATION_STAGES.md) - Stage 1~~ ✅
+2. ~~Configurar credenciales de Jira~~ ✅ — Bitbucket pendiente
+3. ~~Implementar módulo base de Jira~~ ✅ (parcial)
+4. Crear primeros comandos básicos — pendiente
 
 ### Fase 2 - Features Core (Semana 3-6)
 1. Implementar funcionalidades de alta prioridad de [FEATURE_ROADMAP.md](./FEATURE_ROADMAP.md)
