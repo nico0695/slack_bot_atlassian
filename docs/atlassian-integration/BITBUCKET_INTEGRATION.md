@@ -1081,9 +1081,8 @@ class BitbucketApiRepository {
 
   constructor() {
     this.limiter = new Bottleneck({
-      minTime: 1000 * 60 * 60,  // 1 hour in ms (3,600,000 ms)
       maxConcurrent: 5,
-      reservoir: 1000,  // 1000 requests
+      reservoir: 1000,  // 1000 requests per hour
       reservoirRefreshAmount: 1000,
       reservoirRefreshInterval: 60 * 60 * 1000,  // 1 hour
     })

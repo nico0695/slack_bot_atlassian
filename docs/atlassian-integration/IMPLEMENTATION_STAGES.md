@@ -286,6 +286,19 @@ export const createIssueSchema = z.object({
 - Filtros personalizables
 - Multi-canal (Slack + Web Socket.io)
 
+### Prerequisitos de Infraestructura
+
+> **⚠️ Importante:** Los webhooks requieren una URL pública accesible desde los servidores de Atlassian.
+
+- **Desarrollo local**: Usar [ngrok](https://ngrok.com/) o similar para exponer el puerto local
+  ```bash
+  ngrok http 4000  # Expone http://localhost:4000
+  ```
+- **Producción**: El servidor debe tener HTTPS con certificado SSL válido
+- **Webhook secrets**: Configurar `JIRA_WEBHOOK_SECRET` y `BITBUCKET_WEBHOOK_SECRET` en `.env`
+- **Idempotencia**: Implementar deduplicación de eventos (los webhooks pueden reenviarse)
+- **Timeout**: Responder con 200 OK en <10 segundos; procesar eventos de forma asíncrona
+
 ### Tareas
 
 #### 4.1 Webhook Listeners

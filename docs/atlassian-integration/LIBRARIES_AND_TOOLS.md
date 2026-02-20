@@ -236,14 +236,14 @@ import parseDiff from 'parse-diff'
 
 const files = parseDiff(diffString)
 
+// `log` represents your module logger (e.g. a Pino logger instance)
 files.forEach(file => {
-  console.log(`File: ${file.to}`)
-  console.log(`+${file.additions} -${file.deletions}`)
+  log.info({ file: file.to, additions: file.additions, deletions: file.deletions }, 'Parsed diff file')
   
   file.chunks.forEach(chunk => {
     chunk.changes.forEach(change => {
       if (change.type === 'add') {
-        console.log(`+${change.ln} ${change.content}`)
+        log.debug({ line: change.ln, content: change.content }, 'Line added')
       }
     })
   })
@@ -796,7 +796,9 @@ const report = template({
 
 ### Validation
 
-**class-validator** (alternativa a Zod)
+> **⚠️ Note:** This project uses **Zod** as the standard validation library (see `src/shared/utils/validation.ts`). The `class-validator` example below is shown as reference only. **Use Zod schemas** for all new endpoints to maintain consistency.
+
+**class-validator** (reference only — NOT recommended for this project)
 ```bash
 npm install --save class-validator
 npm install --save class-transformer
