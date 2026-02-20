@@ -1,360 +1,360 @@
 # Feature Roadmap - Atlassian Integration
 
-## Clasificación de Funcionalidades
+## Feature Classification
 
-Cada funcionalidad está clasificada según cuatro dimensiones:
-- **Utilidad**: Cuán útil es la feature para el equipo (Baja, Media, Alta, Crítica)
-- **Complejidad**: Esfuerzo de implementación (Simple, Media, Compleja, Muy Compleja)
-- **Impacto**: Efecto en productividad y procesos (Bajo, Medio, Alto, Crítico)
-- **Prioridad**: Orden de implementación sugerido (P0-P4, donde P0 es más urgente)
+Each feature is classified according to four dimensions:
+- **Utility**: How useful the feature is for the team (Low, Medium, High, Critical)
+- **Complexity**: Implementation effort (Simple, Medium, Complex, Very Complex)
+- **Impact**: Effect on productivity and processes (Low, Medium, High, Critical)
+- **Priority**: Suggested implementation order (P0-P4, where P0 is most urgent)
 
 ---
 
-## Matriz de Priorización
+## Prioritization Matrix
 
 ### Priority 0 (P0) - MVP Core Features
-Funcionalidades esenciales para un MVP funcional. **Target: 4 semanas**
+Essential features for a functional MVP. **Target: 4 weeks**
 
-| # | Funcionalidad | Utilidad | Complejidad | Impacto | Tiempo |
-|---|---------------|----------|-------------|---------|--------|
-| 1 | Jira: Ver issue individual | Crítica | Simple | Crítico | 1d |
-| 2 | Jira: Listar mis issues | Crítica | Simple | Crítico | 1d |
-| 3 | Jira: Crear issue | Crítica | Media | Alto | 3d |
-| 4 | Jira: Transición de estado | Alta | Media | Alto | 2d |
-| 5 | Bitbucket: Listar PRs | Crítica | Simple | Crítico | 1d |
-| 6 | Bitbucket: Ver detalle de PR | Crítica | Media | Alto | 2d |
-| 7 | Bitbucket: Aprobar/Merge PR | Alta | Media | Alto | 3d |
-| 8 | Webhooks Jira: Issue created/updated | Alta | Compleja | Alto | 5d |
-| 9 | Webhooks Bitbucket: PR events | Alta | Compleja | Alto | 5d |
-| 10 | Sistema de notificaciones básico | Alta | Media | Alto | 3d |
+| # | Feature | Utility | Complexity | Impact | Time |
+|---|---------|----------|------------|--------|------|
+| 1 | Jira: View individual issue | Critical | Simple | Critical | 1d |
+| 2 | Jira: List my issues | Critical | Simple | Critical | 1d |
+| 3 | Jira: Create issue | Critical | Medium | High | 3d |
+| 4 | Jira: State transition | High | Medium | High | 2d |
+| 5 | Bitbucket: List PRs | Critical | Simple | Critical | 1d |
+| 6 | Bitbucket: View PR details | Critical | Medium | High | 2d |
+| 7 | Bitbucket: Approve/Merge PR | High | Medium | High | 3d |
+| 8 | Webhooks Jira: Issue created/updated | High | Complex | High | 5d |
+| 9 | Webhooks Bitbucket: PR events | High | Complex | High | 5d |
+| 10 | Basic notification system | High | Medium | High | 3d |
 
-**Total P0**: ~26 días (4 semanas con 1-2 devs)
+**Total P0**: ~26 days (4 weeks with 1-2 devs)
 
 ---
 
 ### Priority 1 (P1) - Essential Productivity Features
-Features que aumentan productividad significativamente. **Target: 3 semanas**
+Features that significantly increase productivity. **Target: 3 weeks**
 
-| # | Funcionalidad | Utilidad | Complejidad | Impacto | Tiempo |
-|---|---------------|----------|-------------|---------|--------|
-| 11 | Jira: Búsqueda JQL | Alta | Media | Alto | 3d |
-| 12 | Jira: Agregar comentario | Alta | Media | Medio | 2d |
-| 13 | Jira: Sprint actual | Alta | Simple | Alto | 1d |
-| 14 | Jira: Ver backlog | Alta | Simple | Medio | 1d |
-| 15 | Bitbucket: Crear PR | Alta | Media | Alto | 3d |
-| 16 | Bitbucket: Agregar comentario | Alta | Media | Medio | 2d |
-| 17 | Bitbucket: Ver commits | Media | Simple | Medio | 1d |
-| 18 | Bitbucket: Ver branches | Media | Simple | Medio | 1d |
-| 19 | Auto-link Jira ↔ Bitbucket | Alta | Media | Alto | 4d |
-| 20 | Saved filters (Jira) | Media | Compleja | Medio | 5d |
+| # | Feature | Utility | Complexity | Impact | Time |
+|---|---------|----------|------------|--------|------|
+| 11 | Jira: JQL search | High | Medium | High | 3d |
+| 12 | Jira: Add comment | High | Medium | Medium | 2d |
+| 13 | Jira: Current sprint | High | Simple | High | 1d |
+| 14 | Jira: View backlog | High | Simple | Medium | 1d |
+| 15 | Bitbucket: Create PR | High | Medium | High | 3d |
+| 16 | Bitbucket: Add comment | High | Medium | Medium | 2d |
+| 17 | Bitbucket: View commits | Medium | Simple | Medium | 1d |
+| 18 | Bitbucket: View branches | Medium | Simple | Medium | 1d |
+| 19 | Auto-link Jira ↔ Bitbucket | High | Medium | High | 4d |
+| 20 | Saved filters (Jira) | Medium | Complex | Medium | 5d |
 
-**Total P1**: ~23 días (3 semanas)
+**Total P1**: ~23 days (3 weeks)
 
 ---
 
 ### Priority 2 (P2) - Advanced Features
-Features avanzadas con ROI significativo. **Target: 4 semanas**
+Advanced features with significant ROI. **Target: 4 weeks**
 
-| # | Funcionalidad | Utilidad | Complejidad | Impacto | Tiempo |
-|---|---------------|----------|-------------|---------|--------|
-| 21 | AI Code Review | Alta | Muy Compleja | Alto | 10d |
-| 22 | Sprint management completo | Alta | Compleja | Alto | 7d |
-| 23 | Documentación auto-generada | Alta | Muy Compleja | Alto | 8d |
-| 24 | Analytics dashboard (Jira) | Alta | Compleja | Alto | 7d |
-| 25 | Analytics dashboard (Bitbucket) | Media | Compleja | Medio | 5d |
-| 26 | Pipeline monitoring | Media | Compleja | Medio | 5d |
-| 27 | Bulk operations (Jira) | Media | Compleja | Medio | 5d |
-| 28 | Issue templates | Media | Media | Medio | 3d |
-| 29 | Code diff viewer avanzado | Media | Compleja | Medio | 5d |
-| 30 | Custom field management | Media | Muy Compleja | Medio | 8d |
+| # | Feature | Utility | Complexity | Impact | Time |
+|---|---------|----------|------------|--------|------|
+| 21 | AI Code Review | High | Very Complex | High | 10d |
+| 22 | Complete sprint management | High | Complex | High | 7d |
+| 23 | Auto-generated documentation | High | Very Complex | High | 8d |
+| 24 | Analytics dashboard (Jira) | High | Complex | High | 7d |
+| 25 | Analytics dashboard (Bitbucket) | Medium | Complex | Medium | 5d |
+| 26 | Pipeline monitoring | Medium | Complex | Medium | 5d |
+| 27 | Bulk operations (Jira) | Medium | Complex | Medium | 5d |
+| 28 | Issue templates | Medium | Medium | Medium | 3d |
+| 29 | Advanced code diff viewer | Medium | Complex | Medium | 5d |
+| 30 | Custom field management | Medium | Very Complex | Medium | 8d |
 
-**Total P2**: ~63 días (9 semanas)
+**Total P2**: ~63 days (9 weeks)
 
 ---
 
 ### Priority 3 (P3) - Nice to Have
-Features útiles pero no críticas. **Target: 3 semanas**
+Useful but not critical features. **Target: 3 weeks**
 
-| # | Funcionalidad | Utilidad | Complejidad | Impacto | Tiempo |
-|---|---------------|----------|-------------|---------|--------|
-| 31 | Issue linking avanzado | Media | Muy Compleja | Medio | 7d |
-| 32 | Epic management | Media | Compleja | Medio | 5d |
-| 33 | Version/Release management | Media | Compleja | Medio | 5d |
-| 34 | Branch management | Baja | Compleja | Bajo | 4d |
-| 35 | File browser | Baja | Compleja | Bajo | 4d |
-| 36 | Code search | Media | Compleja | Medio | 5d |
-| 37 | Watchers management | Baja | Media | Bajo | 2d |
-| 38 | Component management | Baja | Compleja | Bajo | 4d |
-| 39 | Smart PR creator | Media | Muy Compleja | Medio | 10d |
-| 40 | Merge conflict resolver | Media | Muy Compleja | Medio | 10d |
+| # | Feature | Utility | Complexity | Impact | Time |
+|---|---------|----------|------------|--------|------|
+| 31 | Advanced issue linking | Medium | Very Complex | Medium | 7d |
+| 32 | Epic management | Medium | Complex | Medium | 5d |
+| 33 | Version/Release management | Medium | Complex | Medium | 5d |
+| 34 | Branch management | Low | Complex | Low | 4d |
+| 35 | File browser | Low | Complex | Low | 4d |
+| 36 | Code search | Medium | Complex | Medium | 5d |
+| 37 | Watchers management | Low | Medium | Low | 2d |
+| 38 | Component management | Low | Complex | Low | 4d |
+| 39 | Smart PR creator | Medium | Very Complex | Medium | 10d |
+| 40 | Merge conflict resolver | Medium | Very Complex | Medium | 10d |
 
-**Total P3**: ~56 días (8 semanas)
+**Total P3**: ~56 days (8 weeks)
 
 ---
 
 ### Priority 4 (P4) - Future Enhancements
-Features para roadmap futuro.
+Features for future roadmap.
 
-| # | Funcionalidad | Utilidad | Complejidad | Impacto | Tiempo |
-|---|---------------|----------|-------------|---------|--------|
-| 41 | Repository analytics avanzado | Media | Muy Compleja | Medio | 10d |
-| 42 | Deployment tracking | Media | Compleja | Medio | 7d |
-| 43 | Auto-healing workflows | Alta | Muy Compleja | Alto | 12d |
-| 44 | Wiki generator | Media | Compleja | Medio | 7d |
-| 45 | Predictive analytics | Alta | Muy Compleja | Alto | 14d |
-| 46 | Smart assignee suggestion | Media | Muy Compleja | Medio | 8d |
-| 47 | Smart priority suggestion | Media | Muy Compleja | Medio | 8d |
-| 48 | Stale PR detector | Baja | Compleja | Bajo | 5d |
-| 49 | Custom workflow engine | Alta | Muy Compleja | Alto | 15d |
-| 50 | Team capacity planner | Media | Muy Compleja | Medio | 10d |
+| # | Feature | Utility | Complexity | Impact | Time |
+|---|---------|----------|------------|--------|------|
+| 41 | Advanced repository analytics | Medium | Very Complex | Medium | 10d |
+| 42 | Deployment tracking | Medium | Complex | Medium | 7d |
+| 43 | Auto-healing workflows | High | Very Complex | High | 12d |
+| 44 | Wiki generator | Medium | Complex | Medium | 7d |
+| 45 | Predictive analytics | High | Very Complex | High | 14d |
+| 46 | Smart assignee suggestion | Medium | Very Complex | Medium | 8d |
+| 47 | Smart priority suggestion | Medium | Very Complex | Medium | 8d |
+| 48 | Stale PR detector | Low | Complex | Low | 5d |
+| 49 | Custom workflow engine | High | Very Complex | High | 15d |
+| 50 | Team capacity planner | Medium | Very Complex | Medium | 10d |
 
-**Total P4**: ~96 días (14+ semanas)
+**Total P4**: ~96 days (14+ weeks)
 
 ---
 
-## Funcionalidades Detalladas por Categoría
+## Detailed Features by Category
 
-### Categoría: Jira Core (CRUD)
+### Category: Jira Core (CRUD)
 
-#### Alto Impacto + Baja Complejidad (Quick Wins)
-1. **Ver Issue Individual** [P0]
-   - Utilidad: Crítica | Complejidad: Simple | Impacto: Crítico
-   - Comando: `.jira PROJ-123`
-   - ROI: Inmediato, uso diario
+#### High Impact + Low Complexity (Quick Wins)
+1. **View Individual Issue** [P0]
+   - Utility: Critical | Complexity: Simple | Impact: Critical
+   - Command: `.jira PROJ-123`
+   - ROI: Immediate, daily use
 
-2. **Listar Mis Issues** [P0]
-   - Utilidad: Crítica | Complejidad: Simple | Impacto: Crítico
-   - Comando: `.jira mine`
-   - ROI: Inmediato, claridad de tareas
+2. **List My Issues** [P0]
+   - Utility: Critical | Complexity: Simple | Impact: Critical
+   - Command: `.jira mine`
+   - ROI: Immediate, task clarity
 
-3. **Sprint Actual** [P1]
-   - Utilidad: Alta | Complejidad: Simple | Impacto: Alto
-   - Comando: `.jira sprint`
-   - ROI: Mejora planificación diaria
+3. **Current Sprint** [P1]
+   - Utility: High | Complexity: Simple | Impact: High
+   - Command: `.jira sprint`
+   - ROI: Improves daily planning
 
-4. **Ver Backlog** [P1]
-   - Utilidad: Alta | Complejidad: Simple | Impacto: Medio
-   - Comando: `.jira backlog`
-   - ROI: Mejor visibilidad de pipeline
+4. **View Backlog** [P1]
+   - Utility: High | Complexity: Simple | Impact: Medium
+   - Command: `.jira backlog`
+   - ROI: Better pipeline visibility
 
-#### Alto Impacto + Media Complejidad
-5. **Crear Issue** [P0]
-   - Utilidad: Crítica | Complejidad: Media | Impacto: Alto
-   - Comando: `.jira create -t Bug -s "..." -p High`
-   - ROI: Reducción de context switching
+#### High Impact + Medium Complexity
+5. **Create Issue** [P0]
+   - Utility: Critical | Complexity: Medium | Impact: High
+   - Command: `.jira create -t Bug -s "..." -p High`
+   - ROI: Reduced context switching
 
-6. **Transición de Estado** [P0]
-   - Utilidad: Alta | Complejidad: Media | Impacto: Alto
-   - Comando: `.jira move PROJ-123 "In Progress"`
-   - ROI: Workflows más ágiles
+6. **State Transition** [P0]
+   - Utility: High | Complexity: Medium | Impact: High
+   - Command: `.jira move PROJ-123 "In Progress"`
+   - ROI: More agile workflows
 
-7. **Actualizar Issue** [P1]
-   - Utilidad: Alta | Complejidad: Media | Impacto: Medio
-   - Comando: `.jira update PROJ-123 -p Critical`
-   - ROI: Menos clicks en Jira UI
+7. **Update Issue** [P1]
+   - Utility: High | Complexity: Medium | Impact: Medium
+   - Command: `.jira update PROJ-123 -p Critical`
+   - ROI: Fewer clicks in Jira UI
 
-8. **Agregar Comentario** [P1]
-   - Utilidad: Alta | Complejidad: Media | Impacto: Medio
-   - Comando: `.jira comment PROJ-123 "..."`
-   - ROI: Colaboración desde Slack
+8. **Add Comment** [P1]
+   - Utility: High | Complexity: Medium | Impact: Medium
+   - Command: `.jira comment PROJ-123 "..."`
+   - ROI: Collaboration from Slack
 
-#### Alto Impacto + Alta Complejidad
-9. **Sprint Management Completo** [P2]
-   - Utilidad: Alta | Complejidad: Compleja | Impacto: Alto
-   - Comandos: crear, start, complete sprint
-   - ROI: Automatización de ceremonies
+#### High Impact + High Complexity
+9. **Complete Sprint Management** [P2]
+   - Utility: High | Complexity: Complex | Impact: High
+   - Commands: create, start, complete sprint
+   - ROI: Ceremony automation
 
 10. **Bulk Operations** [P2]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comando: `.jira bulk assign PROJ-1,PROJ-2 user@...`
-    - ROI: Ahorro en operaciones repetitivas
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Command: `.jira bulk assign PROJ-1,PROJ-2 user@...`
+    - ROI: Savings on repetitive operations
 
-### Categoría: Jira Advanced
+### Category: Jira Advanced
 
-11. **Búsqueda JQL** [P1]
-    - Utilidad: Alta | Complejidad: Media | Impacto: Alto
-    - Comando: `.jira search "status=Open AND priority=High"`
-    - ROI: Queries complejas sin abrir Jira
+11. **JQL Search** [P1]
+    - Utility: High | Complexity: Medium | Impact: High
+    - Command: `.jira search "status=Open AND priority=High"`
+    - ROI: Complex queries without opening Jira
 
 12. **Issue Templates** [P2]
-    - Utilidad: Media | Complejidad: Media | Impacto: Medio
-    - Comando: `.jira create-from-template bug "..."`
-    - ROI: Estandarización y velocidad
+    - Utility: Medium | Complexity: Medium | Impact: Medium
+    - Command: `.jira create-from-template bug "..."`
+    - ROI: Standardization and speed
 
 13. **Saved Filters** [P1]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comando: `.jira filter apply "My High Priority"`
-    - ROI: Acceso rápido a queries frecuentes
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Command: `.jira filter apply "My High Priority"`
+    - ROI: Quick access to frequent queries
 
 14. **Epic Management** [P3]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comandos: crear epic, agregar stories, progress
-    - ROI: Visibilidad de initiatives
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Commands: create epic, add stories, progress
+    - ROI: Initiative visibility
 
 15. **Issue Linking** [P3]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
-    - Comando: `.jira link PROJ-1 blocks PROJ-2`
-    - ROI: Mejor gestión de dependencies
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
+    - Command: `.jira link PROJ-1 blocks PROJ-2`
+    - ROI: Better dependency management
 
 16. **Custom Fields** [P2]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
-    - Comando: `.jira field set PROJ-1 "Story Points" 8`
-    - ROI: Flexibilidad para equipos custom
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
+    - Command: `.jira field set PROJ-1 "Story Points" 8`
+    - ROI: Flexibility for custom teams
 
 17. **Version/Release Management** [P3]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comandos: crear version, release, notes
-    - ROI: Release process automatizado
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Commands: create version, release, notes
+    - ROI: Automated release process
 
 18. **Watchers Management** [P3]
-    - Utilidad: Baja | Complejidad: Media | Impacto: Bajo
-    - Comando: `.jira watch PROJ-123`
-    - ROI: Notificaciones targeted
+    - Utility: Low | Complexity: Medium | Impact: Low
+    - Command: `.jira watch PROJ-123`
+    - ROI: Targeted notifications
 
 19. **Component Management** [P3]
-    - Utilidad: Baja | Complejidad: Compleja | Impacto: Bajo
-    - ROI: Organización de proyectos grandes
+    - Utility: Low | Complexity: Complex | Impact: Low
+    - ROI: Organization of large projects
 
-### Categoría: Bitbucket Core
+### Category: Bitbucket Core
 
-#### Alto Impacto + Baja/Media Complejidad
-20. **Listar PRs** [P0]
-    - Utilidad: Crítica | Complejidad: Simple | Impacto: Crítico
-    - Comando: `.bb pr list`
-    - ROI: Inmediato, visibilidad de code review
+#### High Impact + Low/Medium Complexity
+20. **List PRs** [P0]
+    - Utility: Critical | Complexity: Simple | Impact: Critical
+    - Command: `.bb pr list`
+    - ROI: Immediate, code review visibility
 
-21. **Ver Detalle de PR** [P0]
-    - Utilidad: Crítica | Complejidad: Media | Impacto: Alto
-    - Comando: `.bb pr 123`
-    - ROI: Review desde Slack
+21. **View PR Details** [P0]
+    - Utility: Critical | Complexity: Medium | Impact: High
+    - Command: `.bb pr 123`
+    - ROI: Review from Slack
 
-22. **Aprobar/Merge PR** [P0]
-    - Utilidad: Alta | Complejidad: Media | Impacto: Alto
-    - Comando: `.bb pr merge 123`
-    - ROI: Workflow más rápido
+22. **Approve/Merge PR** [P0]
+    - Utility: High | Complexity: Medium | Impact: High
+    - Command: `.bb pr merge 123`
+    - ROI: Faster workflow
 
-23. **Crear PR** [P1]
-    - Utilidad: Alta | Complejidad: Media | Impacto: Alto
-    - Comando: `.bb pr create -s feature/x -t develop`
-    - ROI: Menos context switching
+23. **Create PR** [P1]
+    - Utility: High | Complexity: Medium | Impact: High
+    - Command: `.bb pr create -s feature/x -t develop`
+    - ROI: Less context switching
 
-24. **Agregar Comentario** [P1]
-    - Utilidad: Alta | Complejidad: Media | Impacto: Medio
-    - Comando: `.bb pr comment 123 "LGTM"`
-    - ROI: Code review más ágil
+24. **Add Comment** [P1]
+    - Utility: High | Complexity: Medium | Impact: Medium
+    - Command: `.bb pr comment 123 "LGTM"`
+    - ROI: More agile code review
 
-25. **Ver Commits** [P1]
-    - Utilidad: Media | Complejidad: Simple | Impacto: Medio
-    - Comando: `.bb commits main`
-    - ROI: Historial accessible
+25. **View Commits** [P1]
+    - Utility: Medium | Complexity: Simple | Impact: Medium
+    - Command: `.bb commits main`
+    - ROI: Accessible history
 
-26. **Ver Branches** [P1]
-    - Utilidad: Media | Complejidad: Simple | Impacto: Medio
-    - Comando: `.bb branches`
-    - ROI: Overview de desarrollo
+26. **View Branches** [P1]
+    - Utility: Medium | Complexity: Simple | Impact: Medium
+    - Command: `.bb branches`
+    - ROI: Development overview
 
-27. **Listar Repositorios** [P1]
-    - Utilidad: Media | Complejidad: Simple | Impacto: Bajo
-    - Comando: `.bb repos`
-    - ROI: Navegación rápida
+27. **List Repositories** [P1]
+    - Utility: Medium | Complexity: Simple | Impact: Low
+    - Command: `.bb repos`
+    - ROI: Quick navigation
 
-### Categoría: Bitbucket Advanced
+### Category: Bitbucket Advanced
 
 28. **Code Diff Viewer** [P2]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comando: `.bb pr diff 123`
-    - ROI: Review inline en Slack
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Command: `.bb pr diff 123`
+    - ROI: Inline review in Slack
 
 29. **Pipeline Monitoring** [P2]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comando: `.bb pipelines`
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Command: `.bb pipelines`
     - ROI: CI/CD visibility
 
 30. **Branch Management** [P3]
-    - Utilidad: Baja | Complejidad: Compleja | Impacto: Bajo
-    - Comando: `.bb branch create feature/x`
-    - ROI: Gestión desde CLI/Slack
+    - Utility: Low | Complexity: Complex | Impact: Low
+    - Command: `.bb branch create feature/x`
+    - ROI: Management from CLI/Slack
 
 31. **File Browser** [P3]
-    - Utilidad: Baja | Complejidad: Compleja | Impacto: Bajo
-    - Comando: `.bb files REPO --path src/`
-    - ROI: Navegación de código
+    - Utility: Low | Complexity: Complex | Impact: Low
+    - Command: `.bb files REPO --path src/`
+    - ROI: Code navigation
 
 32. **Code Search** [P3]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comando: `.bb search "TODO" --repo main`
-    - ROI: Encontrar código sin clonar
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Command: `.bb search "TODO" --repo main`
+    - ROI: Find code without cloning
 
-### Categoría: AI & Automatización
+### Category: AI & Automation
 
-#### Crítico Impacto
+#### Critical Impact
 33. **AI Code Review** [P2]
-    - Utilidad: Alta | Complejidad: Muy Compleja | Impacto: Alto
-    - Comando: `.bb review 123`
+    - Utility: High | Complexity: Very Complex | Impact: High
+    - Command: `.bb review 123`
     - Features:
-      - Detección de bugs potenciales
+      - Potential bug detection
       - Security vulnerabilities
       - Performance issues
       - Code quality suggestions
-    - ROI: Catch bugs antes de merge, mejora calidad
+    - ROI: Catch bugs before merge, improve quality
 
 34. **Auto-healing Workflows** [P4]
-    - Utilidad: Alta | Complejidad: Muy Compleja | Impacto: Alto
+    - Utility: High | Complexity: Very Complex | Impact: High
     - Features:
-      - Auto-assign basado en expertise
-      - Auto-priority basado en keywords
+      - Auto-assign based on expertise
+      - Auto-priority based on keywords
       - Stale PR alerts
-    - ROI: Reducción de trabajo manual >30%
+    - ROI: Manual work reduction >30%
 
 35. **Predictive Analytics** [P4]
-    - Utilidad: Alta | Complejidad: Muy Compleja | Impacto: Alto
+    - Utility: High | Complexity: Very Complex | Impact: High
     - Features:
       - Deadline prediction
       - Velocity forecasting
       - Risk assessment
       - Bottleneck detection
-    - ROI: Mejor planning, menos delays
+    - ROI: Better planning, fewer delays
 
-#### Alto Impacto
+#### High Impact
 36. **Smart PR Creator** [P3]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
-    - Comando: `.bb pr create-smart`
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
+    - Command: `.bb pr create-smart`
     - Features:
       - Auto-generate description from commits
       - Extract Jira issues
       - Suggest reviewers
-    - ROI: PRs mejor documentadas
+    - ROI: Better documented PRs
 
 37. **Documentation Generator** [P2]
-    - Utilidad: Alta | Complejidad: Muy Compleja | Impacto: Alto
-    - Comandos:
+    - Utility: High | Complexity: Very Complex | Impact: High
+    - Commands:
       - `.docs sprint` - Sprint report
       - `.docs release v1.2.0` - Release notes
       - `.wiki generate architecture`
-    - ROI: Documentación 80% automatizada
+    - ROI: 80% automated documentation
 
 38. **Smart Assignee Suggestion** [P4]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
-    - Analiza:
-      - Componentes del issue
-      - Expertise histórico
-      - Carga de trabajo
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
+    - Analyzes:
+      - Issue components
+      - Historical expertise
+      - Workload
       - Availability
-    - ROI: Mejor distribución de trabajo
+    - ROI: Better work distribution
 
 39. **Intent Classifier for PM** [P2]
-    - Utilidad: Alta | Complejidad: Compleja | Impacto: Alto
+    - Utility: High | Complexity: Complex | Impact: High
     - Intents:
       - jira.create, jira.update, jira.search
       - bb.pr.create, bb.review
       - docs.generate, sprint.analyze
-    - ROI: Interacción natural con bot
+    - ROI: Natural bot interaction
 
-### Categoría: Analytics & Reporting
+### Category: Analytics & Reporting
 
 40. **Jira Analytics Dashboard** [P2]
-    - Utilidad: Alta | Complejidad: Compleja | Impacto: Alto
-    - Métricas:
+    - Utility: High | Complexity: Complex | Impact: High
+    - Metrics:
       - Velocity
       - Burndown
       - Cycle time
@@ -363,16 +363,16 @@ Features para roadmap futuro.
     - ROI: Data-driven decisions
 
 41. **Bitbucket Analytics Dashboard** [P2]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Métricas:
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Metrics:
       - PR merge time
       - Code frequency
       - Contributors activity
       - Hotspot files
     - ROI: Code quality insights
 
-42. **Repository Analytics Avanzado** [P4]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
+42. **Advanced Repository Analytics** [P4]
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
     - Features:
       - Code churn analysis
       - Hotspot identification
@@ -381,8 +381,8 @@ Features para roadmap futuro.
     - ROI: Prevent future problems
 
 43. **Combined Metrics (DORA)** [P2]
-    - Utilidad: Alta | Complejidad: Compleja | Impacto: Alto
-    - Métricas:
+    - Utility: High | Complexity: Complex | Impact: High
+    - Metrics:
       - Deployment frequency
       - Lead time for changes
       - Change failure rate
@@ -390,66 +390,66 @@ Features para roadmap futuro.
     - ROI: DevOps maturity tracking
 
 44. **Custom Reports** [P2]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
-    - Comando: `.analytics custom --metrics velocity,burndown --format pdf`
-    - ROI: Reportes para stakeholders
+    - Utility: Medium | Complexity: Complex | Impact: Medium
+    - Command: `.analytics custom --metrics velocity,burndown --format pdf`
+    - ROI: Reports for stakeholders
 
-### Categoría: Integraciones & Webhooks
+### Category: Integrations & Webhooks
 
 45. **Webhooks Jira** [P0]
-    - Utilidad: Alta | Complejidad: Compleja | Impacto: Alto
-    - Eventos: issue created/updated, sprint events, comments
+    - Utility: High | Complexity: Complex | Impact: High
+    - Events: issue created/updated, sprint events, comments
     - ROI: Real-time notifications
 
 46. **Webhooks Bitbucket** [P0]
-    - Utilidad: Alta | Complejidad: Compleja | Impacto: Alto
-    - Eventos: PR events, commits, builds
-    - ROI: CI/CD visibility instantánea
+    - Utility: High | Complexity: Complex | Impact: High
+    - Events: PR events, commits, builds
+    - ROI: Instant CI/CD visibility
 
 47. **Auto-link Jira ↔ Bitbucket** [P1]
-    - Utilidad: Alta | Complejidad: Media | Impacto: Alto
+    - Utility: High | Complexity: Medium | Impact: High
     - Features:
       - Extract issue key from PR title
       - Add comment in Jira with PR link
       - Transition issue to "In Review"
-    - ROI: Trazabilidad automática
+    - ROI: Automatic traceability
 
 48. **Deployment Tracking** [P4]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
+    - Utility: Medium | Complexity: Complex | Impact: Medium
     - Features:
       - Link commits to deployments
       - Track deployment status
       - Notify stakeholders
     - ROI: Release visibility
 
-49. **Sistema de Suscripciones** [P0]
-    - Utilidad: Alta | Complejidad: Media | Impacto: Alto
+49. **Subscription System** [P0]
+    - Utility: High | Complexity: Medium | Impact: High
     - Features:
       - Subscribe to events by project/repo
       - Filter by issue type, priority
       - Multi-channel (Slack + Web)
-    - ROI: Notificaciones targeted
+    - ROI: Targeted notifications
 
-### Categoría: Utilities & Tools
+### Category: Utilities & Tools
 
 50. **Merge Conflict Resolver** [P3]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
     - Features:
       - Detect conflicts
       - Auto-resolve when possible
       - Suggest manual resolution strategy
-    - ROI: Menos merge hell
+    - ROI: Less merge hell
 
 51. **Wiki/Knowledge Base** [P4]
-    - Utilidad: Media | Complejidad: Compleja | Impacto: Medio
+    - Utility: Medium | Complexity: Complex | Impact: Medium
     - Features:
       - Auto-generate from Jira/Bitbucket
       - Full-text search
       - Version control
-    - ROI: Documentación centralizada
+    - ROI: Centralized documentation
 
 52. **Team Capacity Planner** [P4]
-    - Utilidad: Media | Complejidad: Muy Compleja | Impacto: Medio
+    - Utility: Medium | Complexity: Very Complex | Impact: Medium
     - Features:
       - Calculate team capacity
       - Suggest sprint commitment
@@ -457,7 +457,7 @@ Features para roadmap futuro.
     - ROI: Realistic sprint planning
 
 53. **Stale PR Detector** [P4]
-    - Utilidad: Baja | Complejidad: Compleja | Impacto: Bajo
+    - Utility: Low | Complexity: Complex | Impact: Low
     - Features:
       - Find PRs without activity
       - Find PRs with conflicts
@@ -465,24 +465,24 @@ Features para roadmap futuro.
     - ROI: Clean up backlog
 
 54. **Custom Workflow Engine** [P4]
-    - Utilidad: Alta | Complejidad: Muy Compleja | Impacto: Alto
+    - Utility: High | Complexity: Very Complex | Impact: High
     - Features:
       - DSL for defining workflows
       - Trigger on events
       - Execute actions (create, update, notify)
-    - ROI: Automations sin código
+    - ROI: Automations without code
 
 ---
 
-## Roadmap Visual
+## Visual Roadmap
 
 ```
 Timeline:
 ├── Week 1-4: P0 Features (MVP)
-│   ├── Jira CRUD básico
+│   ├── Basic Jira CRUD
 │   ├── Bitbucket PR management
 │   ├── Webhooks setup
-│   └── Notificaciones
+│   └── Notifications
 │
 ├── Week 5-7: P1 Features (Essential)
 │   ├── JQL search
@@ -512,97 +512,97 @@ Timeline:
 
 ---
 
-## Estrategia de Implementación
+## Implementation Strategy
 
-### Fase 1: MVP (P0) - 4 semanas
-**Objetivo**: Bot funcional para operaciones básicas
-
-**Features**:
-- Jira: Ver, listar, crear, transicionar issues
-- Bitbucket: Ver, aprobar, merge PRs
-- Webhooks básicos
-- Notificaciones Slack + Web
-
-**Validación**:
-- [ ] Usuario puede crear issue desde Slack
-- [ ] Usuario recibe notificación de nuevos PRs
-- [ ] Usuario puede aprobar PR desde Slack
-- [ ] Webhooks funcionando <1s latency
-
-### Fase 2: Productividad (P1) - 3 semanas
-**Objetivo**: Aumentar productividad diaria
+### Phase 1: MVP (P0) - 4 weeks
+**Objective**: Functional bot for basic operations
 
 **Features**:
-- Búsqueda y filters
+- Jira: View, list, create, transition issues
+- Bitbucket: View, approve, merge PRs
+- Basic webhooks
+- Slack + Web notifications
+
+**Validation**:
+- [ ] User can create issue from Slack
+- [ ] User receives notification for new PRs
+- [ ] User can approve PR from Slack
+- [ ] Webhooks working <1s latency
+
+### Phase 2: Productivity (P1) - 3 weeks
+**Objective**: Increase daily productivity
+
+**Features**:
+- Search and filters
 - Sprint/backlog views
 - Auto-linking Jira ↔ Bitbucket
-- Comentarios
+- Comments
 
-**Validación**:
-- [ ] Reducción 25% en clicks a Jira/Bitbucket
-- [ ] Auto-linking funcionando >95%
-- [ ] Adopción >50% del equipo
+**Validation**:
+- [ ] 25% reduction in clicks to Jira/Bitbucket
+- [ ] Auto-linking working >95%
+- [ ] Adoption >50% of team
 
-### Fase 3: Intelligence (P2) - 9 semanas
-**Objetivo**: AI y analytics
+### Phase 3: Intelligence (P2) - 9 weeks
+**Objective**: AI and analytics
 
 **Features**:
 - AI Code Review
 - Analytics dashboards
 - Documentation generation
-- Sprint management avanzado
+- Advanced sprint management
 
-**Validación**:
-- [ ] AI review detecta >80% bugs obvios
-- [ ] Dashboards actualizados <5min
-- [ ] Docs generadas ≥70% útiles
-- [ ] Métricas históricas >3 meses
+**Validation**:
+- [ ] AI review detects >80% obvious bugs
+- [ ] Dashboards updated <5min
+- [ ] Docs generated ≥70% useful
+- [ ] Historical metrics >3 months
 
-### Fase 4: Optimización (P3-P4) - Continuo
-**Objetivo**: Features especializadas
+### Phase 4: Optimization (P3-P4) - Ongoing
+**Objective**: Specialized features
 
 **Features**:
-- Workflows custom
+- Custom workflows
 - Predictive analytics
 - Auto-healing
 - Advanced tooling
 
-**Validación**:
-- [ ] Custom workflows en uso
-- [ ] Predicciones ±15% accuracy
-- [ ] Auto-healing reduciendo manual work >30%
+**Validation**:
+- [ ] Custom workflows in use
+- [ ] Predictions ±15% accuracy
+- [ ] Auto-healing reducing manual work >30%
 
 ---
 
-## Métricas de Éxito por Fase
+## Success Metrics by Phase
 
-### MVP (Fase 1)
-- **Adoption**: >30% del equipo
+### MVP (Phase 1)
+- **Adoption**: >30% of team
 - **Daily active users**: >5
 - **Commands per day**: >50
 - **Webhook latency**: <2s
 - **Uptime**: >99%
 
-### Productividad (Fase 2)
-- **Adoption**: >60% del equipo
-- **Time saved**: >2h/semana/persona
+### Productivity (Phase 2)
+- **Adoption**: >60% of team
+- **Time saved**: >2h/week/person
 - **Jira/BB UI visits**: -25%
 - **Auto-linking success**: >95%
 
-### Intelligence (Fase 3)
-- **AI review usage**: >50% de PRs
+### Intelligence (Phase 3)
+- **AI review usage**: >50% of PRs
 - **Bugs caught pre-merge**: +30%
 - **Documentation coverage**: >70%
-- **Dashboard views**: >20/día
+- **Dashboard views**: >20/day
 
-### Optimización (Fase 4)
-- **Custom workflows**: >5 activos
+### Optimization (Phase 4)
+- **Custom workflows**: >5 active
 - **Manual work reduction**: >40%
 - **Prediction accuracy**: ±15%
 - **NPS**: >8/10
 
 ---
 
-## Resumen
+## Summary
 
-Roadmap completo con 54 funcionalidades clasificadas en 4 prioridades. **P0 (MVP)** incluye 10 features core en 4 semanas: CRUD Jira/Bitbucket, webhooks, notificaciones. **P1 (Essential)** añade 10 features de productividad en 3 semanas: búsqueda JQL, sprint views, auto-linking. **P2 (Advanced)** incorpora 10 features AI/analytics en 9 semanas: code review con GPT-4, dashboards, documentación automática. **P3** y **P4** incluyen 24 features adicionales para roadmap extendido: workflows custom, predictive analytics, wiki generator. Clasificación multi-dimensional por utilidad/complejidad/impacto permite priorización data-driven. Métricas de éxito definidas por fase: MVP busca 30% adoption, P1 busca 60% adoption + 25% reducción en clicks, P2 busca 70% docs coverage + 30% más bugs detectados, P3/P4 buscan 40% reducción en trabajo manual + NPS >8/10. Implementación iterativa permite feedback continuo y ajustes.
+Complete roadmap with 54 features classified into 4 priorities. **P0 (MVP)** includes 10 core features in 4 weeks: Jira/Bitbucket CRUD, webhooks, notifications. **P1 (Essential)** adds 10 productivity features in 3 weeks: JQL search, sprint views, auto-linking. **P2 (Advanced)** incorporates 10 AI/analytics features in 9 weeks: code review with GPT-4, dashboards, automatic documentation. **P3** and **P4** include 24 additional features for extended roadmap: custom workflows, predictive analytics, wiki generator. Multi-dimensional classification by utility/complexity/impact enables data-driven prioritization. Success metrics defined by phase: MVP targets 30% adoption, P1 targets 60% adoption + 25% click reduction, P2 targets 70% docs coverage + 30% more bugs detected, P3/P4 target 40% reduction in manual work + NPS >8/10. Iterative implementation allows continuous feedback and adjustments.
