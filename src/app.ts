@@ -37,6 +37,9 @@ import NotesWebController from './modules/notes/controller/notesWeb.controller'
 import LinksWebController from './modules/links/controller/linksWeb.controller'
 import SystemWebController from './modules/system/controller/systemWeb.controller'
 import JiraWebController from './modules/jira/controller/jiraWeb.controller'
+import JiraController from './modules/jira/controller/jira.controller'
+import BitbucketWebController from './modules/bitbucket/controller/bitbucketWeb.controller'
+import BitbucketController from './modules/bitbucket/controller/bitbucket.controller'
 import { slackHelperMessage } from './shared/constants/slack.constants'
 
 dotenv.config()
@@ -66,6 +69,9 @@ export default class App {
   private summaryWebController: SummaryWebController
   private systemWebController: SystemWebController
   private jiraWebController: JiraWebController
+  private jiraController: JiraController
+  private bitbucketWebController: BitbucketWebController
+  private bitbucketController: BitbucketController
 
   constructor() {
     // Controllers Instances
@@ -86,6 +92,9 @@ export default class App {
     this.summaryWebController = SummaryWebController.getInstance()
     this.systemWebController = SystemWebController.getInstance()
     this.jiraWebController = JiraWebController.getInstance()
+    this.jiraController = JiraController.getInstance()
+    this.bitbucketWebController = BitbucketWebController.getInstance()
+    this.bitbucketController = BitbucketController.getInstance()
 
     // Express
     this.app = express()
@@ -125,6 +134,7 @@ export default class App {
     this.app.use('/text-to-speech', [this.textToSpeechWebController.router])
     this.app.use('/summary', [this.summaryWebController.router])
     this.app.use('/jira', [this.jiraWebController.router])
+    this.app.use('/bitbucket', [this.bitbucketWebController.router])
   }
 
   private slackListeners(): void {
@@ -168,6 +178,28 @@ export default class App {
     this.slackApp.message(
       slackListenersKey.conversationFlow,
       safeHandler(this.conversationController.conversationFlow)
+    )
+
+    this.slackApp.message(
+      slackListenersKey.jiraTest,
+      safeHandler(this.jiraController.testConnection)
+    )
+    this.slackApp.message(
+      slackListenersKey.jiraProject,
+      safeHandler(this.jiraController.getProject)
+    )
+
+    this.slackApp.message(
+      slackListenersKey.bitbucketTest,
+      safeHandler(this.bitbucketController.testConnection)
+    )
+    this.slackApp.message(
+      slackListenersKey.bitbucketRepos,
+      safeHandler(this.bitbucketController.listRepositories)
+    )
+    this.slackApp.message(
+      slackListenersKey.bitbucketPRs,
+      safeHandler(this.bitbucketController.listPullRequests)
     )
 
     this.slackApp.command('/help', async ({ ack, body, client }: any): Promise<void> => {

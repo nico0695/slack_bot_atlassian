@@ -20,4 +20,13 @@ export const slackListenersKey = {
   generateImages: /^img?\b/i,
 
   conversationFlow: /^(?!img|cb_clean|cb_show|cb\b)/i,
+
+  // Jira commands
+  jiraTest: /^\.jira\s+test\b/i,
+  jiraProject: /^\.jira\s+project\b/i,
+
+  // Bitbucket commands
+  bitbucketTest: /^\.bb\s+test\b/i,
+  bitbucketRepos: /^\.bb\s+repos?\b/i,
+  bitbucketPRs: /^\.bb\s+prs?\b/i,
 }
