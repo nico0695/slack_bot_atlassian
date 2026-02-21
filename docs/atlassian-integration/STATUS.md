@@ -6,45 +6,53 @@
 
 ## Previous Step
 
-**Stage 0 — Planning and Documentation**
-- All planning documentation created in `docs/atlassian-integration/`.
-- Defined 7 implementation stages, roadmap of 54 features, technical architecture, AI enhancements and recommended libraries.
+**Stage 1 — API and Services Configuration (COMPLETED)**
 
-## Current Step
+All Stage 1 items implemented. Jira and Bitbucket modules are fully scaffolded and ready for Stage 2 core features.
 
-**Stage 1 — API and Services Configuration (IN PROGRESS)**
-
-Jira module base was implemented. Bitbucket and other Stage 1 tasks remain pending.
-
-### Completed
+### Completed (Stage 1)
 - Jira credentials in `.env.example` (JIRA_HOST, JIRA_EMAIL, JIRA_API_TOKEN, JIRA_PROJECT_KEY)
-- Dependencies: `jira-client`, `@types/jira-client`
-- Module `src/modules/jira/` with web controller, service, repository, constants, interfaces, schemas
-- Endpoints `GET /jira/test` and `GET /jira/project` registered in `app.ts`
-- 7 unit tests for JiraServices (all passing)
+- Bitbucket credentials in `.env.example` (BITBUCKET_WORKSPACE, BITBUCKET_USERNAME, BITBUCKET_APP_PASSWORD, BITBUCKET_DEFAULT_REPO)
+- Dependencies: `jira-client`, `@types/jira-client`, `axios` (already present)
+- Module `src/modules/jira/` — controller (Slack + Web), service, repository, constants, interfaces, schemas
+- Jira utilities: `jiraFormatters.ts`, `jql.builder.ts`
+- Jira cache: `src/modules/jira/repositories/database/jiraCache.dataSource.ts`
+- Jira Slack controller: `src/modules/jira/controller/jira.controller.ts`
+- TypeORM cache entities: `JiraIssueCache`, `BitbucketPRCache` in `src/entities/`
+- Module `src/modules/bitbucket/` — controller (Slack + Web), service, repository, constants, interfaces, schemas
+- Endpoints `GET /jira/test`, `GET /jira/project` registered in `app.ts`
+- Endpoints `GET /bitbucket/test`, `GET /bitbucket/repositories`, `GET /bitbucket/pullrequests`, `POST /bitbucket/pullrequests` registered in `app.ts`
+- Slack listeners: `.jira test`, `.jira project`, `.bb test`, `.bb repos`, `.bb prs <repo>` in `slackConfig.ts` and `app.ts`
+- 18 unit tests for JiraServices + BitbucketServices (all passing)
 - Structured logging with Pino
 - TypeScript compiles without errors, ESLint clean
 
-### Pending (Stage 1)
-- Complete Bitbucket module (structure, service, repository, controller, schemas)
-- Bitbucket environment variables in `.env.example`
-- `axios` dependency for Bitbucket API
-- Jira Slack controller (`jira.controller.ts`)
-- Cache layer: `jiraCache.dataSource.ts`
-- Utilities: `jiraFormatters.ts`, `jql.builder.ts`
-- TypeORM entities: `JiraIssueCache`, `BitbucketPRCache`
-- Bitbucket test endpoints (`/bitbucket/test`, `/bitbucket/repositories`)
+---
 
-### Observations
-- The `STAGE_1_COMPLETE.md` file indicates Stage 1 completed, but only covers the Jira API base part. Bitbucket and cache entities were not implemented.
-- One pre-existing test fails (`conversations.controller.test.ts`) due to missing Slack `APP_TOKEN` in test environment — not related to Atlassian integration.
-- The existing implementation correctly follows project patterns (singleton, GenericController, Pino logger, Zod schemas, auth decorators).
+## Current Step
+
+**Stage 2 — Base Modules and Core Functionality (PENDING)**
+
+### Pending (Stage 2)
+- Jira: `GET /jira/issues/:issueKey`, `GET /jira/issues/assigned-to-me`, `GET /jira/issues/search`, `GET /jira/sprints/active`, `GET /jira/backlog`
+- Bitbucket: `GET /bitbucket/repositories/:slug/commits`, `GET /bitbucket/repositories/:slug/branches`
+- Slack commands: `.jira issue PROJ-123`, `.jira list`, `.jira sprint`, `.jira backlog`, `.bb pr list`, `.bb commits REPO`, `.bb branches`
+- Redis cache layer for Jira (issues, sprints) and Bitbucket (PRs, branches)
+- Extend `JiraApiRepository` with `getIssue`, `searchIssues`, `getActiveSprint`, `getBacklog`
+- Extend `BitbucketApiRepository` with `getBranches`, `getCommits`, `getPR`
+- Unit tests >70% coverage for new endpoints and services
 
 ---
 
 ## Next Step
 
-**Complete Stage 1** — Implement Bitbucket base module, TypeORM cache entities, missing Jira utilities and Jira Slack controller. Then advance to **Stage 2** (core read features and Slack commands).
+**Stage 2** — Implement core read functionality (issues, sprints, PRs, branches, commits) with Redis caching. Then advance to **Stage 3** (resource creation and modification).
+
+### Observations
+- One pre-existing test fails (`conversations.controller.test.ts`) due to missing Slack `APP_TOKEN` in test environment — not related to Atlassian integration.
+- The existing implementation correctly follows project patterns (singleton, GenericController, Pino logger, Zod schemas, auth decorators).
+- `JQLBuilder` is ready to power Stage 2 search queries.
+- `jiraFormatters.ts` is ready to format Slack responses in Stage 2.
 
 ---
 
