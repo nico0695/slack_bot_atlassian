@@ -28,6 +28,7 @@ export const slackListenersKey = {
   jiraList: /^\.jira\s+list\b/i,
   jiraSprint: /^\.jira\s+sprint\b/i,
   jiraBacklog: /^\.jira\s+backlog\b/i,
+  jiraSearch: /^\.jira\s+search\b/i,
 
   // Bitbucket commands
   bitbucketTest: /^\.bb\s+test\b/i,

@@ -18,6 +18,7 @@ export default class JiraController {
     this.getAssignedToMe = this.getAssignedToMe.bind(this)
     this.getActiveSprint = this.getActiveSprint.bind(this)
     this.getBacklog = this.getBacklog.bind(this)
+    this.searchByText = this.searchByText.bind(this)
   }
 
   static getInstance(): JiraController {
@@ -183,6 +184,43 @@ export default class JiraController {
     } catch (error) {
       log.error({ err: error }, 'getBacklog Slack command failed')
       say('Ups! Error fetching backlog.')
+    }
+  }
+
+  /**
+   * Slack command: .jira search <text>
+   * Full-text search by summary or description
+   */
+  public async searchByText(data: any): Promise<void> {
+    const { payload, say } = data
+
+    try {
+      const raw: string = payload.text.replace(/^\.jira\s+search\s*/i, '').trim()
+      const text: string = raw.replace(/^["'](.+)["']$/, '$1').trim()
+
+      if (!text) {
+        say('Usage: `.jira search <text>` — e.g. `.jira search login oauth`')
+        return
+      }
+
+      const response = await this.jiraServices.searchByText(text)
+
+      if (response.error) {
+        say(`Error searching issues: ${response.error}`)
+        return
+      }
+
+      const result = response.data
+      if (result.total === 0) {
+        say(`No issues found matching \`${text}\`.`)
+        return
+      }
+
+      const header = `*Search results for \`${text}\` (${result.total}):*\n`
+      say(header + formatIssueListForSlack(result.issues))
+    } catch (error) {
+      log.error({ err: error }, 'searchByText Slack command failed')
+      say('Ups! Error searching issues.')
     }
   }
 }

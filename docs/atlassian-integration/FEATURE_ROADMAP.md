@@ -13,22 +13,22 @@ Each feature is classified according to four dimensions:
 ## Prioritization Matrix
 
 ### Priority 0 (P0) - MVP Core Features
-Essential features for a functional MVP. **Target: 4 weeks**
+Essential features for a functional read-only MVP. **Target: 4 weeks**
 
 | # | Feature | Utility | Complexity | Impact | Time |
 |---|---------|----------|------------|--------|------|
 | 1 | Jira: View individual issue | Critical | Simple | Critical | 1d |
 | 2 | Jira: List my issues | Critical | Simple | Critical | 1d |
-| 3 | Jira: Create issue | Critical | Medium | High | 3d |
-| 4 | Jira: State transition | High | Medium | High | 2d |
-| 5 | Bitbucket: List PRs | Critical | Simple | Critical | 1d |
-| 6 | Bitbucket: View PR details | Critical | Medium | High | 2d |
-| 7 | Bitbucket: Approve/Merge PR | High | Medium | High | 3d |
-| 8 | Webhooks Jira: Issue created/updated | High | Complex | High | 5d |
-| 9 | Webhooks Bitbucket: PR events | High | Complex | High | 5d |
-| 10 | Basic notification system | High | Medium | High | 3d |
+| 3 | Jira: Current sprint | High | Simple | High | 1d |
+| 4 | Jira: View backlog | High | Simple | Medium | 1d |
+| 5 | Jira: Full-text search (summary/description) | Critical | Simple | High | 1d |
+| 6 | Bitbucket: List PRs | Critical | Simple | Critical | 1d |
+| 7 | Bitbucket: View PR details | Critical | Medium | High | 2d |
+| 8 | Bitbucket: View commits | Medium | Simple | Medium | 1d |
+| 9 | Bitbucket: View branches | Medium | Simple | Medium | 1d |
+| 10 | Deep links in all responses (Jira + Bitbucket) | Critical | Simple | Critical | 1d |
 
-**Total P0**: ~26 days (4 weeks with 1-2 devs)
+**Total P0**: ~11 days (~2 weeks with 1 dev)
 
 ---
 
@@ -38,17 +38,17 @@ Features that significantly increase productivity. **Target: 3 weeks**
 | # | Feature | Utility | Complexity | Impact | Time |
 |---|---------|----------|------------|--------|------|
 | 11 | Jira: JQL search | High | Medium | High | 3d |
-| 12 | Jira: Add comment | High | Medium | Medium | 2d |
-| 13 | Jira: Current sprint | High | Simple | High | 1d |
-| 14 | Jira: View backlog | High | Simple | Medium | 1d |
+| 12 | Jira: Create issue | Critical | Medium | High | 3d |
+| 13 | Jira: State transition | High | Medium | High | 2d |
+| 14 | Jira: Add comment | High | Medium | Medium | 2d |
 | 15 | Bitbucket: Create PR | High | Medium | High | 3d |
-| 16 | Bitbucket: Add comment | High | Medium | Medium | 2d |
-| 17 | Bitbucket: View commits | Medium | Simple | Medium | 1d |
-| 18 | Bitbucket: View branches | Medium | Simple | Medium | 1d |
+| 16 | Bitbucket: Approve/Merge PR | High | Medium | High | 3d |
+| 17 | Bitbucket: Add PR comment | High | Medium | Medium | 2d |
+| 18 | Bitbucket: Commit detail (single commit) | Medium | Simple | Medium | 1d |
 | 19 | Auto-link Jira ↔ Bitbucket | High | Medium | High | 4d |
-| 20 | Saved filters (Jira) | Medium | Complex | Medium | 5d |
+| 20 | Basic notification system | High | Medium | High | 3d |
 
-**Total P1**: ~23 days (3 weeks)
+**Total P1**: ~26 days (3-4 weeks)
 
 ---
 
@@ -514,29 +514,29 @@ Timeline:
 
 ## Implementation Strategy
 
-### Phase 1: MVP (P0) - 4 weeks
-**Objective**: Functional bot for basic operations
+### Phase 1: Read-Only MVP (P0) - 2-3 weeks
+**Objective**: Functional read-only bot for search and information retrieval
 
 **Features**:
-- Jira: View, list, create, transition issues
-- Bitbucket: View, approve, merge PRs
-- Basic webhooks
-- Slack + Web notifications
+- Jira: View, list, search (text + JQL), sprint, backlog
+- Bitbucket: View PRs, commits, branches
+- Deep links to Jira and Bitbucket web UI in all responses
+- Basic Slack formatting with clickable URLs
 
 **Validation**:
-- [ ] User can create issue from Slack
-- [ ] User receives notification for new PRs
-- [ ] User can approve PR from Slack
-- [ ] Webhooks working <1s latency
+- [x] User can search issues from Slack by text
+- [x] Every response includes a link to the source
+- [x] Jira sprint and backlog viewable from Slack
+- [x] Bitbucket PRs and commits browsable from Slack
 
-### Phase 2: Productivity (P1) - 3 weeks
-**Objective**: Increase daily productivity
+### Phase 2: Write Operations (P1) - 3-4 weeks
+**Objective**: Enable mutations — create issues, comments, PR lifecycle
 
 **Features**:
-- Search and filters
-- Sprint/backlog views
+- Jira: Create issue, add comment, transition status
+- Bitbucket: Create PR, approve, merge, add comment
 - Auto-linking Jira ↔ Bitbucket
-- Comments
+- Basic notifications
 
 **Validation**:
 - [ ] 25% reduction in clicks to Jira/Bitbucket

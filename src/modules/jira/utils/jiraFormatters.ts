@@ -4,8 +4,12 @@ import { IJiraIssue } from '../shared/interfaces/jira.interfaces'
  * Format a Jira issue for Slack messages
  */
 export function formatIssueForSlack(issue: IJiraIssue): string {
+  const title = issue.url
+    ? `*<${issue.url}|${issue.key}>* — ${issue.summary}`
+    : `*${issue.key}* — ${issue.summary}`
+
   const lines: string[] = [
-    `*${issue.key}* — ${issue.summary}`,
+    title,
     `Status: ${issue.status} | Type: ${issue.issueType}`,
   ]
 
@@ -32,9 +36,10 @@ export function formatIssueListForSlack(issues: IJiraIssue[]): string {
     return 'No issues found.'
   }
 
-  const lines = issues.map(
-    (issue) => `• *${issue.key}* — ${issue.summary} [${issue.status}]`
-  )
+  const lines = issues.map((issue) => {
+    const link = issue.url ? `<${issue.url}|${issue.key}>` : issue.key
+    return `• *${link}* — ${issue.summary} [${issue.status}]`
+  })
 
   return lines.join('\n')
 }

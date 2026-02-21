@@ -154,6 +154,7 @@ export default class BitbucketApiRepository {
         createdOn: pr.created_on,
         updatedOn: pr.updated_on,
         commentCount: pr.comment_count,
+        url: pr.links?.html?.href,
       }))
     } catch (error: any) {
       log.error({ err: error, repoSlug }, 'Failed to list PRs')
@@ -196,6 +197,7 @@ export default class BitbucketApiRepository {
         createdOn: response.data.created_on,
         updatedOn: response.data.updated_on,
         commentCount: response.data.comment_count,
+        url: response.data.links?.html?.href,
       }
     } catch (error: any) {
       log.error({ err: error, repoSlug: data.repoSlug }, 'Failed to create PR')
@@ -241,6 +243,7 @@ export default class BitbucketApiRepository {
         createdOn: pr.created_on,
         updatedOn: pr.updated_on,
         commentCount: pr.comment_count,
+        url: pr.links?.html?.href,
       }
     } catch (error: any) {
       log.error({ err: error, repoSlug, prId }, 'Failed to get PR')
@@ -266,6 +269,7 @@ export default class BitbucketApiRepository {
         name: b.name,
         isDefault: b.name === mainBranchName,
         latestCommit: b.target?.hash?.slice(0, 8),
+        url: `https://bitbucket.org/${this.workspace}/${repoSlug}/src/${encodeURIComponent(String(b.name))}`,
       }))
     } catch (error: any) {
       log.error({ err: error, repoSlug }, 'Failed to list branches')
@@ -295,6 +299,7 @@ export default class BitbucketApiRepository {
         message: c.message?.split('\n')[0] ?? '',
         author: c.author?.user?.display_name ?? c.author?.raw ?? 'Unknown',
         date: c.date,
+        url: `https://bitbucket.org/${this.workspace}/${repoSlug}/commits/${String(c.hash)}`,
       }))
     } catch (error: any) {
       log.error({ err: error, repoSlug }, 'Failed to list commits')
