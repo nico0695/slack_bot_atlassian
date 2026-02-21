@@ -29,7 +29,7 @@ All Stage 1 items implemented. Jira and Bitbucket modules are fully scaffolded a
 
 ---
 
-## Current Step
+## Previous Step
 
 **Stage 2 — Base Modules and Core Functionality (COMPLETED)**
 

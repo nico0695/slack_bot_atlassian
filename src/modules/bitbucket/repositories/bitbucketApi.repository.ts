@@ -269,7 +269,7 @@ export default class BitbucketApiRepository {
         name: b.name,
         isDefault: b.name === mainBranchName,
         latestCommit: b.target?.hash?.slice(0, 8),
-        url: `https://bitbucket.org/${this.workspace}/${repoSlug}/src/${String(b.name)}`,
+        url: `https://bitbucket.org/${this.workspace}/${repoSlug}/src/${encodeURIComponent(String(b.name))}`,
       }))
     } catch (error: any) {
       log.error({ err: error, repoSlug }, 'Failed to list branches')

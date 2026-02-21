@@ -158,7 +158,7 @@ export default class BitbucketController {
 
       const lines = branches.map(
         (b) => {
-          const nameDisplay = b.url ? `<${b.url}|\`${b.name}\`>` : `\`${b.name}\``
+          const nameDisplay = b.url ? `<${b.url}|${b.name}>` : `\`${b.name}\``
           return `• ${nameDisplay}${b.isDefault ? ' _(default)_' : ''}${b.latestCommit ? ` — ${b.latestCommit}` : ''}`
         }
       )
@@ -202,7 +202,7 @@ export default class BitbucketController {
       const lines = commits
         .slice(0, 10)
         .map((c) => {
-          const hashDisplay = c.url ? `<${c.url}|\`${c.hash}\`>` : `\`${c.hash}\``
+          const hashDisplay = c.url ? `<${c.url}|${c.hash}>` : `\`${c.hash}\``
           return `• ${hashDisplay} ${c.message} — _${c.author}_`
         })
       say(`*Recent commits for \`${repoSlug}\`${branch ? ` (${branch})` : ''} :*\n${lines.join('\n')}`)

@@ -263,7 +263,7 @@ Add `.jira search "text"` Slack command + `textSearch()` to `JQLBuilder`.
 ```typescript
 // jql.builder.ts
 textSearch(text: string): this {
-  const escaped = text.replace(/"/g, '\\"')
+  const escaped = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
   this.conditions.push(`(summary ~ "${escaped}" OR description ~ "${escaped}")`)
   return this
 }
@@ -299,7 +299,7 @@ interface IBitbucketCommitDetail {
 - [x] `url` field present on Bitbucket PRs, commits, branches
 - [x] Slack messages show clickable links
 - [x] `.jira search "text"` returns matching issues
-- [x] `GET /bitbucket/repositories/:slug/commits/:hash` responds correctly
+- [ ] `GET /bitbucket/repositories/:slug/commits/:hash` responds correctly _(pending: endpoint not yet implemented)_
 - [x] All new code tested and ESLint clean
 
 ### Estimated Time: 3-4 days
