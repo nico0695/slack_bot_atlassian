@@ -1,5 +1,6 @@
 import { createModuleLogger } from '../../../config/logger'
 import JiraServices from '../services/jira.services'
+import { formatIssueForSlack, formatIssueListForSlack } from '../utils/jiraFormatters'
 
 const log = createModuleLogger('jira.controller')
 
@@ -13,6 +14,10 @@ export default class JiraController {
 
     this.testConnection = this.testConnection.bind(this)
     this.getProject = this.getProject.bind(this)
+    this.getIssue = this.getIssue.bind(this)
+    this.getAssignedToMe = this.getAssignedToMe.bind(this)
+    this.getActiveSprint = this.getActiveSprint.bind(this)
+    this.getBacklog = this.getBacklog.bind(this)
   }
 
   static getInstance(): JiraController {
@@ -77,6 +82,107 @@ export default class JiraController {
     } catch (error) {
       log.error({ err: error }, 'getProject Slack command failed')
       say('Ups! Error fetching Jira project.')
+    }
+  }
+
+  /**
+   * Slack command: .jira issue PROJ-123
+   * Show details for a specific issue
+   */
+  public async getIssue(data: any): Promise<void> {
+    const { payload, say } = data
+
+    try {
+      const issueKey = payload.text.replace(/^\.jira\s+issue\s*/i, '').trim().toUpperCase()
+
+      if (!issueKey || !/^[A-Z]+-\d+$/.test(issueKey)) {
+        say('Usage: `.jira issue PROJ-123`')
+        return
+      }
+
+      const response = await this.jiraServices.getIssue(issueKey)
+
+      if (response.error) {
+        say(`Error fetching issue: ${response.error}`)
+        return
+      }
+
+      say(formatIssueForSlack(response.data))
+    } catch (error) {
+      log.error({ err: error }, 'getIssue Slack command failed')
+      say('Ups! Error fetching issue.')
+    }
+  }
+
+  /**
+   * Slack command: .jira list
+   * Show issues assigned to me
+   */
+  public async getAssignedToMe(data: any): Promise<void> {
+    const { say } = data
+
+    try {
+      const response = await this.jiraServices.getAssignedToMe()
+
+      if (response.error) {
+        say(`Error fetching assigned issues: ${response.error}`)
+        return
+      }
+
+      const result = response.data
+      const header = `*My Issues (${result.total}):*\n`
+      say(header + formatIssueListForSlack(result.issues))
+    } catch (error) {
+      log.error({ err: error }, 'getAssignedToMe Slack command failed')
+      say('Ups! Error fetching assigned issues.')
+    }
+  }
+
+  /**
+   * Slack command: .jira sprint
+   * Show active sprint issues
+   */
+  public async getActiveSprint(data: any): Promise<void> {
+    const { say } = data
+
+    try {
+      const response = await this.jiraServices.getActiveSprint()
+
+      if (response.error) {
+        say(`Error fetching active sprint: ${response.error}`)
+        return
+      }
+
+      const result = response.data
+      const header = `*Active Sprint (${result.total} issues):*\n`
+      say(header + formatIssueListForSlack(result.issues))
+    } catch (error) {
+      log.error({ err: error }, 'getActiveSprint Slack command failed')
+      say('Ups! Error fetching active sprint.')
+    }
+  }
+
+  /**
+   * Slack command: .jira backlog
+   * Show backlog issues
+   */
+  public async getBacklog(data: any): Promise<void> {
+    const { say } = data
+
+    try {
+      const response = await this.jiraServices.getBacklog()
+
+      if (response.error) {
+        say(`Error fetching backlog: ${response.error}`)
+        return
+      }
+
+      const result = response.data
+      const header = `*Backlog (${result.total} issues):*\n`
+      say(header + formatIssueListForSlack(result.issues))
+    } catch (error) {
+      log.error({ err: error }, 'getBacklog Slack command failed')
+      say('Ups! Error fetching backlog.')
     }
   }
 }

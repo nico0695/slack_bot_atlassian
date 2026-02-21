@@ -1,6 +1,13 @@
 import JiraClient from 'jira-client'
 import { createModuleLogger } from '../../../config/logger'
-import { IJiraConfig, IJiraConnectionTest, IJiraProject } from '../shared/interfaces/jira.interfaces'
+import {
+  IJiraConfig,
+  IJiraConnectionTest,
+  IJiraIssue,
+  IJiraProject,
+  IJiraSearchResult,
+} from '../shared/interfaces/jira.interfaces'
+import { JQLBuilder } from '../utils/jql.builder'
 
 const log = createModuleLogger('jira.api.repository')
 
@@ -142,5 +149,147 @@ export default class JiraApiRepository {
    */
   getConfiguredProjectKey(): string | undefined {
     return this.config?.projectKey
+  }
+
+  /**
+   * Get configured email
+   */
+  getConfiguredEmail(): string | undefined {
+    return this.config?.email
+  }
+
+  /**
+   * Map a raw Jira API issue object to IJiraIssue
+   */
+  private mapIssue(issue: any): IJiraIssue {
+    return {
+      key: issue.key,
+      id: issue.id,
+      summary: issue.fields?.summary ?? '',
+      description:
+        issue.fields?.description?.content?.[0]?.content?.[0]?.text ?? issue.fields?.description,
+      status: issue.fields?.status?.name ?? '',
+      issueType: issue.fields?.issuetype?.name ?? '',
+      priority: issue.fields?.priority?.name,
+      assignee: issue.fields?.assignee?.displayName,
+      reporter: issue.fields?.reporter?.displayName,
+      created: new Date(issue.fields?.created),
+      updated: new Date(issue.fields?.updated),
+      labels: issue.fields?.labels ?? [],
+      components: (issue.fields?.components ?? []).map((c: any) => c.name),
+    }
+  }
+
+  /**
+   * Get a specific Jira issue by key (e.g. PROJ-123)
+   */
+  async getIssue(issueKey: string): Promise<IJiraIssue> {
+    try {
+      this.ensureClient()
+
+      if (!this.client) {
+        throw new Error('Jira client not initialized')
+      }
+
+      const issue: any = await this.client.findIssue(issueKey)
+
+      log.debug({ issueKey }, 'Issue retrieved')
+
+      return this.mapIssue(issue)
+    } catch (error: any) {
+      log.error({ err: error, issueKey }, 'Failed to get issue')
+      throw error
+    }
+  }
+
+  /**
+   * Search Jira issues with a JQL query
+   */
+  async searchIssues(jql: string, maxResults = 50, startAt = 0): Promise<IJiraSearchResult> {
+    try {
+      this.ensureClient()
+
+      if (!this.client) {
+        throw new Error('Jira client not initialized')
+      }
+
+      const result: any = await this.client.searchJira(jql, { maxResults, startAt })
+
+      log.debug({ jql, total: result.total }, 'Issues searched')
+
+      return {
+        issues: (result.issues ?? []).map((i: any) => this.mapIssue(i)),
+        total: result.total ?? 0,
+        maxResults: result.maxResults ?? maxResults,
+        startAt: result.startAt ?? startAt,
+      }
+    } catch (error: any) {
+      log.error({ err: error, jql }, 'Failed to search issues')
+      throw error
+    }
+  }
+
+  /**
+   * Get issues assigned to the configured email
+   */
+  async getAssignedToMe(projectKey?: string): Promise<IJiraSearchResult> {
+    const key = projectKey || this.config?.projectKey
+
+    if (!key) {
+      throw new Error('Project key is required')
+    }
+
+    if (!this.config?.email) {
+      throw new Error('Jira email is not configured')
+    }
+
+    const jql = new JQLBuilder()
+      .project(key)
+      .assignedTo(this.config.email)
+      .notInStatus('Done')
+      .orderBy('updated', 'DESC')
+      .build()
+
+    return await this.searchIssues(jql, 50, 0)
+  }
+
+  /**
+   * Get issues in the active sprint for a project
+   */
+  async getActiveSprint(projectKey?: string): Promise<IJiraSearchResult> {
+    const key = projectKey || this.config?.projectKey
+
+    if (!key) {
+      throw new Error('Project key is required')
+    }
+
+    const jql = new JQLBuilder()
+      .project(key)
+      .inOpenSprints()
+      .notInStatus('Done')
+      .orderBy('priority', 'DESC')
+      .build()
+
+    return await this.searchIssues(jql, 100, 0)
+  }
+
+  /**
+   * Get backlog issues (no sprint assigned) for a project
+   */
+  async getBacklog(projectKey?: string): Promise<IJiraSearchResult> {
+    const key = projectKey || this.config?.projectKey
+
+    if (!key) {
+      throw new Error('Project key is required')
+    }
+
+    const jql = new JQLBuilder()
+      .project(key)
+      .noSprint()
+      .notInStatus('Done')
+      .orderBy('created', 'DESC')
+      .build()
+
+    return await this.searchIssues(jql, 50, 0)
   }
 }

@@ -15,6 +15,8 @@ export default class BitbucketController {
     this.testConnection = this.testConnection.bind(this)
     this.listRepositories = this.listRepositories.bind(this)
     this.listPullRequests = this.listPullRequests.bind(this)
+    this.getBranches = this.getBranches.bind(this)
+    this.getCommits = this.getCommits.bind(this)
   }
 
   static getInstance(): BitbucketController {
@@ -119,6 +121,85 @@ export default class BitbucketController {
     } catch (error) {
       log.error({ err: error }, 'listPullRequests Slack command failed')
       say('Ups! Error listing pull requests.')
+    }
+  }
+
+  /**
+   * Slack command: .bb branches <repo>
+   * List branches for a repository
+   */
+  public async getBranches(data: any): Promise<void> {
+    const { payload, say } = data
+
+    try {
+      const repoSlug: string = payload.text.replace(/^\.bb\s+branches?\s*/i, '').trim()
+
+      if (!repoSlug) {
+        say('Usage: `.bb branches <repo-slug>`')
+        return
+      }
+
+      const response = await this.bitbucketServices.getBranches(repoSlug)
+
+      if (response.error) {
+        say(`Error fetching branches: ${response.error}`)
+        return
+      }
+
+      const branches = response.data ?? []
+
+      if (branches.length === 0) {
+        say(`No branches found for \`${repoSlug}\`.`)
+        return
+      }
+
+      const lines = branches.map(
+        (b) => `• \`${b.name}\`${b.isDefault ? ' _(default)_' : ''}${b.latestCommit ? ` — ${b.latestCommit}` : ''}`
+      )
+      say(`*Branches for \`${repoSlug}\` (${branches.length}):*\n${lines.join('\n')}`)
+    } catch (error) {
+      log.error({ err: error }, 'getBranches Slack command failed')
+      say('Ups! Error listing branches.')
+    }
+  }
+
+  /**
+   * Slack command: .bb commits <repo>
+   * List recent commits for a repository
+   */
+  public async getCommits(data: any): Promise<void> {
+    const { payload, say } = data
+
+    try {
+      const text: string = payload.text.replace(/^\.bb\s+commits?\s*/i, '').trim()
+      const [repoSlug, branch] = text.split(/\s+/)
+
+      if (!repoSlug) {
+        say('Usage: `.bb commits <repo-slug> [branch]`')
+        return
+      }
+
+      const response = await this.bitbucketServices.getCommits(repoSlug, branch)
+
+      if (response.error) {
+        say(`Error fetching commits: ${response.error}`)
+        return
+      }
+
+      const commits = response.data ?? []
+
+      if (commits.length === 0) {
+        say(`No commits found for \`${repoSlug}\`.`)
+        return
+      }
+
+      const lines = commits
+        .slice(0, 10)
+        .map((c) => `• \`${c.hash}\` ${c.message} — _${c.author}_`)
+      say(`*Recent commits for \`${repoSlug}\`${branch ? ` (${branch})` : ''} :*\n${lines.join('\n')}`)
+    } catch (error) {
+      log.error({ err: error }, 'getCommits Slack command failed')
+      say('Ups! Error listing commits.')
     }
   }
 }

@@ -22,3 +22,8 @@ export const searchJiraIssuesSchema = z.object({
   maxResults: z.coerce.number().int().positive().max(100).optional().default(50),
   startAt: z.coerce.number().int().min(0).optional().default(0),
 })
+
+// Schema for issue key route param
+export const issueKeyParamSchema = z.object({
+  issueKey: z.string().regex(/^[A-Z]+-\d+$/, 'Invalid issue key format (e.g. PROJ-123)'),
+})

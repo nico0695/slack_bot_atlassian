@@ -188,6 +188,22 @@ export default class App {
       slackListenersKey.jiraProject,
       safeHandler(this.jiraController.getProject)
     )
+    this.slackApp.message(
+      slackListenersKey.jiraIssue,
+      safeHandler(this.jiraController.getIssue)
+    )
+    this.slackApp.message(
+      slackListenersKey.jiraList,
+      safeHandler(this.jiraController.getAssignedToMe)
+    )
+    this.slackApp.message(
+      slackListenersKey.jiraSprint,
+      safeHandler(this.jiraController.getActiveSprint)
+    )
+    this.slackApp.message(
+      slackListenersKey.jiraBacklog,
+      safeHandler(this.jiraController.getBacklog)
+    )
 
     this.slackApp.message(
       slackListenersKey.bitbucketTest,
@@ -200,6 +216,14 @@ export default class App {
     this.slackApp.message(
       slackListenersKey.bitbucketPRs,
       safeHandler(this.bitbucketController.listPullRequests)
+    )
+    this.slackApp.message(
+      slackListenersKey.bitbucketBranches,
+      safeHandler(this.bitbucketController.getBranches)
+    )
+    this.slackApp.message(
+      slackListenersKey.bitbucketCommits,
+      safeHandler(this.bitbucketController.getCommits)
     )
 
     this.slackApp.command('/help', async ({ ack, body, client }: any): Promise<void> => {

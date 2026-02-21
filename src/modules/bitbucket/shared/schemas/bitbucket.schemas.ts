@@ -24,3 +24,20 @@ export const mergePRSchema = z.object({
   message: z.string().optional(),
   closeSourceBranch: z.boolean().optional().default(true),
 })
+
+// Schema for repo slug + PR id route params
+export const prParamsSchema = z.object({
+  slug: z.string().min(1),
+  id: z.coerce.number().int().positive(),
+})
+
+// Schema for repo slug route param
+export const repoSlugParamSchema = z.object({
+  slug: z.string().min(1),
+})
+
+// Schema for commits query
+export const getCommitsQuerySchema = z.object({
+  branch: z.string().optional(),
+  limit: z.coerce.number().int().positive().max(100).optional().default(30),
+})

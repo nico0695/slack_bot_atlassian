@@ -2,11 +2,14 @@ import { GenericResponse } from '../../../shared/interfaces/services'
 import { createModuleLogger } from '../../../config/logger'
 
 import BitbucketApiRepository from '../repositories/bitbucketApi.repository'
+import { BitbucketCacheRedis } from '../repositories/redis/bitbucketCache.redis'
 import {
   IBitbucketConnectionTest,
   IBitbucketRepository,
   IBitbucketPR,
   ICreateBitbucketPR,
+  IBitbucketBranch,
+  IBitbucketCommit,
 } from '../shared/interfaces/bitbucket.interfaces'
 import { PRState } from '../shared/constants/bitbucket.constants'
 
@@ -16,9 +19,11 @@ export default class BitbucketServices {
   private static instance: BitbucketServices
 
   private bitbucketApiRepository: BitbucketApiRepository
+  private bitbucketCache: BitbucketCacheRedis
 
   private constructor() {
     this.bitbucketApiRepository = BitbucketApiRepository.getInstance()
+    this.bitbucketCache = BitbucketCacheRedis.getInstance()
   }
 
   static getInstance(): BitbucketServices {
@@ -106,5 +111,71 @@ export default class BitbucketServices {
    */
   getWorkspace(): string | undefined {
     return this.bitbucketApiRepository.getWorkspace()
+  }
+
+  /**
+   * Get a specific pull request by ID, with Redis cache
+   */
+  async getPR(repoSlug: string, prId: number): Promise<GenericResponse<IBitbucketPR>> {
+    try {
+      const cached = await this.bitbucketCache.getPR(repoSlug, prId)
+      if (cached) {
+        return { data: cached }
+      }
+
+      const pr = await this.bitbucketApiRepository.getPR(repoSlug, prId)
+
+      await this.bitbucketCache.setPR(repoSlug, prId, pr)
+
+      log.info({ repoSlug, prId }, 'PR retrieved')
+
+      return { data: pr }
+    } catch (error: any) {
+      log.error({ err: error, repoSlug, prId }, 'getPR failed')
+      return { error: error.message || 'Failed to get pull request' }
+    }
+  }
+
+  /**
+   * List branches for a repository, with Redis cache
+   */
+  async getBranches(repoSlug: string): Promise<GenericResponse<IBitbucketBranch[]>> {
+    try {
+      const cached = await this.bitbucketCache.getBranches(repoSlug)
+      if (cached) {
+        return { data: cached }
+      }
+
+      const branches = await this.bitbucketApiRepository.getBranches(repoSlug)
+
+      await this.bitbucketCache.setBranches(repoSlug, branches)
+
+      log.info({ repoSlug, count: branches.length }, 'Branches listed')
+
+      return { data: branches }
+    } catch (error: any) {
+      log.error({ err: error, repoSlug }, 'getBranches failed')
+      return { error: error.message || 'Failed to list branches' }
+    }
+  }
+
+  /**
+   * List commits for a repository
+   */
+  async getCommits(
+    repoSlug: string,
+    branch?: string,
+    limit = 30
+  ): Promise<GenericResponse<IBitbucketCommit[]>> {
+    try {
+      const commits = await this.bitbucketApiRepository.getCommits(repoSlug, branch, limit)
+
+      log.info({ repoSlug, branch, count: commits.length }, 'Commits listed')
+
+      return { data: commits }
+    } catch (error: any) {
+      log.error({ err: error, repoSlug }, 'getCommits failed')
+      return { error: error.message || 'Failed to list commits' }
+    }
   }
 }

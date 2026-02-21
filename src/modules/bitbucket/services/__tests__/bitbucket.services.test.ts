@@ -16,6 +16,9 @@ const listPullRequestsMock = jest.fn()
 const createPullRequestMock = jest.fn()
 const getDefaultRepoMock = jest.fn()
 const getWorkspaceMock = jest.fn()
+const getPRMock = jest.fn()
+const getBranchesMock = jest.fn()
+const getCommitsMock = jest.fn()
 
 const bitbucketApiRepositoryInstance = {
   testConnection: testConnectionMock,
@@ -24,7 +27,26 @@ const bitbucketApiRepositoryInstance = {
   createPullRequest: createPullRequestMock,
   getDefaultRepo: getDefaultRepoMock,
   getWorkspace: getWorkspaceMock,
+  getPR: getPRMock,
+  getBranches: getBranchesMock,
+  getCommits: getCommitsMock,
 }
+
+const getBranchesRedisMock = jest.fn()
+const setBranchesRedisMock = jest.fn()
+const getPRRedisMock = jest.fn()
+const setPRRedisMock = jest.fn()
+
+jest.mock('../../repositories/redis/bitbucketCache.redis', () => ({
+  BitbucketCacheRedis: {
+    getInstance: () => ({
+      getBranches: getBranchesRedisMock,
+      setBranches: setBranchesRedisMock,
+      getPR: getPRRedisMock,
+      setPR: setPRRedisMock,
+    }),
+  },
+}))
 
 jest.mock('../../repositories/bitbucketApi.repository', () => ({
   __esModule: true,
@@ -38,6 +60,11 @@ describe('BitbucketServices', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    // Default: cache miss
+    getBranchesRedisMock.mockResolvedValue(null)
+    setBranchesRedisMock.mockResolvedValue(undefined)
+    getPRRedisMock.mockResolvedValue(null)
+    setPRRedisMock.mockResolvedValue(undefined)
   })
 
   describe('testConnection', () => {
@@ -192,6 +219,110 @@ describe('BitbucketServices', () => {
       const result = services.getWorkspace()
 
       expect(result).toBeUndefined()
+    })
+  })
+
+  describe('getPR', () => {
+    const mockPR = {
+      id: 1,
+      title: 'Test PR',
+      state: 'OPEN',
+      sourceBranch: 'feature/test',
+      destinationBranch: 'main',
+      createdOn: '2024-01-01T00:00:00Z',
+      updatedOn: '2024-01-01T00:00:00Z',
+    }
+
+    it('should return PR from API on cache miss', async () => {
+      getPRMock.mockResolvedValue(mockPR)
+
+      const result = await services.getPR('my-repo', 1)
+
+      expect(getPRRedisMock).toHaveBeenCalledWith('my-repo', 1)
+      expect(getPRMock).toHaveBeenCalledWith('my-repo', 1)
+      expect(setPRRedisMock).toHaveBeenCalledWith('my-repo', 1, mockPR)
+      expect(result.data).toEqual(mockPR)
+      expect(result.error).toBeUndefined()
+    })
+
+    it('should return PR from cache on cache hit', async () => {
+      getPRRedisMock.mockResolvedValue(mockPR)
+
+      const result = await services.getPR('my-repo', 1)
+
+      expect(getPRMock).not.toHaveBeenCalled()
+      expect(result.data).toEqual(mockPR)
+    })
+
+    it('should handle repository errors', async () => {
+      getPRMock.mockRejectedValue(new Error('PR not found'))
+
+      const result = await services.getPR('my-repo', 999)
+
+      expect(result.error).toBe('PR not found')
+      expect(result.data).toBeUndefined()
+    })
+  })
+
+  describe('getBranches', () => {
+    const mockBranches = [
+      { name: 'main', isDefault: true, latestCommit: 'abc12345' },
+      { name: 'develop', isDefault: false, latestCommit: 'def67890' },
+    ]
+
+    it('should return branches from API on cache miss', async () => {
+      getBranchesMock.mockResolvedValue(mockBranches)
+
+      const result = await services.getBranches('my-repo')
+
+      expect(getBranchesRedisMock).toHaveBeenCalledWith('my-repo')
+      expect(getBranchesMock).toHaveBeenCalledWith('my-repo')
+      expect(setBranchesRedisMock).toHaveBeenCalledWith('my-repo', mockBranches)
+      expect(result.data).toEqual(mockBranches)
+      expect(result.error).toBeUndefined()
+    })
+
+    it('should return branches from cache on cache hit', async () => {
+      getBranchesRedisMock.mockResolvedValue(mockBranches)
+
+      const result = await services.getBranches('my-repo')
+
+      expect(getBranchesMock).not.toHaveBeenCalled()
+      expect(result.data).toEqual(mockBranches)
+    })
+
+    it('should handle repository errors', async () => {
+      getBranchesMock.mockRejectedValue(new Error('Repo not found'))
+
+      const result = await services.getBranches('invalid-repo')
+
+      expect(result.error).toBe('Repo not found')
+      expect(result.data).toBeUndefined()
+    })
+  })
+
+  describe('getCommits', () => {
+    const mockCommits = [
+      { hash: 'abc12345', message: 'feat: add new feature', author: 'John Doe', date: '2024-01-01T00:00:00Z' },
+    ]
+
+    it('should return commits', async () => {
+      getCommitsMock.mockResolvedValue(mockCommits)
+
+      const result = await services.getCommits('my-repo', 'main', 30)
+
+      expect(getCommitsMock).toHaveBeenCalledWith('my-repo', 'main', 30)
+      expect(result.data).toEqual(mockCommits)
+      expect(result.error).toBeUndefined()
+    })
+
+    it('should handle repository errors', async () => {
+      getCommitsMock.mockRejectedValue(new Error('Branch not found'))
+
+      const result = await services.getCommits('my-repo', 'invalid-branch')
+
+      expect(result.error).toBe('Branch not found')
+      expect(result.data).toBeUndefined()
     })
   })
 })

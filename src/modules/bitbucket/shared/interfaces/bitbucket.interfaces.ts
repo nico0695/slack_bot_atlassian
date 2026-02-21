@@ -57,3 +57,18 @@ export interface IMergePROptions {
   message?: string
   closeSourceBranch?: boolean
 }
+
+// Branch
+export interface IBitbucketBranch {
+  name: string
+  isDefault: boolean
+  latestCommit?: string
+}
+
+// Commit
+export interface IBitbucketCommit {
+  hash: string
+  message: string
+  author: string
+  date: string
+}
