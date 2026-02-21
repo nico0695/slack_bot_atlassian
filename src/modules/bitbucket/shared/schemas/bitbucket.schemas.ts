@@ -36,6 +36,12 @@ export const repoSlugParamSchema = z.object({
   slug: z.string().min(1),
 })
 
+// Schema for repo slug + commit hash route params
+export const commitParamsSchema = z.object({
+  slug: z.string().min(1),
+  hash: z.string().min(1),
+})
+
 // Schema for commits query
 export const getCommitsQuerySchema = z.object({
   branch: z.string().optional(),

@@ -75,3 +75,13 @@ export interface IBitbucketCommit {
   date: string
   url?: string
 }
+
+// Commit detail (single commit with parents)
+export interface IBitbucketCommitDetail {
+  hash: string
+  message: string
+  author: string
+  date: string
+  url: string
+  parents: string[]
+}

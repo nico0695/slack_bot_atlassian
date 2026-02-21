@@ -10,6 +10,7 @@ import {
   ICreateBitbucketPR,
   IBitbucketBranch,
   IBitbucketCommit,
+  IBitbucketCommitDetail,
 } from '../shared/interfaces/bitbucket.interfaces'
 import { PRState } from '../shared/constants/bitbucket.constants'
 
@@ -176,6 +177,22 @@ export default class BitbucketServices {
     } catch (error: any) {
       log.error({ err: error, repoSlug }, 'getCommits failed')
       return { error: error.message || 'Failed to list commits' }
+    }
+  }
+
+  /**
+   * Get a specific commit by hash
+   */
+  async getCommit(repoSlug: string, hash: string): Promise<GenericResponse<IBitbucketCommitDetail>> {
+    try {
+      const commit = await this.bitbucketApiRepository.getCommit(repoSlug, hash)
+
+      log.info({ repoSlug, hash }, 'Commit retrieved')
+
+      return { data: commit }
+    } catch (error: any) {
+      log.error({ err: error, repoSlug, hash }, 'getCommit failed')
+      return { error: error.message || 'Failed to get commit' }
     }
   }
 }

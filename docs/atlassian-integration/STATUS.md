@@ -51,22 +51,25 @@ All Stage 1 items implemented. Jira and Bitbucket modules are fully scaffolded a
 
 ## Current Step
 
-**Stage 3 — Rich Read Experience: Deep Links, Text Search & Commit Details (PENDING)**
+**Stage 3 — Rich Read Experience: Deep Links, Text Search & Commit Details (COMPLETED)**
 
-### Pending (Stage 3)
-- Jira: add `url` field to all issue responses (deep link to `https://{host}/browse/{issueKey}`)
-- Bitbucket: add `url` field to all PR and commit responses (deep link to Bitbucket web UI)
-- Bitbucket: add `url` field to branch responses (deep link to source view)
+### Completed (Stage 3)
+- Jira: `url` field added to all issue responses (deep link to `https://{host}/browse/{issueKey}`)
+- Bitbucket: `url` field added to all PR and commit responses (deep link to Bitbucket web UI)
+- Bitbucket: `url` field added to branch responses (deep link to source view)
 - Jira: `.jira search "text"` Slack command — full-text search by summary/description using JQL `~` operator
 - Jira: `JQLBuilder.textSearch(text)` utility method
-- Slack formatters: show clickable deep links for all Jira issues and Bitbucket PRs/commits
-- Bitbucket: `GET /bitbucket/repositories/:slug/commits/:hash` — commit detail endpoint (with URL, message, author)
+- Slack formatters: clickable deep links for all Jira issues and Bitbucket PRs/commits/branches
+- Bitbucket: `GET /bitbucket/repositories/:slug/commits/:hash` — commit detail endpoint (hash, message, author, date, url, parents)
+- `IBitbucketCommitDetail` interface added
+- `commitParamsSchema` Zod schema added
+- `BitbucketApiRepository.getCommit()` and `BitbucketServices.getCommit()` implemented and tested
 
 ---
 
 ## Next Step
 
-**Stage 4 — Resource Creation and Modification (DEFERRED)**
+**Stage 4 — Resource Creation and Modification (PENDING)**
 
 Write operations intentionally moved after the read/search MVP is complete and stable.
 

@@ -19,6 +19,7 @@ const getWorkspaceMock = jest.fn()
 const getPRMock = jest.fn()
 const getBranchesMock = jest.fn()
 const getCommitsMock = jest.fn()
+const getCommitMock = jest.fn()
 
 const bitbucketApiRepositoryInstance = {
   testConnection: testConnectionMock,
@@ -30,6 +31,7 @@ const bitbucketApiRepositoryInstance = {
   getPR: getPRMock,
   getBranches: getBranchesMock,
   getCommits: getCommitsMock,
+  getCommit: getCommitMock,
 }
 
 const getBranchesRedisMock = jest.fn()
@@ -322,6 +324,36 @@ describe('BitbucketServices', () => {
       const result = await services.getCommits('my-repo', 'invalid-branch')
 
       expect(result.error).toBe('Branch not found')
+      expect(result.data).toBeUndefined()
+    })
+  })
+
+  describe('getCommit', () => {
+    const mockCommitDetail = {
+      hash: 'abc1234567890',
+      message: 'feat: add new feature',
+      author: 'John Doe',
+      date: '2024-01-01T00:00:00Z',
+      url: 'https://bitbucket.org/workspace/my-repo/commits/abc1234567890',
+      parents: ['def0987654321'],
+    }
+
+    it('should return commit detail', async () => {
+      getCommitMock.mockResolvedValue(mockCommitDetail)
+
+      const result = await services.getCommit('my-repo', 'abc1234567890')
+
+      expect(getCommitMock).toHaveBeenCalledWith('my-repo', 'abc1234567890')
+      expect(result.data).toEqual(mockCommitDetail)
+      expect(result.error).toBeUndefined()
+    })
+
+    it('should handle repository errors', async () => {
+      getCommitMock.mockRejectedValue(new Error('Commit not found'))
+
+      const result = await services.getCommit('my-repo', 'invalid-hash')
+
+      expect(result.error).toBe('Commit not found')
       expect(result.data).toBeUndefined()
     })
   })

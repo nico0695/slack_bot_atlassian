@@ -15,6 +15,7 @@ import {
   prParamsSchema,
   repoSlugParamSchema,
   getCommitsQuerySchema,
+  commitParamsSchema,
 } from '../shared/schemas/bitbucket.schemas'
 import { ICreateBitbucketPR } from '../shared/interfaces/bitbucket.interfaces'
 
@@ -34,6 +35,7 @@ export default class BitbucketWebController extends GenericController {
     this.getPullRequest = this.getPullRequest.bind(this)
     this.getBranches = this.getBranches.bind(this)
     this.getCommits = this.getCommits.bind(this)
+    this.getCommit = this.getCommit.bind(this)
 
     this.bitbucketServices = BitbucketServices.getInstance()
 
@@ -54,6 +56,7 @@ export default class BitbucketWebController extends GenericController {
     this.router.get('/test', this.testConnection)
     this.router.get('/repositories', this.listRepositories)
     this.router.get('/repositories/:slug/branches', this.getBranches)
+    this.router.get('/repositories/:slug/commits/:hash', this.getCommit)
     this.router.get('/repositories/:slug/commits', this.getCommits)
     this.router.get('/pullrequests', this.listPullRequests)
     this.router.post('/pullrequests', this.createPullRequest)
@@ -185,6 +188,24 @@ export default class BitbucketWebController extends GenericController {
     const { branch, limit } = validateQuery(getCommitsQuerySchema, req.query)
 
     const response = await this.bitbucketServices.getCommits(slug, branch, limit)
+
+    if (response.error) {
+      throw new BadRequestError({ message: response.error })
+    }
+
+    res.send(response.data)
+  }
+
+  /**
+   * Get a specific commit by hash
+   * GET /bitbucket/repositories/:slug/commits/:hash
+   */
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  public async getCommit(req: any, res: any): Promise<void> {
+    const { slug, hash } = validateParams(commitParamsSchema, req.params)
+
+    const response = await this.bitbucketServices.getCommit(slug, hash)
 
     if (response.error) {
       throw new BadRequestError({ message: response.error })
