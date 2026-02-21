@@ -6,6 +6,8 @@ import {
   IBitbucketRepository,
   IBitbucketPR,
   ICreateBitbucketPR,
+  IBitbucketBranch,
+  IBitbucketCommit,
 } from '../shared/interfaces/bitbucket.interfaces'
 import { PRState } from '../shared/constants/bitbucket.constants'
 
@@ -213,5 +215,90 @@ export default class BitbucketApiRepository {
    */
   getWorkspace(): string | undefined {
     return this.config?.workspace
+  }
+
+  /**
+   * Get a specific pull request by ID
+   */
+  async getPR(repoSlug: string, prId: number): Promise<IBitbucketPR> {
+    try {
+      const response = await this.apiClient.get(
+        `/repositories/${this.workspace}/${repoSlug}/pullrequests/${prId}`
+      )
+
+      const pr = response.data
+
+      log.debug({ repoSlug, prId }, 'PR retrieved')
+
+      return {
+        id: pr.id,
+        title: pr.title,
+        description: pr.description,
+        state: pr.state,
+        author: pr.author?.display_name,
+        sourceBranch: pr.source?.branch?.name,
+        destinationBranch: pr.destination?.branch?.name,
+        createdOn: pr.created_on,
+        updatedOn: pr.updated_on,
+        commentCount: pr.comment_count,
+      }
+    } catch (error: any) {
+      log.error({ err: error, repoSlug, prId }, 'Failed to get PR')
+      throw error
+    }
+  }
+
+  /**
+   * List branches for a repository
+   */
+  async getBranches(repoSlug: string): Promise<IBitbucketBranch[]> {
+    try {
+      const response = await this.apiClient.get(
+        `/repositories/${this.workspace}/${repoSlug}/refs/branches`,
+        { params: { pagelen: 50, sort: '-target.date' } }
+      )
+
+      const mainBranchName = response.data.values?.find((b: any) => b.name === 'main' || b.name === 'master')?.name
+
+      log.debug({ repoSlug, count: response.data.values?.length }, 'Branches retrieved')
+
+      return (response.data.values ?? []).map((b: any) => ({
+        name: b.name,
+        isDefault: b.name === mainBranchName,
+        latestCommit: b.target?.hash?.slice(0, 8),
+      }))
+    } catch (error: any) {
+      log.error({ err: error, repoSlug }, 'Failed to list branches')
+      throw error
+    }
+  }
+
+  /**
+   * List commits for a repository, optionally filtered by branch
+   */
+  async getCommits(repoSlug: string, branch?: string, limit = 30): Promise<IBitbucketCommit[]> {
+    try {
+      const params: any = { pagelen: limit }
+      if (branch) {
+        params.include = branch
+      }
+
+      const response = await this.apiClient.get(
+        `/repositories/${this.workspace}/${repoSlug}/commits`,
+        { params }
+      )
+
+      log.debug({ repoSlug, branch, count: response.data.values?.length }, 'Commits retrieved')
+
+      return (response.data.values ?? []).map((c: any) => ({
+        hash: c.hash?.slice(0, 8) ?? c.hash,
+        message: c.message?.split('\n')[0] ?? '',
+        author: c.author?.user?.display_name ?? c.author?.raw ?? 'Unknown',
+        date: c.date,
+      }))
+    } catch (error: any) {
+      log.error({ err: error, repoSlug }, 'Failed to list commits')
+      throw error
+    }
   }
 }

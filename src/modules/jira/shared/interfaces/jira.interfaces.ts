@@ -56,3 +56,11 @@ export interface IJiraConnectionTest {
     baseUrl: string
   }
 }
+
+// Search result wrapper
+export interface IJiraSearchResult {
+  issues: IJiraIssue[]
+  total: number
+  maxResults: number
+  startAt: number
+}

@@ -3,13 +3,19 @@ import { Router } from 'express'
 
 import GenericController from '../../../shared/modules/genericController'
 import BadRequestError from '../../../shared/utils/errors/BadRequestError'
-import { validateQuery, validateBody } from '../../../shared/utils/validation'
+import { validateQuery, validateBody, validateParams } from '../../../shared/utils/validation'
 
 import BitbucketServices from '../services/bitbucket.services'
 
 import { HttpAuth, Permission } from '../../../shared/middleware/auth'
 import { Profiles } from '../../../shared/constants/auth.constants'
-import { listPRsSchema, createPRSchema } from '../shared/schemas/bitbucket.schemas'
+import {
+  listPRsSchema,
+  createPRSchema,
+  prParamsSchema,
+  repoSlugParamSchema,
+  getCommitsQuerySchema,
+} from '../shared/schemas/bitbucket.schemas'
 import { ICreateBitbucketPR } from '../shared/interfaces/bitbucket.interfaces'
 
 export default class BitbucketWebController extends GenericController {
@@ -25,6 +31,9 @@ export default class BitbucketWebController extends GenericController {
     this.listRepositories = this.listRepositories.bind(this)
     this.listPullRequests = this.listPullRequests.bind(this)
     this.createPullRequest = this.createPullRequest.bind(this)
+    this.getPullRequest = this.getPullRequest.bind(this)
+    this.getBranches = this.getBranches.bind(this)
+    this.getCommits = this.getCommits.bind(this)
 
     this.bitbucketServices = BitbucketServices.getInstance()
 
@@ -44,8 +53,11 @@ export default class BitbucketWebController extends GenericController {
   protected registerRoutes(): void {
     this.router.get('/test', this.testConnection)
     this.router.get('/repositories', this.listRepositories)
+    this.router.get('/repositories/:slug/branches', this.getBranches)
+    this.router.get('/repositories/:slug/commits', this.getCommits)
     this.router.get('/pullrequests', this.listPullRequests)
     this.router.post('/pullrequests', this.createPullRequest)
+    this.router.get('/pullrequests/:slug/:id', this.getPullRequest)
   }
 
   /**
@@ -118,6 +130,61 @@ export default class BitbucketWebController extends GenericController {
     }
 
     const response = await this.bitbucketServices.createPullRequest(prData)
+
+    if (response.error) {
+      throw new BadRequestError({ message: response.error })
+    }
+
+    res.send(response.data)
+  }
+
+  /**
+   * Get a specific pull request
+   * GET /bitbucket/pullrequests/:slug/:id
+   */
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  public async getPullRequest(req: any, res: any): Promise<void> {
+    const { slug, id } = validateParams(prParamsSchema, req.params)
+
+    const response = await this.bitbucketServices.getPR(slug, id)
+
+    if (response.error) {
+      throw new BadRequestError({ message: response.error })
+    }
+
+    res.send(response.data)
+  }
+
+  /**
+   * List branches for a repository
+   * GET /bitbucket/repositories/:slug/branches
+   */
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  public async getBranches(req: any, res: any): Promise<void> {
+    const { slug } = validateParams(repoSlugParamSchema, req.params)
+
+    const response = await this.bitbucketServices.getBranches(slug)
+
+    if (response.error) {
+      throw new BadRequestError({ message: response.error })
+    }
+
+    res.send(response.data)
+  }
+
+  /**
+   * List commits for a repository
+   * GET /bitbucket/repositories/:slug/commits?branch=...&limit=30
+   */
+  @HttpAuth
+  @Permission([Profiles.USER, Profiles.USER_PREMIUM, Profiles.ADMIN])
+  public async getCommits(req: any, res: any): Promise<void> {
+    const { slug } = validateParams(repoSlugParamSchema, req.params)
+    const { branch, limit } = validateQuery(getCommitsQuerySchema, req.query)
+
+    const response = await this.bitbucketServices.getCommits(slug, branch, limit)
 
     if (response.error) {
       throw new BadRequestError({ message: response.error })

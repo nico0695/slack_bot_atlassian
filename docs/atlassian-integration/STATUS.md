@@ -31,29 +31,44 @@ All Stage 1 items implemented. Jira and Bitbucket modules are fully scaffolded a
 
 ## Current Step
 
-**Stage 2 — Base Modules and Core Functionality (PENDING)**
+**Stage 2 — Base Modules and Core Functionality (COMPLETED)**
 
-### Pending (Stage 2)
-- Jira: `GET /jira/issues/:issueKey`, `GET /jira/issues/assigned-to-me`, `GET /jira/issues/search`, `GET /jira/sprints/active`, `GET /jira/backlog`
-- Bitbucket: `GET /bitbucket/repositories/:slug/commits`, `GET /bitbucket/repositories/:slug/branches`
-- Slack commands: `.jira issue PROJ-123`, `.jira list`, `.jira sprint`, `.jira backlog`, `.bb pr list`, `.bb commits REPO`, `.bb branches`
-- Redis cache layer for Jira (issues, sprints) and Bitbucket (PRs, branches)
-- Extend `JiraApiRepository` with `getIssue`, `searchIssues`, `getActiveSprint`, `getBacklog`
-- Extend `BitbucketApiRepository` with `getBranches`, `getCommits`, `getPR`
-- Unit tests >70% coverage for new endpoints and services
+### Completed (Stage 2)
+- Jira: `GET /jira/issues/:issueKey`, `GET /jira/issues/assigned-to-me`, `GET /jira/issues/search?jql=...`, `GET /jira/sprints/active`, `GET /jira/backlog`
+- Bitbucket: `GET /bitbucket/repositories/:slug/branches`, `GET /bitbucket/repositories/:slug/commits`, `GET /bitbucket/pullrequests/:slug/:id`
+- Slack commands: `.jira issue PROJ-123`, `.jira list`, `.jira sprint`, `.jira backlog`, `.bb branches <repo>`, `.bb commits <repo> [branch]`
+- Redis cache layer: `jiraCache.redis.ts` (issues 5min, sprint 10min, user-issues 2min), `bitbucketCache.redis.ts` (branches 15min, PRs 3min)
+- Extended `JiraApiRepository` with `getIssue`, `searchIssues`, `getAssignedToMe`, `getActiveSprint`, `getBacklog`
+- Extended `BitbucketApiRepository` with `getBranches`, `getCommits`, `getPR`
+- Added `IJiraSearchResult` to `jira.interfaces.ts`
+- Added `IBitbucketBranch`, `IBitbucketCommit` to `bitbucket.interfaces.ts`
+- Added `issueKeyParamSchema` to `jira.schemas.ts`
+- Added `prParamsSchema`, `repoSlugParamSchema`, `getCommitsQuerySchema` to `bitbucket.schemas.ts`
+- 21 new unit tests (472 total, all passing)
+- ESLint clean
 
 ---
 
 ## Next Step
 
-**Stage 2** — Implement core read functionality (issues, sprints, PRs, branches, commits) with Redis caching. Then advance to **Stage 3** (resource creation and modification).
+**Stage 3 — Resource Creation and Modification (PENDING)**
 
-### Observations
-- One pre-existing test fails (`conversations.controller.test.ts`) due to missing Slack `APP_TOKEN` in test environment — not related to Atlassian integration.
-- The existing implementation correctly follows project patterns (singleton, GenericController, Pino logger, Zod schemas, auth decorators).
-- `JQLBuilder` is ready to power Stage 2 search queries.
-- `jiraFormatters.ts` is ready to format Slack responses in Stage 2.
+### Pending (Stage 3)
+- Jira: `POST /jira/issues` — create issue with Zod validation
+- Jira: `PUT /jira/issues/:issueKey/transition` — move issue to new status
+- Jira: `POST /jira/issues/:issueKey/comments` — add comment
+- Bitbucket: PR approval, merge, and comment endpoints
+- Slack commands: `.jira create`, `.jira move PROJ-123 "In Progress"`, `.jira comment PROJ-123 "..."`, `.bb pr approve/merge`
+- Robust error handling and rollback on failure
 
 ---
 
-*Last updated: 2026-02-20*
+### Observations
+- One pre-existing test fails (`conversations.controller.test.ts`) due to missing Slack `APP_TOKEN` in test environment — not related to Atlassian integration.
+- Cache-aside pattern implemented for Jira issues, sprint, user-issues, and Bitbucket branches/PRs.
+- `JQLBuilder` powers all Jira search operations (assigned-to-me, sprint, backlog).
+- `formatIssueForSlack` / `formatIssueListForSlack` used in Slack responses.
+
+---
+
+*Last updated: 2026-02-21*
