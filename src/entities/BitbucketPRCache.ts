@@ -5,7 +5,7 @@ export class BitbucketPRCache {
   @PrimaryColumn()
   prId: number
 
-  @Column()
+  @PrimaryColumn()
   repoSlug: string
 
   @Column({ type: 'simple-json' })
