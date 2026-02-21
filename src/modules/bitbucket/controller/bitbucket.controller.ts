@@ -115,7 +115,10 @@ export default class BitbucketController {
       }
 
       const lines = prs.map(
-        (pr) => `• *#${pr.id}* — ${pr.title} (${pr.sourceBranch} → ${pr.destinationBranch})`
+        (pr) => {
+          const link = pr.url ? `<${pr.url}|#${pr.id}>` : `#${pr.id}`
+          return `• *${link}* — ${pr.title} (${pr.sourceBranch} → ${pr.destinationBranch})`
+        }
       )
       say(`*Open PRs for \`${text}\` (${prs.length}):*\n${lines.join('\n')}`)
     } catch (error) {
@@ -154,7 +157,10 @@ export default class BitbucketController {
       }
 
       const lines = branches.map(
-        (b) => `• \`${b.name}\`${b.isDefault ? ' _(default)_' : ''}${b.latestCommit ? ` — ${b.latestCommit}` : ''}`
+        (b) => {
+          const nameDisplay = b.url ? `<${b.url}|\`${b.name}\`>` : `\`${b.name}\``
+          return `• ${nameDisplay}${b.isDefault ? ' _(default)_' : ''}${b.latestCommit ? ` — ${b.latestCommit}` : ''}`
+        }
       )
       say(`*Branches for \`${repoSlug}\` (${branches.length}):*\n${lines.join('\n')}`)
     } catch (error) {
@@ -195,7 +201,10 @@ export default class BitbucketController {
 
       const lines = commits
         .slice(0, 10)
-        .map((c) => `• \`${c.hash}\` ${c.message} — _${c.author}_`)
+        .map((c) => {
+          const hashDisplay = c.url ? `<${c.url}|\`${c.hash}\`>` : `\`${c.hash}\``
+          return `• ${hashDisplay} ${c.message} — _${c.author}_`
+        })
       say(`*Recent commits for \`${repoSlug}\`${branch ? ` (${branch})` : ''} :*\n${lines.join('\n')}`)
     } catch (error) {
       log.error({ err: error }, 'getCommits Slack command failed')

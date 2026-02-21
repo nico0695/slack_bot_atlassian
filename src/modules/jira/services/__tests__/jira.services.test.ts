@@ -329,4 +329,67 @@ describe('JiraServices', () => {
       expect(result.error).toBe('Project key required')
     })
   })
+
+  describe('searchByText', () => {
+    const mockResult = {
+      issues: [
+        {
+          key: 'PROJ-1',
+          id: '1',
+          summary: 'Login with OAuth fails',
+          status: 'Open',
+          issueType: 'Bug',
+          created: new Date(),
+          updated: new Date(),
+          url: 'https://test.atlassian.net/browse/PROJ-1',
+        },
+      ],
+      total: 1,
+      maxResults: 20,
+      startAt: 0,
+    }
+
+    it('should search issues by text using JQL text search', async () => {
+      getConfiguredProjectKeyMock.mockReturnValue('PROJ')
+      searchIssuesMock.mockResolvedValue(mockResult)
+
+      const result = await services.searchByText('login oauth')
+
+      expect(searchIssuesMock).toHaveBeenCalledWith(
+        expect.stringContaining('summary ~'),
+        20,
+        0
+      )
+      expect(searchIssuesMock).toHaveBeenCalledWith(
+        expect.stringContaining('description ~'),
+        20,
+        0
+      )
+      expect(result.data).toEqual(mockResult)
+      expect(result.error).toBeUndefined()
+    })
+
+    it('should scope search to configured project when available', async () => {
+      getConfiguredProjectKeyMock.mockReturnValue('PROJ')
+      searchIssuesMock.mockResolvedValue(mockResult)
+
+      await services.searchByText('oauth')
+
+      expect(searchIssuesMock).toHaveBeenCalledWith(
+        expect.stringContaining('project = "PROJ"'),
+        20,
+        0
+      )
+    })
+
+    it('should handle repository errors', async () => {
+      getConfiguredProjectKeyMock.mockReturnValue('PROJ')
+      searchIssuesMock.mockRejectedValue(new Error('Search failed'))
+
+      const result = await services.searchByText('oauth')
+
+      expect(result.error).toBe('Search failed')
+      expect(result.data).toBeUndefined()
+    })
+  })
 })

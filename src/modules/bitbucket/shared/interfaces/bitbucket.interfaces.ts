@@ -38,6 +38,7 @@ export interface IBitbucketPR {
   createdOn: string
   updatedOn: string
   commentCount?: number
+  url?: string
 }
 
 // Create PR input
@@ -63,6 +64,7 @@ export interface IBitbucketBranch {
   name: string
   isDefault: boolean
   latestCommit?: string
+  url?: string
 }
 
 // Commit
@@ -71,4 +73,5 @@ export interface IBitbucketCommit {
   message: string
   author: string
   date: string
+  url?: string
 }

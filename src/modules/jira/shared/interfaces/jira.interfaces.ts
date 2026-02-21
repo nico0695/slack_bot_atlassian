@@ -23,6 +23,7 @@ export interface IJiraIssue {
   updated: Date
   labels?: string[]
   components?: string[]
+  url?: string
 }
 
 // Jira Project interface

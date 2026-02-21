@@ -60,6 +60,13 @@ export class JQLBuilder {
     return this
   }
 
+  textSearch(text: string): this {
+    // Escape backslashes first, then double quotes to prevent JQL injection
+    const escaped = text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')
+    this.conditions.push(`(summary ~ "${escaped}" OR description ~ "${escaped}")`)
+    return this
+  }
+
   unresolved(): this {
     this.conditions.push('resolution = "Unresolved"')
     return this

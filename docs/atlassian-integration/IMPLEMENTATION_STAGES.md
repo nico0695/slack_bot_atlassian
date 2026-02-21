@@ -216,7 +216,99 @@ class JQLBuilder {
 
 ---
 
-## Stage 3: Resource Creation and Modification (Week 4)
+## Stage 3: Rich Read Experience — Deep Links, Text Search & Commit Details (Week 4)
+
+### Objectives
+- Every response includes a direct URL to the Jira or Bitbucket web UI
+- Full-text search for Jira issues by summary/description
+- Commit detail endpoint (single commit with URL and metadata)
+- Slack responses show clickable links so users are redirected to the source
+
+### Tasks
+
+#### 3.1 Deep Links in All Responses
+Add `url` field to every response object so users can click through to the source.
+
+```typescript
+// Jira issue URL (added to IJiraIssue)
+url: `https://${JIRA_HOST}/browse/${issueKey}`
+
+// Bitbucket PR URL (added to IBitbucketPR)
+url: pr.links?.html?.href  // from API response, e.g. https://bitbucket.org/workspace/repo/pull-requests/42
+
+// Bitbucket commit URL (added to IBitbucketCommit)
+url: `https://bitbucket.org/${workspace}/${repoSlug}/commits/${hash}`
+
+// Bitbucket branch URL (added to IBitbucketBranch)
+url: `https://bitbucket.org/${workspace}/${repoSlug}/src/${branchName}`
+```
+
+#### 3.2 Slack Formatters with Links
+Update Slack response formatters to include clickable links using Slack link syntax `<url|text>`.
+
+```typescript
+// jiraFormatters.ts — issue link line
+`*<${issue.url}|${issue.key}>* — ${issue.summary}`
+
+// Bitbucket — PR link line
+`• *#${pr.id}* — <${pr.url}|${pr.title}>`
+
+// Bitbucket — commit link line
+`• \`${c.hash}\` <${c.url}|${c.message}> — _${c.author}_`
+```
+
+#### 3.3 Jira Full-Text Search
+Add `.jira search "text"` Slack command + `textSearch()` to `JQLBuilder`.
+
+```typescript
+// jql.builder.ts
+textSearch(text: string): this {
+  const escaped = text.replace(/"/g, '\\"')
+  this.conditions.push(`(summary ~ "${escaped}" OR description ~ "${escaped}")`)
+  return this
+}
+
+// Slack command
+.jira search login oauth         → searches summary/description
+.jira search "login oauth"       → same, quoted form
+
+// REST endpoint already exists:
+GET /jira/issues/search?jql=summary ~ "login oauth" OR description ~ "login oauth"
+```
+
+#### 3.4 Bitbucket Commit Detail Endpoint
+```typescript
+// REST
+GET /bitbucket/repositories/:slug/commits/:hash
+
+// Returns
+interface IBitbucketCommitDetail {
+  hash: string
+  message: string
+  author: string
+  date: string
+  url: string
+  parents: string[]   // parent commit hashes
+}
+
+// Slack: the URL in the commit item response handles deep linking
+```
+
+### Validation
+- [x] `url` field present on Jira issues
+- [x] `url` field present on Bitbucket PRs, commits, branches
+- [x] Slack messages show clickable links
+- [x] `.jira search "text"` returns matching issues
+- [x] `GET /bitbucket/repositories/:slug/commits/:hash` responds correctly
+- [x] All new code tested and ESLint clean
+
+### Estimated Time: 3-4 days
+
+---
+
+## Stage 4: Resource Creation and Modification (Week 5)
+
+> ⚠️ Intentionally deferred — read/search MVP must be complete and stable first.
 
 ### Objectives
 - Enable issue/PR creation from Slack
@@ -226,7 +318,7 @@ class JQLBuilder {
 
 ### Tasks
 
-#### 3.1 Jira Issue Creation
+#### 4.1 Jira Issue Creation
 ```typescript
 // Commands
 .jira create -t Task -s "Title" -d "Description" -a user@company.com
@@ -237,7 +329,7 @@ class JQLBuilder {
 → AI classify → jira.create intent
 ```
 
-#### 3.2 Transitions and Updates
+#### 4.2 Transitions and Updates
 ```typescript
 .jira move PROJ-123 "In Progress"
 .jira assign PROJ-123 @username
@@ -245,7 +337,7 @@ class JQLBuilder {
 .jira update PROJ-123 -p High -l backend,urgent
 ```
 
-#### 3.3 Bitbucket Operations
+#### 4.3 Bitbucket Operations
 ```typescript
 .bb pr create -s feature/new -t develop -title "..." -desc "..."
 .bb pr approve PR-123
@@ -253,7 +345,7 @@ class JQLBuilder {
 .bb pr merge PR-123
 ```
 
-#### 3.4 Validation Schemas
+#### 4.4 Validation Schemas
 ```typescript
 // jira.schemas.ts
 export const createIssueSchema = z.object({
@@ -278,7 +370,7 @@ export const createIssueSchema = z.object({
 
 ---
 
-## Stage 4: Webhooks and Real-Time Notifications (Week 5)
+## Stage 5: Webhooks and Real-Time Notifications (Week 7)
 
 ### Objectives
 - Configure Jira and Bitbucket webhooks
@@ -371,7 +463,7 @@ class NotificationManager {
 
 ---
 
-## Stage 5: AI Enhancements and Classifiers (Week 6-7)
+## Stage 6: AI Enhancements and Classifiers (Week 8-9)
 
 ### Objectives
 - PM-specific intent classifier
@@ -448,7 +540,7 @@ enum ProjectManagementIntent {
 
 ---
 
-## Stage 6: Analytics, Dashboards and Reports (Week 8-9)
+## Stage 7: Analytics, Dashboards and Reports (Week 10-11)
 
 ### Objectives
 - Visual dashboards
@@ -544,7 +636,7 @@ interface ChartData {
 
 ---
 
-## Stage 7: Advanced Features and Optimization (Week 10+)
+## Stage 8: Advanced Features and Optimization (Week 12+)
 
 ### Objectives
 - Advanced features
@@ -695,27 +787,33 @@ describe('PM Workflows', () => {
 ```
 Stage 1 (Setup)
     ↓
-Stage 2 (Core Features) ← Stage 3 (CRUD)
-    ↓                         ↓
-Stage 4 (Webhooks)           ↓
-    ↓                         ↓
-Stage 5 (AI) ←---------------┘
+Stage 2 (Core Read Features)
     ↓
-Stage 6 (Analytics)
+Stage 3 (Rich Read: URLs + Text Search)
     ↓
-Stage 7 (Advanced)
+Stage 4 (Write Ops: Create/Transition/Comment) ← depends on Stage 3 stable
+    ↓
+Stage 5 (Webhooks + Notifications)
+    ↓
+Stage 6 (AI Enhancements)
+    ↓
+Stage 7 (Analytics)
+    ↓
+Stage 8 (Advanced)
 ```
 
-**Recommended order:** 1 → 2 → 3 → 4 → 5 → 6 → 7
+**Recommended order:** 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
-**Minimum viable:** Stage 1, 2, 3 (4 weeks)
+**Minimum viable (read-only MVP):** Stage 1, 2, 3 (4 weeks)
 
-**Production-ready:** Stage 1-6 (9 weeks)
+**MVP with write ops:** Stage 1-4 (5-6 weeks)
 
-**Full-featured:** Stage 1-7 (12+ weeks)
+**Production-ready:** Stage 1-7 (10-11 weeks)
+
+**Full-featured:** Stage 1-8 (13+ weeks)
 
 ---
 
 ## Summary
 
-7-stage implementation plan covering from initial setup to advanced features. **Stage 1** API and base module setup (3-5 days). **Stage 2** core read functionality (7-10 days). **Stage 3** CRUD operations (5-7 days). **Stage 4** webhooks and notifications (5-7 days). **Stage 5** AI enhancements and classifiers (7-10 days). **Stage 6** analytics and dashboards (7-10 days). **Stage 7** advanced features and optimization (10-15 days). Total estimate: 10-12 weeks for complete implementation. Viable MVP in 4 weeks (Stages 1-3). Each stage is independent and deployable, with specific validations and success metrics. Modular architecture allows parallel development by multiple developers.
+8-stage implementation plan covering from initial setup to advanced features. **Stage 1** API and base module setup (3-5 days). **Stage 2** core read functionality + Redis cache (7-10 days). **Stage 3** rich read experience — deep links, text search, commit details (3-4 days). **Stage 4** write operations: issue/PR create, transitions, comments (5-7 days). **Stage 5** webhooks and notifications (5-7 days). **Stage 6** AI enhancements and classifiers (7-10 days). **Stage 7** analytics and dashboards (7-10 days). **Stage 8** advanced features and optimization (10-15 days). Total estimate: 13+ weeks for complete implementation. Read-only MVP in 4 weeks (Stages 1-3). MVP with write ops in 5-6 weeks (Stages 1-4). Each stage is independent and deployable, with specific validations and success metrics. Modular architecture allows parallel development by multiple developers.

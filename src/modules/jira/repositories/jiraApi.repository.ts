@@ -177,6 +177,7 @@ export default class JiraApiRepository {
       updated: new Date(issue.fields?.updated),
       labels: issue.fields?.labels ?? [],
       components: (issue.fields?.components ?? []).map((c: any) => c.name),
+      url: this.config?.host ? `https://${this.config.host}/browse/${String(issue.key)}` : undefined,
     }
   }
 

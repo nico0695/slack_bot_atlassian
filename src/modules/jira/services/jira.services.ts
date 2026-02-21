@@ -9,6 +9,7 @@ import {
   IJiraProject,
   IJiraSearchResult,
 } from '../shared/interfaces/jira.interfaces'
+import { JQLBuilder } from '../utils/jql.builder'
 
 const log = createModuleLogger('jira.service')
 
@@ -122,6 +123,35 @@ export default class JiraServices {
       return { data: result }
     } catch (error: any) {
       log.error({ err: error, jql }, 'searchIssues failed')
+      return { error: error.message || 'Failed to search issues' }
+    }
+  }
+
+  /**
+   * Full-text search for issues by summary or description
+   */
+  async searchByText(
+    text: string,
+    projectKey?: string
+  ): Promise<GenericResponse<IJiraSearchResult>> {
+    try {
+      const builder = new JQLBuilder().textSearch(text)
+
+      const key = projectKey || this.jiraApiRepository.getConfiguredProjectKey()
+      if (key) {
+        builder.project(key)
+      }
+
+      builder.notInStatus('Done').orderBy('updated', 'DESC')
+
+      const jql = builder.build()
+      const result = await this.jiraApiRepository.searchIssues(jql, 20, 0)
+
+      log.info({ text, total: result.total }, 'Issues searched by text')
+
+      return { data: result }
+    } catch (error: any) {
+      log.error({ err: error, text }, 'searchByText failed')
       return { error: error.message || 'Failed to search issues' }
     }
   }

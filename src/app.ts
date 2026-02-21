@@ -204,6 +204,10 @@ export default class App {
       slackListenersKey.jiraBacklog,
       safeHandler(this.jiraController.getBacklog)
     )
+    this.slackApp.message(
+      slackListenersKey.jiraSearch,
+      safeHandler(this.jiraController.searchByText)
+    )
 
     this.slackApp.message(
       slackListenersKey.bitbucketTest,

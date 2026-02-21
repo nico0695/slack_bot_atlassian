@@ -49,11 +49,28 @@ All Stage 1 items implemented. Jira and Bitbucket modules are fully scaffolded a
 
 ---
 
-## Next Step
+## Current Step
 
-**Stage 3 — Resource Creation and Modification (PENDING)**
+**Stage 3 — Rich Read Experience: Deep Links, Text Search & Commit Details (PENDING)**
 
 ### Pending (Stage 3)
+- Jira: add `url` field to all issue responses (deep link to `https://{host}/browse/{issueKey}`)
+- Bitbucket: add `url` field to all PR and commit responses (deep link to Bitbucket web UI)
+- Bitbucket: add `url` field to branch responses (deep link to source view)
+- Jira: `.jira search "text"` Slack command — full-text search by summary/description using JQL `~` operator
+- Jira: `JQLBuilder.textSearch(text)` utility method
+- Slack formatters: show clickable deep links for all Jira issues and Bitbucket PRs/commits
+- Bitbucket: `GET /bitbucket/repositories/:slug/commits/:hash` — commit detail endpoint (with URL, message, author)
+
+---
+
+## Next Step
+
+**Stage 4 — Resource Creation and Modification (DEFERRED)**
+
+Write operations intentionally moved after the read/search MVP is complete and stable.
+
+### Pending (Stage 4)
 - Jira: `POST /jira/issues` — create issue with Zod validation
 - Jira: `PUT /jira/issues/:issueKey/transition` — move issue to new status
 - Jira: `POST /jira/issues/:issueKey/comments` — add comment
