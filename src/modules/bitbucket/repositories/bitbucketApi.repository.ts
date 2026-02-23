@@ -8,6 +8,7 @@ import {
   ICreateBitbucketPR,
   IBitbucketBranch,
   IBitbucketCommit,
+  IBitbucketCommitDetail,
 } from '../shared/interfaces/bitbucket.interfaces'
 import { PRState } from '../shared/constants/bitbucket.constants'
 
@@ -303,6 +304,33 @@ export default class BitbucketApiRepository {
       }))
     } catch (error: any) {
       log.error({ err: error, repoSlug }, 'Failed to list commits')
+      throw error
+    }
+  }
+
+  /**
+   * Get a specific commit by hash
+   */
+  async getCommit(repoSlug: string, hash: string): Promise<IBitbucketCommitDetail> {
+    try {
+      const response = await this.apiClient.get(
+        `/repositories/${this.workspace}/${repoSlug}/commit/${encodeURIComponent(hash)}`
+      )
+
+      const c = response.data
+
+      log.debug({ repoSlug, hash }, 'Commit retrieved')
+
+      return {
+        hash: c.hash,
+        message: c.message?.split('\n')[0] ?? '',
+        author: c.author?.user?.display_name ?? c.author?.raw ?? 'Unknown',
+        date: c.date,
+        url: `https://bitbucket.org/${this.workspace}/${repoSlug}/commits/${String(c.hash)}`,
+        parents: (c.parents ?? []).map((p: any) => String(p.hash)),
+      }
+    } catch (error: any) {
+      log.error({ err: error, repoSlug, hash }, 'Failed to get commit')
       throw error
     }
   }
