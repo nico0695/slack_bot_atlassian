@@ -74,11 +74,16 @@ All Stage 1 items implemented. Jira and Bitbucket modules are fully scaffolded a
 Write operations intentionally moved after the read/search MVP is complete and stable.
 
 ### Pending (Stage 4)
+- **[Critical]** Add `@SlackAuth` + `extends GenericController` to Jira and Bitbucket Slack controllers (auth gap)
+- **[Critical]** Add `jiraEmail` / `bitbucketUsername` to `Users` entity; add `.jira me` / `.bb me` registration commands
 - Jira: `POST /jira/issues` — create issue with Zod validation
+- Jira: `GET /jira/issues/:issueKey/transitions` — list available status transitions
 - Jira: `PUT /jira/issues/:issueKey/transition` — move issue to new status
 - Jira: `POST /jira/issues/:issueKey/comments` — add comment
 - Bitbucket: PR approval, merge, and comment endpoints
+- Bitbucket: Slack command for existing `POST /bitbucket/pullrequests` (endpoint exists, command missing)
 - Slack commands: `.jira create`, `.jira move PROJ-123 "In Progress"`, `.jira comment PROJ-123 "..."`, `.bb pr approve/merge`
+- Clean up unused TypeORM cache entities (`JiraIssueCache`, `BitbucketPRCache`) — connect to analytics or remove
 - Robust error handling and rollback on failure
 
 ---
@@ -88,7 +93,10 @@ Write operations intentionally moved after the read/search MVP is complete and s
 - Cache-aside pattern implemented for Jira issues, sprint, user-issues, and Bitbucket branches/PRs.
 - `JQLBuilder` powers all Jira search operations (assigned-to-me, sprint, backlog).
 - `formatIssueForSlack` / `formatIssueListForSlack` used in Slack responses.
+- `POST /bitbucket/pullrequests` (create PR) is implemented in REST but has no Slack command.
+- `getActiveSprint` uses `sprint in openSprints()` — only works with Jira Software projects.
+- See `REVIEW.md` for a complete deep-dive analysis of the integration status, issues, and roadmap.
 
 ---
 
-*Last updated: 2026-02-21*
+*Last updated: 2026-02-23*

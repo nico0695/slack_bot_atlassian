@@ -135,6 +135,7 @@ export default class UsersController extends GenericController {
       phone: req.body.phone,
       enabled: req.body.enabled,
       profile: req.body.profile,
+      atlassianEmail: req.body.atlassianEmail,
     }
 
     if (!dataUser.name || !dataUser.email) {

@@ -176,8 +176,40 @@ describe('UsersController', () => {
         phone: '555',
         enabled: true,
         profile: 1,
+        atlassianEmail: undefined,
       })
       expect(res.send).toHaveBeenCalledWith({ id: 8 })
+    })
+
+    it('updates atlassianEmail field', async () => {
+      const req: any = {
+        params: { id: '8' },
+        body: {
+          username: 'nick',
+          name: 'Nick',
+          lastName: 'Doe',
+          email: 'nick@example.com',
+          phone: '555',
+          enabled: true,
+          profile: 1,
+          atlassianEmail: 'nick@company.atlassian.net',
+        },
+      }
+      updateUserByIdMock.mockResolvedValue({ data: { id: 8, atlassianEmail: 'nick@company.atlassian.net' } })
+
+      await controller.updateUser(req, res)
+
+      expect(updateUserByIdMock).toHaveBeenCalledWith(8, {
+        username: 'nick',
+        name: 'Nick',
+        lastName: 'Doe',
+        email: 'nick@example.com',
+        phone: '555',
+        enabled: true,
+        profile: 1,
+        atlassianEmail: 'nick@company.atlassian.net',
+      })
+      expect(res.send).toHaveBeenCalledWith({ id: 8, atlassianEmail: 'nick@company.atlassian.net' })
     })
 
     it('throws BadRequestError when name or email missing', async () => {
