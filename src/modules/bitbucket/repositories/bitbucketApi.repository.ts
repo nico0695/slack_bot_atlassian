@@ -314,7 +314,7 @@ export default class BitbucketApiRepository {
   async getCommit(repoSlug: string, hash: string): Promise<IBitbucketCommitDetail> {
     try {
       const response = await this.apiClient.get(
-        `/repositories/${this.workspace}/${repoSlug}/commit/${hash}`
+        `/repositories/${this.workspace}/${repoSlug}/commit/${encodeURIComponent(hash)}`
       )
 
       const c = response.data
