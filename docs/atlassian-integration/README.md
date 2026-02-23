@@ -99,6 +99,9 @@ Stage 1 implementation summary (Jira base). Note: covers only the Jira API part,
 ### 10. [PR_SUMMARY.md](./PR_SUMMARY.md)
 Planning documentation PR summary.
 
+### 11. [REVIEW.md](./REVIEW.md)
+Deep-dive review of the Atlassian integration (branch `dev`). Covers implemented features with status classification, issues found against project standards, next steps grouped by stage, recommended features not in the original plan, and a complete production-readiness assessment.
+
 ## Implementation Philosophy
 
 ### Iterative and Incremental
@@ -124,26 +127,31 @@ Planning documentation PR summary.
 
 ## Quickstart
 
-### Phase 1 - Basic Setup (Week 1-2) — ⏳ In progress
+### Phase 1 - Basic Setup (Week 1-2) — ✅ Complete
 1. ~~Read [IMPLEMENTATION_STAGES.md](./IMPLEMENTATION_STAGES.md) - Stage 1~~ ✅
-2. ~~Configure Jira credentials~~ ✅ — Bitbucket pending
-3. ~~Implement Jira base module~~ ✅ (partial)
-4. Create first basic commands — pending
+2. ~~Configure Jira credentials~~ ✅
+3. ~~Configure Bitbucket credentials~~ ✅
+4. ~~Implement Jira base module~~ ✅
+5. ~~Implement Bitbucket base module~~ ✅
+6. ~~Basic Slack commands~~ ✅
 
-### Phase 2 - Core Features (Week 3-6)
-1. Implement high priority features from [FEATURE_ROADMAP.md](./FEATURE_ROADMAP.md)
-2. Webhooks setup
-3. Basic dashboards
+> Stages 1–3 (read-only MVP) are **complete**. See [STATUS.md](./STATUS.md) and [REVIEW.md](./REVIEW.md) for details.
 
-### Phase 3 - AI and Automation (Week 7-10)
-1. Implement classifiers from [AI_ENHANCEMENTS.md](./AI_ENHANCEMENTS.md)
-2. Intelligent automation
-3. Documentation generation
+### Phase 2 - Write Operations (Stage 4) — ⏳ In progress
+1. User identity mapping (Slack user → Jira/Bitbucket email)
+2. Jira issue creation, state transitions, comments
+3. Bitbucket PR approval, merge, comments
+4. Slack auth fix for Jira/Bitbucket commands
 
-### Phase 4 - Advanced Features (Week 11+)
-1. Advanced analytics
+### Phase 3 - Webhooks & AI (Stages 5-6)
+1. Webhooks setup (Jira + Bitbucket events → Slack notifications)
+2. AI assistant intents for Jira/Bitbucket
+3. Code review assistant
+
+### Phase 4 - Analytics & Advanced (Stages 7-8)
+1. Analytics dashboards
 2. Custom workflows
-3. Additional integrations
+3. Auto-linking, stale PR detection
 
 ## Success Metrics
 
